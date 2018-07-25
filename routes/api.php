@@ -20,3 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('accommodation_request', 'AccommodationRequestController@store')
     ->name('accommodation_request.store');
 
+Route::post('client', 'ClientController@store')
+    ->name('client.store');
+
+Route::post('transfer_request','TransferRequestController@store')
+->name('transfer_request.store');
+
