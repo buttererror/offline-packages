@@ -15,6 +15,7 @@ class CreateTransferRequestsTable extends Migration
     {
         Schema::create('transfer_requests', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('package_id');
             $table->string('from');
             $table->string('to');
             $table->date('date');

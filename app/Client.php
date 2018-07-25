@@ -15,4 +15,8 @@ class Client extends Model
         'gender',
         'age'
     ];
+
+    public function packages(){
+        return $this->hasMany('App/Package');
+    }
 }

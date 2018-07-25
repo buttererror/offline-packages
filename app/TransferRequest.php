@@ -15,4 +15,8 @@ class TransferRequest extends Model
         'number_of_children',
         'quality'
     ] ;
+
+    public function package(){
+        return $this->belongsTo('App/Package');
+    }
 }

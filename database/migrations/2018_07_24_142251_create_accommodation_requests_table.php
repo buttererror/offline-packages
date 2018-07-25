@@ -15,6 +15,7 @@ class CreateAccommodationRequestsTable extends Migration
     {
         Schema::create('accommodation_requests', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('package_id');
             $table->date('checkin');
             $table->date('checkout');
             $table->integer('destination_id');
