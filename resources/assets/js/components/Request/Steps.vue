@@ -1,8 +1,6 @@
 <template>
     <div>
-        <journey-start></journey-start>
-        <!--<client-details></client-details>-->
-        <!--<accommodation></accommodation>-->
+        <component @changeComponent="changeComponent" v-bind:is="component"></component>
     </div>
 </template>
 
@@ -10,18 +8,26 @@
     import JourneyStart from "./JourneyStart";
     import ClientDetails from './ClientDetails';
     import Accommodation from './Accommodation';
+    import NewOrOldClient from './NewOrOldClient';
 
     export default {
         components: {
             JourneyStart,
             ClientDetails,
-            Accommodation
+            Accommodation,
+            NewOrOldClient
         },
-        name: "steps",
+        mounted(){
 
+        },
         data() {
             return {
-                currentStep: 0
+                component: 'NewOrOldClient'
+            }
+        },
+        methods: {
+            changeComponent(component){
+                this.component = component;
             }
         }
     }

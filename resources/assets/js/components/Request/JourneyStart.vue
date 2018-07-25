@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <button class="btn btn-primary">التالي</button>
+            <button @click="handleClicked" class="btn btn-primary">التالي</button>
             <button class="btn btn-secondary">تخطي</button>
         </div>
     </div>
@@ -28,7 +28,11 @@
 
 <script>
     export default {
-        name: "journey-start"
+        methods: {
+            handleClicked() {
+                this.$emit('changeComponent','Accommodation');
+            }
+        }
     }
 </script>
 

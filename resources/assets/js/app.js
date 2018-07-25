@@ -21,3 +21,5 @@ const app = new Vue({
     el: '#app',
     components: {BaseComponent}
 });
+
+import 'v-autocomplete/dist/v-autocomplete.css';
