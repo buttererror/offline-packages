@@ -61630,23 +61630,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            clients: [{
-                name: "Mohamed Ahmed",
-                phone: "01220179432"
-            }, {
-                name: "Mahmoud Ahmed",
-                phone: "01278734721"
-            }, {
-                name: "Ibrahim Ahmed",
-                phone: "01221590118"
-            }, {
-                name: "Mama Genedy",
-                phone: "01229881478"
-            }],
-            client: {
-                name: "Mohamed Ahmed",
-                phone: "01220179432"
-            },
+            clients: [],
+            client: null,
             clientTemplate: __WEBPACK_IMPORTED_MODULE_1__ClientAutocompleteItem___default.a
         };
     },
@@ -61659,7 +61644,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return '';
         },
         updateItems: function updateItems(text) {
-            console.log(text);
+            var _this = this;
+
+            if (!text) {
+                this.clients = [];
+                return;
+            }
+            axios.get('api/client/search', {
+                params: {
+                    searchText: text
+                }
+            }).then(function (response) {
+                _this.clients = response.data;
+            });
         }
     }
 
@@ -61795,7 +61792,13 @@ var render = function() {
   return _c("div", [
     _c("b", [_vm._v(_vm._s(_vm.item.name))]),
     _vm._v(" "),
-    _c("abbr", [_vm._v(_vm._s(_vm.item.phone))])
+    _c("abbr", [
+      _vm._v(
+        _vm._s(_vm.item.mobile) +
+          " " +
+          _vm._s(_vm.item.email ? " - " + _vm.item.email : "")
+      )
+    ])
   ])
 }
 var staticRenderFns = []
@@ -61937,9 +61940,11 @@ var render = function() {
           [
             _c("autocomplete", {
               attrs: {
+                dir: "rtl",
                 items: _vm.clients,
                 "get-label": _vm.getLabel,
-                "component-item": _vm.clientTemplate
+                "component-item": _vm.clientTemplate,
+                "min-len": 0
               },
               on: { "update-items": _vm.updateItems },
               model: {
@@ -62030,7 +62035,7 @@ exports = module.exports = __webpack_require__(7)(false);
 
 
 // module
-exports.push([module.i, "\n.v-autocomplete .v-autocomplete-input-group .v-autocomplete-input {\n    font-size: 1.5em;\n    padding: 10px 15px;\n    -webkit-box-shadow: none;\n            box-shadow: none;\n    border: 1px solid #157977;\n    width: calc(100% - 32px);\n    outline: none;\n    background-color: #eee;\n}\n.v-autocomplete .v-autocomplete-input-group.v-autocomplete-selected .v-autocomplete-input {\n    color: #008000;\n    background-color: #f2fff2;\n}\n.v-autocomplete .v-autocomplete-list {\n    width: 100%;\n    text-align: left;\n    border: none;\n    border-top: none;\n    max-height: 400px;\n    overflow-y: auto;\n    border-bottom: 1px solid #157977;\n    z-index: 999;\n}\n.v-autocomplete-input-group .v-autocomplete-input{\n    display: block;\n    width: 100% !important;\n    margin: 0;\n}\n.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item {\n    cursor: pointer;\n    background-color: #fff;\n    padding: 10px;\n    border-bottom: 1px solid #157977;\n    border-left: 1px solid #157977;\n    border-right: 1px solid #157977;\n}\n.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item:last-child {\n    border-bottom: none;\n}\n.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item:hover {\n    background-color: #eee;\n}\n.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item abbr {\n    opacity: 0.8;\n    font-size: 0.8em;\n    display: block;\n    font-family: sans-serif;\n}\n.v-autocomplete pre {\n    text-align: left;\n    white-space: pre-wrap;\n    background-color: #eee;\n    border: 1px solid #c0c0c0;\n    padding: 20px !important;\n    border-radius: 10px;\n    font-family: monospace !important;\n}\n.v-autocomplete .left {\n    text-align: left;\n}\n.v-autocomplete .note {\n    border-left: 5px solid #ccc;\n    padding: 10px;\n}\n", ""]);
+exports.push([module.i, "\n.v-autocomplete .v-autocomplete-input-group .v-autocomplete-input {\n    font-size: 1.5em;\n    padding: 10px 15px;\n    -webkit-box-shadow: none;\n            box-shadow: none;\n    border: 1px solid #157977;\n    width: calc(100% - 32px);\n    outline: none;\n    background-color: #eee;\n}\n.v-autocomplete .v-autocomplete-input-group.v-autocomplete-selected .v-autocomplete-input {\n    color: #008000;\n    background-color: #f2fff2;\n}\n.v-autocomplete .v-autocomplete-list {\n    width: 100%;\n    text-align: left;\n    border: none;\n    border-top: none;\n    max-height: 400px;\n    overflow-y: auto;\n    border-bottom: 1px solid #157977;\n    z-index: 999;\n}\n.v-autocomplete-input-group .v-autocomplete-input {\n    display: block;\n    width: 100% !important;\n    margin: 0;\n}\n.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item {\n    cursor: pointer;\n    background-color: #fff;\n    padding: 10px;\n    border-bottom: 1px solid #157977;\n    border-left: 1px solid #157977;\n    border-right: 1px solid #157977;\n}\n.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item:last-child {\n    border-bottom: none;\n}\n.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item:hover {\n    background-color: #eee;\n}\n.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item abbr {\n    opacity: 0.8;\n    font-size: 0.8em;\n    display: block;\n    font-family: sans-serif;\n}\n.v-autocomplete pre {\n    text-align: left;\n    white-space: pre-wrap;\n    background-color: #eee;\n    border: 1px solid #c0c0c0;\n    padding: 20px !important;\n    border-radius: 10px;\n    font-family: monospace !important;\n}\n.v-autocomplete .left {\n    text-align: left;\n}\n.v-autocomplete .note {\n    border-left: 5px solid #ccc;\n    padding: 10px;\n}\n", ""]);
 
 // exports
 

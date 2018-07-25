@@ -8,8 +8,8 @@
             </h2>
             <div class="row mt-4">
                 <div class="col-6 offset-3">
-                    <autocomplete :items="clients" v-model="client" :get-label="getLabel"
-                                  :component-item='clientTemplate' @update-items="updateItems">
+                    <autocomplete dir="rtl" :items="clients" v-model="client" :get-label="getLabel"
+                                  :component-item='clientTemplate' @update-items="updateItems" :min-len="0">
                     </autocomplete>
                 </div>
             </div>
@@ -40,28 +40,8 @@
         },
         data() {
             return {
-                clients: [
-                    {
-                        name: "Mohamed Ahmed",
-                        phone: "01220179432"
-                    },
-                    {
-                        name: "Mahmoud Ahmed",
-                        phone: "01278734721"
-                    },
-                    {
-                        name: "Ibrahim Ahmed",
-                        phone: "01221590118"
-                    },
-                    {
-                        name: "Mama Genedy",
-                        phone: "01229881478"
-                    },
-                ],
-                client: {
-                    name: "Mohamed Ahmed",
-                    phone: "01220179432"
-                },
+                clients: [],
+                client: null,
                 clientTemplate: ClientAutocompleteItem
             }
         },
@@ -73,7 +53,17 @@
                 return ''
             },
             updateItems(text) {
-                console.log(text);
+                if (!text) {
+                    this.clients = [];
+                    return;
+                }
+                axios.get('api/client/search', {
+                    params: {
+                        searchText: text
+                    }
+                }).then(response => {
+                    this.clients = response.data;
+                });
             }
         }
 
@@ -90,10 +80,12 @@
         outline: none;
         background-color: #eee;
     }
+
     .v-autocomplete .v-autocomplete-input-group.v-autocomplete-selected .v-autocomplete-input {
         color: #008000;
         background-color: #f2fff2;
     }
+
     .v-autocomplete .v-autocomplete-list {
         width: 100%;
         text-align: left;
@@ -104,11 +96,13 @@
         border-bottom: 1px solid #157977;
         z-index: 999;
     }
-    .v-autocomplete-input-group .v-autocomplete-input{
+
+    .v-autocomplete-input-group .v-autocomplete-input {
         display: block;
         width: 100% !important;
         margin: 0;
     }
+
     .v-autocomplete .v-autocomplete-list .v-autocomplete-list-item {
         cursor: pointer;
         background-color: #fff;
@@ -117,18 +111,22 @@
         border-left: 1px solid #157977;
         border-right: 1px solid #157977;
     }
+
     .v-autocomplete .v-autocomplete-list .v-autocomplete-list-item:last-child {
         border-bottom: none;
     }
+
     .v-autocomplete .v-autocomplete-list .v-autocomplete-list-item:hover {
         background-color: #eee;
     }
+
     .v-autocomplete .v-autocomplete-list .v-autocomplete-list-item abbr {
         opacity: 0.8;
         font-size: 0.8em;
         display: block;
         font-family: sans-serif;
     }
+
     .v-autocomplete pre {
         text-align: left;
         white-space: pre-wrap;
@@ -138,9 +136,11 @@
         border-radius: 10px;
         font-family: monospace !important;
     }
+
     .v-autocomplete .left {
         text-align: left;
     }
+
     .v-autocomplete .note {
         border-left: 5px solid #ccc;
         padding: 10px;

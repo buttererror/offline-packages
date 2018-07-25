@@ -23,6 +23,8 @@ Route::post('accommodation_request', 'AccommodationRequestController@store')
 Route::post('client', 'ClientController@store')
     ->name('client.store');
 
-Route::post('transfer_request','TransferRequestController@store')
-->name('transfer_request.store');
+Route::post('transfer_request', 'TransferRequestController@store')
+    ->name('transfer_request.store');
 
+Route::get('client/search', 'ClientController@search')
+    ->name('client.search');
