@@ -25,4 +25,11 @@ class AccommodationRequest extends Model
     {
         $this->attributes['rooms'] = json_encode($value);
     }
+
+    public function package()
+    {
+        return $this->belongsTo('App/Package');
+    }
 }
+
+
