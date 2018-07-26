@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
 {
+    protected $fillable = [
+        'client_id',
+        'title',
+        'start_date',
+        'star_place',
+        'note'
+    ];
 
     public function accommodationRequests(){
         return $this->hasMany('App/AccommodationReuests');

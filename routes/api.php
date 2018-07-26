@@ -26,5 +26,9 @@ Route::post('client', 'ClientController@store')
 Route::post('transfer_request', 'TransferRequestController@store')
     ->name('transfer_request.store');
 
+Route::post('package','PackageController@store')
+    ->name('package.store');
+
 Route::get('client/search', 'ClientController@search')
     ->name('client.search');
+
