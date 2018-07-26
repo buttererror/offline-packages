@@ -32,3 +32,5 @@ Route::post('package','PackageController@store')
 Route::get('client/search', 'ClientController@search')
     ->name('client.search');
 
+Route::get('countries','CountryController@index')
+    ->name('country.index');

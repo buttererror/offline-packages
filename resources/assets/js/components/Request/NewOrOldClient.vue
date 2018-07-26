@@ -16,7 +16,7 @@
             <div class="row mt-4 text-center">
                 <div class="col-12">
                     أو أدخل بيانات عميل جديد من
-                    <a href="#">
+                    <a href="#" @click.prevent="handleNewClientClicked">
                         هنا
                     </a>
                 </div>
@@ -64,6 +64,9 @@
                 }).then(response => {
                     this.clients = response.data;
                 });
+            },
+            handleNewClientClicked() {
+                bus.$emit('new-client-clicked');
             }
         }
 

@@ -5,15 +5,18 @@
                 <steps></steps>
             </div>
         </div>
+        <modal-popup></modal-popup>
     </div>
 </template>
 
 <script>
     import Steps from './Steps';
+    import ModalPopup from './ModalPopup';
     export default {
         name: "base-component",
         components: {
-            Steps
+            Steps,
+            ModalPopup
         }
     }
 </script>
