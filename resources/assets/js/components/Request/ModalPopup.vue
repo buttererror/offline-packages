@@ -5,21 +5,31 @@
             :no-close-on-esc="true"
             :no-close-on-backdrop="true"
             :hide-header-close="true"
-    >
+            :header-class="'justify-content-center'">
         <h5 slot="modal-title">
             اضافة عميل جديد
         </h5>
-        <div class="row mt-4">
+        <div class="form-group row">
+
             <div class="col-6 offset-3">
-                <input class="form-control" dir="rtl" v-model="clientData.name">
+                <input type="text"
+                       dir="rtl" v-model.trim="clientData.name" class="form-control"
+                       @input="validateName" @blur="fieldEmptinessValidation"
+                       v-bind:class="{'is-invalid': invalidNameStyle, 'is-valid': validNameStyle}">
+                <div class="invalid-feedback" v-if="invalidNameStyle" id="tooltip">
+                    <b-tooltip id="nameTooltip" target="tooltip" placement="left"></b-tooltip>
+                    قف هنا لتعرف الخطأ
+                </div>
             </div>
-            <div class="col-3">* الإسم</div>
+
+            <label class="col-form-label col-3">* الإسم</label>
+
         </div>
         <div class="row mt-4">
             <div class="col-6 offset-3">
                 <input class="form-control" dir="rtl" v-model="clientData.mobile">
             </div>
-            <div class="col-3">* رقم الجوال</div>
+            <div class="col-3" @input="validateMobile">* رقم الجوال</div>
         </div>
 
         <div class="row mt-4">
@@ -57,7 +67,6 @@
                         dir="rtl"
                         :items="filteredCountries"
                         v-model="country"
-                        :value="s"
                         :get-label="getLabel"
                         :component-item='countryTemplate'
                         @update-items="updateCountryList"
@@ -79,7 +88,9 @@
 
 
         <div slot="modal-footer" class="w-100">
-            <button class="btn btn-primary pull-left">حفظ</button>
+            <button class="btn btn-primary pull-left" v-bind:class="{'disabled': disableSaveBtn}">
+                حفظ
+            </button>
             <button @click="cancel" class="btn btn-danger pull-left">الغاء</button>
         </div>
     </b-modal>
@@ -88,6 +99,7 @@
 <script>
     import Autocomplete from 'v-autocomplete';
     import CountryTemplate from './CountryAutocompleteItem';
+    import validator from 'validator';
 
     export default {
         components: {
@@ -103,12 +115,14 @@
         },
         data() {
             return {
+                invalidNameStyle: false,
+                validNameStyle: false,
+                disableSaveBtn: true,
                 show: false,
                 countries: [],
                 filteredCountries: [],
                 country: null,
                 countryTemplate: CountryTemplate,
-                s: "a",
                 clientData: {
                     name: null,
                     email: null,
@@ -152,6 +166,26 @@
                     }
                 },200);
             },
+            validateName() {
+                let trimName = this.clientData.name.split(' ').join("");
+                if(!validator.isAlpha(trimName, 'ar')) {
+                    this.invalidNameStyle = true;
+                    $('#tooltip').attr("data-original-title", "ادخل الاسم بحروف عربيه");
+                    return;
+                }
+                this.invalidNameStyle = false;
+                this.validNameStyle = true;
+                return
+            },
+            validateMobile() {
+                if(!validator.isMobilePhone(this.clientData.mobile, 'any')){
+
+                }
+            },
+            fieldEmptinessValidation() {
+                if(!this.clientData.name) this.invalidNameStyle = true;
+                $('#tooltip').attr("data-original-title", "لم يتم ادخال الاسم")
+            }
         }
     }
 </script>
