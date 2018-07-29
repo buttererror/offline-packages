@@ -17,6 +17,7 @@ class AccommodationRequestController extends Controller
             abort(400);
         }
         $request->validate([
+            'package_id' => 'required|integer|exists:packages,id',
             'checkin' => 'required|date|after_or_equal:today',
             'checkout' => 'required|date|after:checkin',
             'destination' => 'required|integer',

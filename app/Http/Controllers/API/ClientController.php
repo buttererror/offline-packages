@@ -31,8 +31,7 @@ class ClientController extends Controller
             'gender' => 'required|string|in:male,female',
             'age' => 'nullable|integer|min:0|max:100',
         ]);
-        $data = $request->all();
-        Client::create($data);
+        Client::create($request->all());
 
     }
 }

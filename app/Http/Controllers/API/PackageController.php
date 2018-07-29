@@ -14,7 +14,7 @@ class PackageController extends Controller
         }
 
         $request->validate([
-            'client_id'=>'required|integer',
+            'client_id'=>'required|integer|exists:clients,id',
             'title'=>'nullable|string|max:255',
             'start_date'=>'nullable|date_format:Y-m-d|after:yesterday',
             'star_place'=>'nullable|string|max:255',
