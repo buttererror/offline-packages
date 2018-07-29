@@ -33,7 +33,11 @@ class AccommodationRequestController extends Controller
         $this->validateRoomAdultChildMatching($request);
         $data = $request->all();
         $data['destination_id'] = $data['destination'];
-        AccommodationRequest::create($data);
+        $accommodation = AccommodationRequest::create($data);
+        $accommodation->refresh();
+        return response()->json([
+            'accommodation_request' => $accommodation
+        ], 201);
     }
 
     /**

@@ -11,7 +11,7 @@ class ClientController extends Controller
 {
     public function search(Request $request)
     {
-        if(!$request->searchText){
+        if (!$request->searchText) {
             return [];
         }
         return Client::search($request->searchText)->take(7)->get();
@@ -31,7 +31,33 @@ class ClientController extends Controller
             'gender' => 'required|string|in:male,female',
             'age' => 'nullable|integer|min:0|max:100',
         ]);
-        Client::create($request->all());
+        $client = Client::create($request->all());
+        $client->refresh();
+        return response()->json([
+            'client' => $client
+        ], 201);
 
+    }
+
+    public function isMobileUnique(Request $request)
+    {
+        $request->validate([
+            'mobile' => 'required'
+        ]);
+        $count = Client::where('mobile', $request->mobile)->count();
+        return response()->json([
+            'unique' => $count == 0
+        ]);
+    }
+
+    public function isEmailUnique(Request $request)
+    {
+        $request->validate([
+            'email' => 'required'
+        ]);
+        $count = Client::where('email', $request->email)->count();
+        return response()->json([
+            'unique' => $count == 0
+        ]);
     }
 }

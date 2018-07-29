@@ -21,9 +21,13 @@ class TransferRequestController extends Controller
             'date' => 'required|date|date_format:Y-m-d|after:today',
             'time' => 'nullable|date_format:H:i',
             'number_of_adults' => 'required|integer|min:1',
-            'number_of_children' => 'required|integer|min:0',
+            'number_of_children' => 'nullable|integer|min:0',
             'quality' => 'nullable|string|max:255|in:economical|medium|luxory',
         ]);
-        TransferRequest::create($request->all());
+        $transferRequest = TransferRequest::create($request->all());
+        $transferRequest->refresh();
+        return response()->json([
+            'transfer_request' => $transferRequest
+        ], 201);
     }
 }
