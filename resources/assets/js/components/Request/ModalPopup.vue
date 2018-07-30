@@ -14,49 +14,60 @@
             <div class="col-6 offset-3">
                 <input type="text"
                        dir="rtl" v-model.trim="clientData.name" class="form-control"
-                       @input="validateName" @blur="fieldEmptinessValidation"
-                       v-bind:class="{'is-invalid': invalidNameStyle, 'is-valid': validNameStyle}">
-                <div class="invalid-feedback" v-if="invalidNameStyle" id="tooltip">
-                    <b-tooltip id="nameTooltip" target="tooltip" placement="left"></b-tooltip>
-                    قف هنا لتعرف الخطأ
+                       @input="validateName" @blur="validateName"
+                       v-bind:class="{'is-invalid': name.invalid, 'is-valid': name.valid}">
+                <div class="invalid-feedback" v-if="name.invalid">
+                    {{name.errorMessage}}
                 </div>
             </div>
 
             <label class="col-form-label col-3">* الإسم</label>
-
         </div>
-        <div class="row mt-4">
+
+        <div class="form-group row">
             <div class="col-6 offset-3">
-                <input class="form-control" dir="rtl" v-model="clientData.mobile">
+                <input class="form-control" @input="validateMobile" @blur="validateMobile"
+                       v-model.trim="clientData.mobile"
+                       v-bind:class="{'is-invalid': mobile.invalid,
+                        'is-valid': mobile.valid}">
+                <div class="invalid-feedback" v-if="mobile.invalid">
+                    {{mobile.errorMessage}}
+                </div>
             </div>
-            <div class="col-3" @input="validateMobile">* رقم الجوال</div>
+            <div class="col-3">* رقم الجوال</div>
         </div>
 
-        <div class="row mt-4">
+        <div class="form-group row">
             <div class="col-6 offset-3">
                 <input class="form-control" dir="rtl" v-model="clientData.email">
             </div>
             <div class="col-3">البريد الإلكتروني</div>
         </div>
 
-        <div class="row mt-4">
+        <div class="form-group row mt-4">
             <div class="col-6 offset-3">
-                <select class="form-control" dir="rtl" v-model="clientData.gender">
+                <select class="form-control" dir="rtl" v-model="clientData.gender"
+                    @change="validateGender"
+                        v-bind:class="{'is-invalid': gender.invalid,
+                        'is-valid': gender.valid}">
                     <option value="male">ذكر</option>
                     <option value="female">أنثى</option>
                 </select>
+                <div class="invalid-feedback" v-if="gender.invalid">
+                    {{gender.errorMessage}}
+                </div>
             </div>
-            <div class="col-3">النوع</div>
+            <div class="col-3">* النوع</div>
         </div>
 
-        <div class="row mt-4">
+        <div class="form-group row">
             <div class="col-6 offset-3">
                 <input class="form-control" dir="rtl" v-model="clientData.age">
             </div>
             <div class="col-3">السن</div>
         </div>
 
-        <div class="row mt-4">
+        <div class="form-group row">
             <div class="col-6 offset-3">
                 <autocomplete
                         ref="countryAutocomplete"
@@ -72,14 +83,14 @@
                         @update-items="updateCountryList"
                         :auto-select-one-item="false"
                         @item-selected="selectedCountry"
-                        @blur="emptyIfNotSelected"
+                        @blur="handler('emptyIfNotSelected', 'validateCountry')"
                         :min-len="0">
                 </autocomplete>
             </div>
-            <div class="col-3">البلد</div>
+            <div class="col-3">* البلد</div>
         </div>
 
-        <div class="row mt-4">
+        <div class="form-group row">
             <div class="col-6 offset-3">
                 <input class="form-control" dir="rtl" v-model="clientData.address">
             </div>
@@ -115,9 +126,26 @@
         },
         data() {
             return {
-                invalidNameStyle: false,
-                validNameStyle: false,
+                name: {
+                    valid: false,
+                    invalid: false,
+                    required: false,
+                    errorMessage: ""
+                },
+                mobile: {
+                    valid: false,
+                    invalid: false,
+                    required: false,
+                    errorMessage: ""
+                },
+                gender: {
+                    valid: false,
+                    invalid: false,
+                    required: false,
+                    errorMessage: ""
+                },
                 disableSaveBtn: true,
+                requiredCheck: 0,
                 show: false,
                 countries: [],
                 filteredCountries: [],
@@ -151,6 +179,10 @@
                 });
             },
             cancel() {
+                this.validNameStyle = false;
+                this.invalidNameStyle = false;
+                this.validMobileNumber = false;
+                this.invalidMobileNumber = false;
                 for (let prop in this.clientData) {
                     this.clientData[prop] = null;
                 }
@@ -166,25 +198,54 @@
                     }
                 },200);
             },
-            validateName() {
+            validateName(e) {
+                if(!this.clientData.name && e.type === 'blur'){
+                    this.name.errorMessage = "ادخل الاسم";
+                    this.name.invalid = true;
+                    return;
+                }
                 let trimName = this.clientData.name.split(' ').join("");
                 if(!validator.isAlpha(trimName, 'ar')) {
                     this.invalidNameStyle = true;
-                    $('#tooltip').attr("data-original-title", "ادخل الاسم بحروف عربيه");
+                    this.validNameStyle = false;
+                    this.name.errorMessage = "ادخل الاسم بحروف عربيه";
                     return;
                 }
-                this.invalidNameStyle = false;
-                this.validNameStyle = true;
-                return
+                this.name.invalid = false;
+                this.name.valid = true;
             },
-            validateMobile() {
-                if(!validator.isMobilePhone(this.clientData.mobile, 'any')){
-
+            validateMobile(e) {
+                if(!this.clientData.mobile && e.type === "blur"){
+                    this.mobile.invalid = true;
+                    this.mobile.errorMessage = "ادخل رقم الموبايل";
+                    return;
                 }
+                let mobileNumber = this.clientData.mobile[0] === '+' ? this.clientData.mobile.slice(1)
+                    : this.clientData.mobile;
+                if(!validator.isMobilePhone(mobileNumber, 'any')){
+                    this.mobile.invalid = true;
+                    this.mobile.valid = false;
+                    this.mobile.errorMessage = "ليس اقل من 3 ارقام";
+                    return;
+                }
+                this.mobile.invalid = false;
+                this.mobile.valid = true;
             },
-            fieldEmptinessValidation() {
-                if(!this.clientData.name) this.invalidNameStyle = true;
-                $('#tooltip').attr("data-original-title", "لم يتم ادخال الاسم")
+            validateGender() {
+                console.log("here")
+                if(!this.clientData.gender){
+                    this.gender.invalid = true;
+                    this.gender.errorMessage = "ادخل رقم الموبايل";
+                    return;
+                }
+                this.gender.invalid = false;
+                this.gender.valid = true;
+            },
+            validateCountry() {
+
+            },
+            activateSaveBtn() {
+                return this.requiredCheck === 4;
             }
         }
     }
