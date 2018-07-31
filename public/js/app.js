@@ -62679,7 +62679,7 @@ exports = module.exports = __webpack_require__(7)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -62696,6 +62696,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__CountryAutocompleteItem___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__CountryAutocompleteItem__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_validator__ = __webpack_require__(277);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_validator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_validator__);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+//
 //
 //
 //
@@ -62844,6 +62847,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 required: false,
                 errorMessage: ""
             },
+            country: {
+                object: null,
+                valid: false,
+                invalid: false,
+                required: false,
+                errorMessage: ""
+            },
             checkNotes: {
                 name: false,
                 mobile: false,
@@ -62854,7 +62864,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             show: false,
             countries: [],
             filteredCountries: [],
-            country: null,
             countryTemplate: __WEBPACK_IMPORTED_MODULE_1__CountryAutocompleteItem___default.a,
             clientData: {
                 name: null,
@@ -62901,10 +62910,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             setTimeout(function () {
-                if (!_this2.country) {
+                if (!_this2.country.object) {
                     _this2.$refs.countryAutocomplete.searchText = '';
                 }
             }, 200);
+        },
+        autocompleteBlurHandler: function autocompleteBlurHandler(country) {
+            this.emptyIfNotSelected();
+            this.validateCountry(country);
+        },
+        autocompleteItemSelectedHandler: function autocompleteItemSelectedHandler(country) {
+            this.selectedCountry(country);
+            this.validateCountry(country);
         },
         validateName: function validateName(e) {
             if (!this.clientData.name && e.type === 'blur') {
@@ -62961,16 +62978,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.checkNotes.gender = true;
             this.activateSaveBtn();
         },
-        validateCountry: function validateCountry() {
-            if (!this.clientData.gender) {
-                this.gender.invalid = true;
-                this.checkNotes.country = false;
-                this.gender.errorMessage = "اختر البلد";
+        invalidCountry: function invalidCountry($countryInput, message) {
+            this.country.errorMessage = message;
+            var invalidFeedback = '<div class="invalid-feedback">\n                        ' + this.country.errorMessage + '\n                    </div>';
+            $countryInput.removeClass("is-valid").addClass("is-invalid");
+            this.checkNotes.country = false;
+            this.activateSaveBtn();
+            if ($countryInput.parent().children().length < 2) $(invalidFeedback).insertAfter($countryInput);else $countryInput.next().text(message);
+        },
+        validateCountry: function validateCountry(country) {
+            var $countryInput = $("#__BVID__7___BV_modal_outer_ .v-autocomplete-input-group input");
+            if ((typeof country === 'undefined' ? 'undefined' : _typeof(country)) === 'object' || this.country.object) {
+                $countryInput.removeClass("is-invalid").addClass("is-valid");
+                this.checkNotes.country = true;
+                this.activateSaveBtn();
                 return;
             }
-            this.gender.invalid = false;
-            this.gender.valid = true;
-            this.checkNotes.country = true;
+            if (!country && !$countryInput.is(':focus')) {
+                this.invalidCountry($countryInput, "ادخل الاسم");
+                return;
+            }
+            if (typeof country === 'string' && __WEBPACK_IMPORTED_MODULE_2_validator___default.a.isAlpha(country, "ar")) {
+                this.invalidCountry($countryInput, "حروف انجليزية فقط");
+                return;
+            }
+            $countryInput.removeClass("is-valid is-invalid");
+            this.checkNotes.country = false;
             this.activateSaveBtn();
         },
         activateSaveBtn: function activateSaveBtn() {
@@ -65963,7 +65996,7 @@ var render = function() {
             : _vm._e()
         ]),
         _vm._v(" "),
-        _c("label", { staticClass: "col-form-label col-3" }, [
+        _c("label", { staticClass: "col-form-label col-3 text-right" }, [
           _vm._v("* الإسم")
         ])
       ]),
@@ -66016,7 +66049,9 @@ var render = function() {
             : _vm._e()
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-3" }, [_vm._v("* رقم الجوال")])
+        _c("div", { staticClass: "col-form-label col-3 text-right" }, [
+          _vm._v("* رقم الجوال")
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group row" }, [
@@ -66044,10 +66079,14 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-3" }, [_vm._v("البريد الإلكتروني")])
+        _c(
+          "div",
+          { staticClass: "col-form-label col-3 text-right text-nowrap" },
+          [_vm._v("البريد الإلكتروني")]
+        )
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group row mt-4" }, [
+      _c("div", { staticClass: "form-group row" }, [
         _c("div", { staticClass: "col-6 offset-3" }, [
           _c(
             "select",
@@ -66068,22 +66107,24 @@ var render = function() {
               attrs: { dir: "rtl" },
               on: {
                 blur: _vm.validateGender,
-                select: _vm.validateGender,
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.$set(
-                    _vm.clientData,
-                    "gender",
-                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                  )
-                }
+                change: [
+                  function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.clientData,
+                      "gender",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  },
+                  _vm.validateGender
+                ]
               }
             },
             [
@@ -66104,7 +66145,9 @@ var render = function() {
             : _vm._e()
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-3" }, [_vm._v("* النوع")])
+        _c("div", { staticClass: "col-form-label col-3 text-right" }, [
+          _vm._v("* النوع")
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group row" }, [
@@ -66132,7 +66175,9 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-3" }, [_vm._v("السن")])
+        _c("div", { staticClass: "col-form-label col-3 text-right" }, [
+          _vm._v("السن")
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group row" }, [
@@ -66156,24 +66201,25 @@ var render = function() {
               },
               on: {
                 "update-items": _vm.updateCountryList,
-                "item-selected": _vm.selectedCountry,
-                blur: function($event) {
-                  _vm.handler("emptyIfNotSelected", "validateCountry")
-                }
+                "item-selected": _vm.autocompleteItemSelectedHandler,
+                blur: _vm.autocompleteBlurHandler,
+                change: _vm.validateCountry
               },
               model: {
-                value: _vm.country,
+                value: _vm.country.object,
                 callback: function($$v) {
-                  _vm.country = $$v
+                  _vm.$set(_vm.country, "object", $$v)
                 },
-                expression: "country"
+                expression: "country.object"
               }
             })
           ],
           1
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "col-3" }, [_vm._v("* البلد")])
+        _c("div", { staticClass: "col-form-label col-3 text-right" }, [
+          _vm._v("* البلد")
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form-group row" }, [
@@ -66201,7 +66247,9 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-3" }, [_vm._v("العنوان")])
+        _c("div", { staticClass: "col-form-label col-3 text-right" }, [
+          _vm._v("العنوان")
+        ])
       ]),
       _vm._v(" "),
       _c(

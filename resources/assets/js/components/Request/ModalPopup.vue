@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <label class="col-form-label col-3">* الإسم</label>
+            <label class="col-form-label col-3 text-right">* الإسم</label>
         </div>
 
         <div class="form-group row">
@@ -34,20 +34,20 @@
                     {{mobile.errorMessage}}
                 </div>
             </div>
-            <div class="col-3">* رقم الجوال</div>
+            <div class="col-form-label col-3 text-right">* رقم الجوال</div>
         </div>
 
         <div class="form-group row">
             <div class="col-6 offset-3">
                 <input class="form-control" dir="rtl" v-model="clientData.email">
             </div>
-            <div class="col-3">البريد الإلكتروني</div>
+            <div class="col-form-label col-3 text-right text-nowrap">البريد الإلكتروني</div>
         </div>
 
-        <div class="form-group row mt-4">
+        <div class="form-group row">
             <div class="col-6 offset-3">
                 <select class="form-control" dir="rtl" v-model="clientData.gender"
-                    @blur="validateGender" @select="validateGender"
+                    @blur="validateGender" @change="validateGender"
                         v-bind:class="{'is-invalid': gender.invalid,
                         'is-valid': gender.valid}">
                     <option value="male">ذكر</option>
@@ -57,14 +57,14 @@
                     {{gender.errorMessage}}
                 </div>
             </div>
-            <div class="col-3">* النوع</div>
+            <div class="col-form-label col-3 text-right">* النوع</div>
         </div>
 
         <div class="form-group row">
             <div class="col-6 offset-3">
                 <input class="form-control" dir="rtl" v-model="clientData.age">
             </div>
-            <div class="col-3">السن</div>
+            <div class="col-form-label col-3 text-right">السن</div>
         </div>
 
         <div class="form-group row">
@@ -77,24 +77,25 @@
                         id="country-autocomplete"
                         dir="rtl"
                         :items="filteredCountries"
-                        v-model="country"
+                        v-model="country.object"
                         :get-label="getLabel"
                         :component-item='countryTemplate'
                         @update-items="updateCountryList"
                         :auto-select-one-item="false"
-                        @item-selected="selectedCountry"
-                        @blur="handler('emptyIfNotSelected', 'validateCountry')"
+                        @item-selected="autocompleteItemSelectedHandler"
+                        @blur="autocompleteBlurHandler"
+                        @change="validateCountry"
                         :min-len="0">
                 </autocomplete>
             </div>
-            <div class="col-3">* البلد</div>
+            <div class="col-form-label col-3 text-right">* البلد</div>
         </div>
 
         <div class="form-group row">
             <div class="col-6 offset-3">
                 <input class="form-control" dir="rtl" v-model="clientData.address">
             </div>
-            <div class="col-3">العنوان</div>
+            <div class="col-form-label col-3 text-right">العنوان</div>
         </div>
 
 
@@ -144,6 +145,13 @@
                     required: false,
                     errorMessage: ""
                 },
+                country: {
+                    object: null,
+                    valid: false,
+                    invalid: false,
+                    required: false,
+                    errorMessage: ""
+                },
                 checkNotes: {
                     name: false,
                     mobile: false,
@@ -154,7 +162,6 @@
                 show: false,
                 countries: [],
                 filteredCountries: [],
-                country: null,
                 countryTemplate: CountryTemplate,
                 clientData: {
                     name: null,
@@ -198,10 +205,18 @@
             },
             emptyIfNotSelected() {
                 setTimeout(() => {
-                    if(!this.country){
+                    if(!this.country.object){
                         this.$refs.countryAutocomplete.searchText = '';
                     }
                 },200);
+            },
+            autocompleteBlurHandler(country) {
+                this.emptyIfNotSelected();
+                this.validateCountry(country);
+            },
+            autocompleteItemSelectedHandler(country) {
+                this.selectedCountry(country);
+                this.validateCountry(country);
             },
             validateName(e) {
                 if(!this.clientData.name && e.type === 'blur'){
@@ -259,16 +274,36 @@
                 this.checkNotes.gender = true;
                 this.activateSaveBtn();
             },
-            validateCountry() {
-                if(!this.clientData.gender){
-                    this.gender.invalid = true;
-                    this.checkNotes.country = false;
-                    this.gender.errorMessage = "اختر البلد";
+            invalidCountry($countryInput, message){
+                this.country.errorMessage = message;
+                let invalidFeedback = `<div class="invalid-feedback">
+                            ${this.country.errorMessage}
+                        </div>`;
+                $countryInput.removeClass("is-valid").addClass("is-invalid");
+                this.checkNotes.country = false;
+                this.activateSaveBtn();
+                if($countryInput.parent().children().length < 2)
+                    $(invalidFeedback).insertAfter($countryInput);
+                else $countryInput.next().text(message);
+            },
+            validateCountry(country) {
+                let $countryInput = $("#__BVID__7___BV_modal_outer_ .v-autocomplete-input-group input");
+                if(typeof country === 'object' || this.country.object){
+                    $countryInput.removeClass("is-invalid").addClass("is-valid");
+                    this.checkNotes.country = true;
+                    this.activateSaveBtn();
                     return;
                 }
-                this.gender.invalid = false;
-                this.gender.valid = true;
-                this.checkNotes.country = true;
+                if(!country && !$countryInput.is(':focus')){
+                    this.invalidCountry($countryInput, "ادخل الاسم");
+                    return;
+                }
+                if(typeof country === 'string' && validator.isAlpha(country, "ar")){
+                    this.invalidCountry($countryInput, "حروف انجليزية فقط");
+                    return;
+                }
+                $countryInput.removeClass("is-valid is-invalid");
+                this.checkNotes.country = false;
                 this.activateSaveBtn();
             },
             activateSaveBtn() {
