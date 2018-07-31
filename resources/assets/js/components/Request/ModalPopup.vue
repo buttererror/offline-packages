@@ -130,26 +130,22 @@
                 name: {
                     valid: false,
                     invalid: false,
-                    required: false,
                     errorMessage: ""
                 },
                 mobile: {
                     valid: false,
                     invalid: false,
-                    required: false,
                     errorMessage: ""
                 },
                 gender: {
                     valid: false,
                     invalid: false,
-                    required: false,
                     errorMessage: ""
                 },
                 country: {
                     object: null,
-                    valid: false,
-                    invalid: false,
-                    required: false,
+                    // valid: false,
+                    // invalid: false,
                     errorMessage: ""
                 },
                 checkNotes: {
@@ -191,13 +187,18 @@
                 });
             },
             cancel() {
-                this.validNameStyle = false;
-                this.invalidNameStyle = false;
-                this.validMobileNumber = false;
-                this.invalidMobileNumber = false;
+                let $countryInput = $("#__BVID__7___BV_modal_outer_ .v-autocomplete-input-group input");
+                this.name.valid = false;
+                this.name.invalid = false;
+                this.mobile.valid = false;
+                this.mobile.invalid = false;
+                this.gender.valid = false;
+                this.gender.invalid = false;
+                $countryInput.removeClass("is-valid is-invalid");
                 for (let prop in this.clientData) {
                     this.clientData[prop] = null;
                 }
+                this.country.object = null;
                 this.show = false;
             },
             selectedCountry(country) {
@@ -295,7 +296,7 @@
                     return;
                 }
                 if(!country && !$countryInput.is(':focus')){
-                    this.invalidCountry($countryInput, "ادخل الاسم");
+                    this.invalidCountry($countryInput, "ادخل البلد");
                     return;
                 }
                 if(typeof country === 'string' && validator.isAlpha(country, "ar")){
