@@ -17,6 +17,7 @@ class AccommodationRequestController extends Controller
             abort(400);
         }
         $request->validate([
+            'package_id' => 'required|integer|exists:packages,id',
             'checkin' => 'required|date|after_or_equal:today',
             'checkout' => 'required|date|after:checkin',
             'destination' => 'required|integer',
@@ -32,7 +33,11 @@ class AccommodationRequestController extends Controller
         $this->validateRoomAdultChildMatching($request);
         $data = $request->all();
         $data['destination_id'] = $data['destination'];
-        AccommodationRequest::create($data);
+        $accommodation = AccommodationRequest::create($data);
+        $accommodation->refresh();
+        return response()->json([
+            'accommodation_request' => $accommodation
+        ], 201);
     }
 
     /**

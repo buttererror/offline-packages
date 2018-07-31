@@ -13,7 +13,8 @@ class TransferRequest extends Model
         'time',
         'number_of_adults',
         'number_of_children',
-        'quality'
+        'quality',
+        'package_id'
     ] ;
 
     public function package(){
