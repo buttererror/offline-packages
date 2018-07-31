@@ -47,7 +47,7 @@
         <div class="form-group row mt-4">
             <div class="col-6 offset-3">
                 <select class="form-control" dir="rtl" v-model="clientData.gender"
-                    @change="validateGender"
+                    @blur="validateGender" @select="validateGender"
                         v-bind:class="{'is-invalid': gender.invalid,
                         'is-valid': gender.valid}">
                     <option value="male">ذكر</option>
@@ -144,8 +144,13 @@
                     required: false,
                     errorMessage: ""
                 },
+                checkNotes: {
+                    name: false,
+                    mobile: false,
+                    gender: false,
+                    country: false
+                },
                 disableSaveBtn: true,
-                requiredCheck: 0,
                 show: false,
                 countries: [],
                 filteredCountries: [],
@@ -202,21 +207,29 @@
                 if(!this.clientData.name && e.type === 'blur'){
                     this.name.errorMessage = "ادخل الاسم";
                     this.name.invalid = true;
+                    this.checkNotes.name = false;
+                    this.activateSaveBtn();
                     return;
                 }
                 let trimName = this.clientData.name.split(' ').join("");
                 if(!validator.isAlpha(trimName, 'ar')) {
-                    this.invalidNameStyle = true;
-                    this.validNameStyle = false;
+                    this.name.invalid = true;
+                    this.name.valid = false;
+                    this.checkNotes.name = false;
+                    this.activateSaveBtn();
                     this.name.errorMessage = "ادخل الاسم بحروف عربيه";
                     return;
                 }
                 this.name.invalid = false;
                 this.name.valid = true;
+                this.checkNotes.name = true;
+                this.activateSaveBtn();
             },
             validateMobile(e) {
                 if(!this.clientData.mobile && e.type === "blur"){
                     this.mobile.invalid = true;
+                    this.checkNotes.mobile = false;
+                    this.activateSaveBtn();
                     this.mobile.errorMessage = "ادخل رقم الموبايل";
                     return;
                 }
@@ -225,27 +238,47 @@
                 if(!validator.isMobilePhone(mobileNumber, 'any')){
                     this.mobile.invalid = true;
                     this.mobile.valid = false;
+                    this.checkNotes.mobile = false;
+                    this.activateSaveBtn();
                     this.mobile.errorMessage = "ليس اقل من 3 ارقام";
                     return;
                 }
                 this.mobile.invalid = false;
                 this.mobile.valid = true;
+                this.checkNotes.mobile = true;
+                this.activateSaveBtn();
             },
             validateGender() {
-                console.log("here")
                 if(!this.clientData.gender){
                     this.gender.invalid = true;
-                    this.gender.errorMessage = "ادخل رقم الموبايل";
+                    this.gender.errorMessage = "اختر النوع";
                     return;
                 }
                 this.gender.invalid = false;
                 this.gender.valid = true;
+                this.checkNotes.gender = true;
+                this.activateSaveBtn();
             },
             validateCountry() {
-
+                if(!this.clientData.gender){
+                    this.gender.invalid = true;
+                    this.checkNotes.country = false;
+                    this.gender.errorMessage = "اختر البلد";
+                    return;
+                }
+                this.gender.invalid = false;
+                this.gender.valid = true;
+                this.checkNotes.country = true;
+                this.activateSaveBtn();
             },
             activateSaveBtn() {
-                return this.requiredCheck === 4;
+                for(let checkNote in this.checkNotes){
+                    if(this.checkNotes.hasOwnProperty(checkNote) && !this.checkNotes[checkNote]){
+                        this.disableSaveBtn = true;
+                        return;
+                    }
+                }
+                this.disableSaveBtn = false;
             }
         }
     }

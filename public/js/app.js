@@ -62679,7 +62679,7 @@ exports = module.exports = __webpack_require__(7)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -62844,8 +62844,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 required: false,
                 errorMessage: ""
             },
+            checkNotes: {
+                name: false,
+                mobile: false,
+                gender: false,
+                country: false
+            },
             disableSaveBtn: true,
-            requiredCheck: 0,
             show: false,
             countries: [],
             filteredCountries: [],
@@ -62905,21 +62910,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (!this.clientData.name && e.type === 'blur') {
                 this.name.errorMessage = "ادخل الاسم";
                 this.name.invalid = true;
+                this.checkNotes.name = false;
+                this.activateSaveBtn();
                 return;
             }
             var trimName = this.clientData.name.split(' ').join("");
             if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isAlpha(trimName, 'ar')) {
-                this.invalidNameStyle = true;
-                this.validNameStyle = false;
+                this.name.invalid = true;
+                this.name.valid = false;
+                this.checkNotes.name = false;
+                this.activateSaveBtn();
                 this.name.errorMessage = "ادخل الاسم بحروف عربيه";
                 return;
             }
             this.name.invalid = false;
             this.name.valid = true;
+            this.checkNotes.name = true;
+            this.activateSaveBtn();
         },
         validateMobile: function validateMobile(e) {
             if (!this.clientData.mobile && e.type === "blur") {
                 this.mobile.invalid = true;
+                this.checkNotes.mobile = false;
+                this.activateSaveBtn();
                 this.mobile.errorMessage = "ادخل رقم الموبايل";
                 return;
             }
@@ -62927,25 +62940,47 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isMobilePhone(mobileNumber, 'any')) {
                 this.mobile.invalid = true;
                 this.mobile.valid = false;
+                this.checkNotes.mobile = false;
+                this.activateSaveBtn();
                 this.mobile.errorMessage = "ليس اقل من 3 ارقام";
                 return;
             }
             this.mobile.invalid = false;
             this.mobile.valid = true;
+            this.checkNotes.mobile = true;
+            this.activateSaveBtn();
         },
         validateGender: function validateGender() {
-            console.log("here");
             if (!this.clientData.gender) {
                 this.gender.invalid = true;
-                this.gender.errorMessage = "ادخل رقم الموبايل";
+                this.gender.errorMessage = "اختر النوع";
                 return;
             }
             this.gender.invalid = false;
             this.gender.valid = true;
+            this.checkNotes.gender = true;
+            this.activateSaveBtn();
         },
-        validateCountry: function validateCountry() {},
+        validateCountry: function validateCountry() {
+            if (!this.clientData.gender) {
+                this.gender.invalid = true;
+                this.checkNotes.country = false;
+                this.gender.errorMessage = "اختر البلد";
+                return;
+            }
+            this.gender.invalid = false;
+            this.gender.valid = true;
+            this.checkNotes.country = true;
+            this.activateSaveBtn();
+        },
         activateSaveBtn: function activateSaveBtn() {
-            return this.requiredCheck === 4;
+            for (var checkNote in this.checkNotes) {
+                if (this.checkNotes.hasOwnProperty(checkNote) && !this.checkNotes[checkNote]) {
+                    this.disableSaveBtn = true;
+                    return;
+                }
+            }
+            this.disableSaveBtn = false;
         }
     }
 });
@@ -66032,24 +66067,23 @@ var render = function() {
               },
               attrs: { dir: "rtl" },
               on: {
-                change: [
-                  function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.clientData,
-                      "gender",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  },
-                  _vm.validateGender
-                ]
+                blur: _vm.validateGender,
+                select: _vm.validateGender,
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.$set(
+                    _vm.clientData,
+                    "gender",
+                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                  )
+                }
               }
             },
             [
