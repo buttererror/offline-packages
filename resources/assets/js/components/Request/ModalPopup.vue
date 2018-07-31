@@ -39,7 +39,8 @@
 
         <div class="form-group row">
             <div class="col-6 offset-3">
-                <input class="form-control" dir="rtl" v-model="clientData.email">
+                <input class="form-control" dir="rtl" v-model="clientData.email"
+                    @keyup.enter="validateEmail">
             </div>
             <div class="col-form-label col-3 text-right text-nowrap">البريد الإلكتروني</div>
         </div>
@@ -315,6 +316,15 @@
                     }
                 }
                 this.disableSaveBtn = false;
+            },
+            validateEmail() {
+                axios.get(`/api/client/email/is_unique?email=${this.clientData.email}`)
+                    .then((response) => {
+                        console.log(response.data.unique);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
             }
         }
     }
