@@ -62679,7 +62679,7 @@ exports = module.exports = __webpack_require__(7)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -62698,6 +62698,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_validator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_validator__);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+//
+//
+//
 //
 //
 //
@@ -62830,32 +62833,36 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     },
     data: function data() {
         return {
-            name: {
-                valid: false,
-                invalid: false,
-                errorMessage: ""
-            },
-            mobile: {
-                valid: false,
-                invalid: false,
-                errorMessage: ""
-            },
-            gender: {
-                valid: false,
-                invalid: false,
-                errorMessage: ""
-            },
-            country: {
-                object: null,
-                // valid: false,
-                // invalid: false,
-                errorMessage: ""
-            },
-            checkNotes: {
-                name: false,
-                mobile: false,
-                gender: false,
-                country: false
+            validation: {
+                name: {
+                    valid: false,
+                    invalid: false,
+                    errorMessage: ""
+                },
+                mobile: {
+                    valid: false,
+                    invalid: false,
+                    errorMessage: ""
+                },
+                gender: {
+                    valid: false,
+                    invalid: false,
+                    errorMessage: ""
+                },
+                country: {
+                    errorMessage: ""
+                },
+                email: {
+                    valid: false,
+                    invalid: false,
+                    errorMessage: ""
+                },
+                checkNotes: {
+                    name: false,
+                    mobile: false,
+                    gender: false,
+                    country: false
+                }
             },
             disableSaveBtn: true,
             show: false,
@@ -62865,6 +62872,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             clientData: {
                 name: null,
                 email: null,
+                country: null,
                 mobile: null,
                 country_id: null,
                 gender: null,
@@ -62892,17 +62900,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         cancel: function cancel() {
             var $countryInput = $("#__BVID__7___BV_modal_outer_ .v-autocomplete-input-group input");
-            this.name.valid = false;
-            this.name.invalid = false;
-            this.mobile.valid = false;
-            this.mobile.invalid = false;
-            this.gender.valid = false;
-            this.gender.invalid = false;
+            this.validation.name.valid = false;
+            this.validation.name.invalid = false;
+            this.validation.mobile.valid = false;
+            this.validation.mobile.invalid = false;
+            this.validation.gender.valid = false;
+            this.validation.gender.invalid = false;
             $countryInput.removeClass("is-valid is-invalid");
             for (var prop in this.clientData) {
                 this.clientData[prop] = null;
             }
-            this.country.object = null;
+            for (var check in this.validation.checkNotes) {
+                this.validation.checkNotes[check] = false;
+            }
+            this.activateSaveBtn();
             this.show = false;
         },
         selectedCountry: function selectedCountry(country) {
@@ -62912,7 +62923,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var _this2 = this;
 
             setTimeout(function () {
-                if (!_this2.country.object) {
+                if (!_this2.clientData.country) {
                     _this2.$refs.countryAutocomplete.searchText = '';
                 }
             }, 200);
@@ -62927,72 +62938,72 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         validateName: function validateName(e) {
             if (!this.clientData.name && e.type === 'blur') {
-                this.name.errorMessage = "ادخل الاسم";
-                this.name.invalid = true;
-                this.checkNotes.name = false;
+                this.validation.name.errorMessage = "ادخل الاسم";
+                this.validation.name.invalid = true;
+                this.validation.checkNotes.name = false;
                 this.activateSaveBtn();
                 return;
             }
             var trimName = this.clientData.name.split(' ').join("");
             if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isAlpha(trimName, 'ar')) {
-                this.name.invalid = true;
-                this.name.valid = false;
-                this.checkNotes.name = false;
+                this.validation.name.invalid = true;
+                this.validation.name.valid = false;
+                this.validation.checkNotes.name = false;
                 this.activateSaveBtn();
-                this.name.errorMessage = "ادخل الاسم بحروف عربيه";
+                this.validation.name.errorMessage = "ادخل الاسم بحروف عربيه";
                 return;
             }
-            this.name.invalid = false;
-            this.name.valid = true;
-            this.checkNotes.name = true;
+            this.validation.name.invalid = false;
+            this.validation.name.valid = true;
+            this.validation.checkNotes.name = true;
             this.activateSaveBtn();
         },
         validateMobile: function validateMobile(e) {
             if (!this.clientData.mobile && e.type === "blur") {
-                this.mobile.invalid = true;
-                this.checkNotes.mobile = false;
+                this.validation.mobile.invalid = true;
+                this.validation.checkNotes.mobile = false;
                 this.activateSaveBtn();
-                this.mobile.errorMessage = "ادخل رقم الموبايل";
+                this.validation.mobile.errorMessage = "ادخل رقم الموبايل";
                 return;
             }
             var mobileNumber = this.clientData.mobile[0] === '+' ? this.clientData.mobile.slice(1) : this.clientData.mobile;
             if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isMobilePhone(mobileNumber, 'any')) {
-                this.mobile.invalid = true;
-                this.mobile.valid = false;
-                this.checkNotes.mobile = false;
+                this.validation.mobile.invalid = true;
+                this.validation.mobile.valid = false;
+                this.validation.checkNotes.mobile = false;
                 this.activateSaveBtn();
-                this.mobile.errorMessage = "ليس اقل من 3 ارقام";
+                this.validation.mobile.errorMessage = "ليس اقل من 3 ارقام";
                 return;
             }
-            this.mobile.invalid = false;
-            this.mobile.valid = true;
-            this.checkNotes.mobile = true;
+            this.validation.mobile.invalid = false;
+            this.validation.mobile.valid = true;
+            this.validation.checkNotes.mobile = true;
             this.activateSaveBtn();
         },
         validateGender: function validateGender() {
             if (!this.clientData.gender) {
-                this.gender.invalid = true;
-                this.gender.errorMessage = "اختر النوع";
+                this.validation.gender.invalid = true;
+                this.validation.gender.errorMessage = "اختر النوع";
                 return;
             }
-            this.gender.invalid = false;
-            this.gender.valid = true;
-            this.checkNotes.gender = true;
+            this.validation.gender.invalid = false;
+            this.validation.gender.valid = true;
+            this.validation.checkNotes.gender = true;
             this.activateSaveBtn();
         },
         invalidCountry: function invalidCountry($countryInput, message) {
-            this.country.errorMessage = message;
-            var invalidFeedback = '<div class="invalid-feedback">\n                        ' + this.country.errorMessage + '\n                    </div>';
+            this.validation.country.errorMessage = message;
+            var invalidFeedback = '<div class="invalid-feedback">\n                        ' + this.validation.country.errorMessage + '\n                    </div>';
             $countryInput.removeClass("is-valid").addClass("is-invalid");
-            this.checkNotes.country = false;
+            this.validation.checkNotes.country = false;
             this.activateSaveBtn();
             if ($countryInput.parent().children().length < 2) $(invalidFeedback).insertAfter($countryInput);else $countryInput.next().text(message);
         },
         validateCountry: function validateCountry(country) {
             var $countryInput = $("#__BVID__7___BV_modal_outer_ .v-autocomplete-input-group input");
-            if ((typeof country === 'undefined' ? 'undefined' : _typeof(country)) === 'object' || this.country.object) {
+            if ((typeof country === 'undefined' ? 'undefined' : _typeof(country)) === 'object' || this.clientData.country) {
                 $countryInput.removeClass("is-invalid").addClass("is-valid");
-                this.checkNotes.country = true;
+                this.validation.checkNotes.country = true;
                 this.activateSaveBtn();
                 return;
             }
@@ -63005,12 +63016,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return;
             }
             $countryInput.removeClass("is-valid is-invalid");
-            this.checkNotes.country = false;
+            this.validation.checkNotes.country = false;
             this.activateSaveBtn();
         },
         activateSaveBtn: function activateSaveBtn() {
-            for (var checkNote in this.checkNotes) {
-                if (this.checkNotes.hasOwnProperty(checkNote) && !this.checkNotes[checkNote]) {
+            for (var checkNote in this.validation.checkNotes) {
+                if (this.validation.checkNotes.hasOwnProperty(checkNote) && !this.validation.checkNotes[checkNote]) {
                     this.disableSaveBtn = true;
                     return;
                 }
@@ -63018,6 +63029,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.disableSaveBtn = false;
         },
         validateEmail: function validateEmail() {
+            if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isEmail(this.clientData.email)) {}
             axios.get('/api/client/email/is_unique?email=' + this.clientData.email).then(function (response) {
                 console.log(response.data.unique);
             }).catch(function (err) {
@@ -65970,8 +65982,8 @@ var render = function() {
             ],
             staticClass: "form-control",
             class: {
-              "is-invalid": _vm.name.invalid,
-              "is-valid": _vm.name.valid
+              "is-invalid": _vm.validation.name.invalid,
+              "is-valid": _vm.validation.name.valid
             },
             attrs: { type: "text", dir: "rtl" },
             domProps: { value: _vm.clientData.name },
@@ -65994,11 +66006,11 @@ var render = function() {
             }
           }),
           _vm._v(" "),
-          _vm.name.invalid
+          _vm.validation.name.invalid
             ? _c("div", { staticClass: "invalid-feedback" }, [
                 _vm._v(
                   "\n                " +
-                    _vm._s(_vm.name.errorMessage) +
+                    _vm._s(_vm.validation.name.errorMessage) +
                     "\n            "
                 )
               ])
@@ -66024,8 +66036,8 @@ var render = function() {
             ],
             staticClass: "form-control",
             class: {
-              "is-invalid": _vm.mobile.invalid,
-              "is-valid": _vm.mobile.valid
+              "is-invalid": _vm.validation.mobile.invalid,
+              "is-valid": _vm.validation.mobile.valid
             },
             domProps: { value: _vm.clientData.mobile },
             on: {
@@ -66047,11 +66059,11 @@ var render = function() {
             }
           }),
           _vm._v(" "),
-          _vm.mobile.invalid
+          _vm.validation.mobile.invalid
             ? _c("div", { staticClass: "invalid-feedback" }, [
                 _vm._v(
                   "\n                " +
-                    _vm._s(_vm.mobile.errorMessage) +
+                    _vm._s(_vm.validation.mobile.errorMessage) +
                     "\n            "
                 )
               ])
@@ -66094,7 +66106,17 @@ var render = function() {
                 _vm.$set(_vm.clientData, "email", $event.target.value)
               }
             }
-          })
+          }),
+          _vm._v(" "),
+          _vm.validation.email.invalid
+            ? _c("div", { staticClass: "invalid-feedback" }, [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.validation.gender.errorMessage) +
+                    "\n        "
+                )
+              ])
+            : _vm._e()
         ]),
         _vm._v(" "),
         _c(
@@ -66119,8 +66141,8 @@ var render = function() {
               ],
               staticClass: "form-control",
               class: {
-                "is-invalid": _vm.gender.invalid,
-                "is-valid": _vm.gender.valid
+                "is-invalid": _vm.validation.gender.invalid,
+                "is-valid": _vm.validation.gender.valid
               },
               attrs: { dir: "rtl" },
               on: {
@@ -66152,11 +66174,11 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _vm.gender.invalid
+          _vm.validation.gender.invalid
             ? _c("div", { staticClass: "invalid-feedback" }, [
                 _vm._v(
                   "\n                " +
-                    _vm._s(_vm.gender.errorMessage) +
+                    _vm._s(_vm.validation.gender.errorMessage) +
                     "\n            "
                 )
               ])
@@ -66224,11 +66246,11 @@ var render = function() {
                 change: _vm.validateCountry
               },
               model: {
-                value: _vm.country.object,
+                value: _vm.clientData.country,
                 callback: function($$v) {
-                  _vm.$set(_vm.country, "object", $$v)
+                  _vm.$set(_vm.clientData, "country", $$v)
                 },
-                expression: "country.object"
+                expression: "clientData.country"
               }
             })
           ],
