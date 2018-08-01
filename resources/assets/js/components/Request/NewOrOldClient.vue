@@ -9,7 +9,8 @@
             <div class="row mt-4">
                 <div class="col-6 offset-3">
                     <autocomplete dir="rtl" :items="clients" v-model="client" :get-label="getLabel"
-                                  :component-item='clientTemplate' @update-items="updateItems" :min-len="0">
+                                  :component-item='clientTemplate'
+                                  @update-items="updateItems" :min-len="0">
                     </autocomplete>
                 </div>
             </div>
@@ -37,6 +38,11 @@
     export default {
         components: {
             Autocomplete,
+        },
+        mounted() {
+            bus.$on('new-client-saved', (client) => {
+                this.client = client;
+            });
         },
         data() {
             return {

@@ -62289,6 +62289,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -62296,6 +62297,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
         Autocomplete: __WEBPACK_IMPORTED_MODULE_0_v_autocomplete___default.a
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        bus.$on('new-client-saved', function (client) {
+            _this.client = client;
+        });
     },
     data: function data() {
         return {
@@ -62313,7 +62321,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return '';
         },
         updateItems: function updateItems(text) {
-            var _this = this;
+            var _this2 = this;
 
             if (!text) {
                 this.clients = [];
@@ -62324,7 +62332,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     searchText: text
                 }
             }).then(function (response) {
-                _this.clients = response.data;
+                _this2.clients = response.data;
             });
         },
         handleNewClientClicked: function handleNewClientClicked() {
