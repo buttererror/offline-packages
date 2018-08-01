@@ -258,12 +258,13 @@
                     return;
                 }
                 let trimName = this.clientData.name.split(' ').join("");
-                if(!validator.isAlpha(trimName, 'ar')) {
+                if(!validator.isAlpha(trimName, 'ar') &&
+                    !validator.isAlpha(trimName, 'en-US')) {
                     this.validation.name.invalid = true;
                     this.validation.name.valid = false;
                     this.validation.checkNotes.name = false;
                     this.activateSaveBtn();
-                    this.validation.name.errorMessage = "ادخل الاسم بحروف عربيه";
+                    this.validation.name.errorMessage = "حروف فقط";
                     return;
                 }
                 this.validation.name.invalid = false;
