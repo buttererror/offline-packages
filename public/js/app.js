@@ -62679,7 +62679,7 @@ exports = module.exports = __webpack_require__(7)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -62698,6 +62698,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_validator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_validator__);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+//
+//
 //
 //
 //
@@ -63028,13 +63030,40 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
             this.disableSaveBtn = false;
         },
+        invalidEmail: function invalidEmail(message) {
+            this.validation.email.invalid = true;
+            this.validation.email.valid = false;
+            this.validation.email.errorMessage = message;
+            return true;
+        },
         validateEmail: function validateEmail() {
-            if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isEmail(this.clientData.email)) {}
-            axios.get('/api/client/email/is_unique?email=' + this.clientData.email).then(function (response) {
-                console.log(response.data.unique);
-            }).catch(function (err) {
-                console.log(err);
-            });
+            var _this3 = this;
+
+            // empty field
+            this.invalidEmail("");
+            this.validation.email.invalid = false;
+            this.validation.email.valid = false;
+            if (this.clientData.email) {
+                axios.get('/api/client/email/is_unique?email=' + this.clientData.email).then(function (response) {
+                    if (!response.data.unique) {
+                        // is unique validation
+                        return _this3.invalidEmail("الايميل موجود");
+                    }
+                }).then(function () {
+                    console.log(_this3.clientData.email);
+                    if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isEmail(_this3.clientData.email)) {
+                        // is email validation
+                        _this3.invalidEmail("الايميل غير صالح");
+                    } else {
+                        // valid email
+                        _this3.invalidEmail("");
+                        _this3.validation.email.invalid = false;
+                        _this3.validation.email.valid = true;
+                    }
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            }
         }
     }
 });
@@ -66087,7 +66116,10 @@ var render = function() {
               }
             ],
             staticClass: "form-control",
-            attrs: { dir: "rtl" },
+            class: {
+              "is-invalid": _vm.validation.email.invalid,
+              "is-valid": _vm.validation.email.valid
+            },
             domProps: { value: _vm.clientData.email },
             on: {
               keyup: function($event) {
@@ -66112,7 +66144,7 @@ var render = function() {
             ? _c("div", { staticClass: "invalid-feedback" }, [
                 _vm._v(
                   "\n            " +
-                    _vm._s(_vm.validation.gender.errorMessage) +
+                    _vm._s(_vm.validation.email.errorMessage) +
                     "\n        "
                 )
               ])

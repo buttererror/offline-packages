@@ -39,10 +39,12 @@
 
         <div class="form-group row">
             <div class="col-6 offset-3">
-                <input class="form-control" dir="rtl" v-model="clientData.email"
-                    @keyup.enter="validateEmail">
+                <input class="form-control" v-model="clientData.email"
+                    @keyup.enter="validateEmail"
+                       v-bind:class="{'is-invalid': validation.email.invalid,
+                        'is-valid': validation.email.valid}">
                 <div class="invalid-feedback" v-if="validation.email.invalid">
-                {{validation.gender.errorMessage}}
+                {{validation.email.errorMessage}}
             </div>
             </div>
             <div class="col-form-label col-3 text-right text-nowrap">البريد الإلكتروني</div>
@@ -328,17 +330,38 @@
                 }
                 this.disableSaveBtn = false;
             },
+            invalidEmail(message) {
+                this.validation.email.invalid = true;
+                this.validation.email.valid = false;
+                this.validation.email.errorMessage = message;
+                return true;
+            },
             validateEmail() {
-                if(!validator.isEmail(this.clientData.email)){
-
+                // empty field
+                this.invalidEmail("");
+                this.validation.email.invalid = false;
+                this.validation.email.valid = false;
+                if(this.clientData.email){
+                    axios.get(`/api/client/email/is_unique?email=${this.clientData.email}`)
+                        .then((response) => {
+                            if(!response.data.unique){ // is unique validation
+                                return this.invalidEmail("الايميل موجود");
+                            }
+                        })
+                        .then(() => {
+                            console.log(this.clientData.email)
+                            if(!validator.isEmail(this.clientData.email)){ // is email validation
+                                this.invalidEmail("الايميل غير صالح");
+                            }else{ // valid email
+                                this.invalidEmail("");
+                                this.validation.email.invalid = false;
+                                this.validation.email.valid = true;                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 }
-                axios.get(`/api/client/email/is_unique?email=${this.clientData.email}`)
-                    .then((response) => {
-                        console.log(response.data.unique);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
+
             }
         }
     }
