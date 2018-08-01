@@ -62679,7 +62679,7 @@ exports = module.exports = __webpack_require__(7)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -62698,6 +62698,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_validator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_validator__);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+//
 //
 //
 //
@@ -62863,6 +62864,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     name: false,
                     mobile: false,
                     gender: false,
+                    email: true,
                     country: false
                 }
             },
@@ -62908,6 +62910,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.validation.mobile.invalid = false;
             this.validation.gender.valid = false;
             this.validation.gender.invalid = false;
+            this.validation.email.valid = false;
+            this.validation.email.invalid = false;
             $countryInput.removeClass("is-valid is-invalid");
             for (var prop in this.clientData) {
                 this.clientData[prop] = null;
@@ -62960,27 +62964,45 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.validation.checkNotes.name = true;
             this.activateSaveBtn();
         },
-        validateMobile: function validateMobile(e) {
-            if (!this.clientData.mobile && e.type === "blur") {
-                this.validation.mobile.invalid = true;
-                this.validation.checkNotes.mobile = false;
-                this.activateSaveBtn();
-                this.validation.mobile.errorMessage = "ادخل رقم الموبايل";
-                return;
-            }
-            var mobileNumber = this.clientData.mobile[0] === '+' ? this.clientData.mobile.slice(1) : this.clientData.mobile;
-            if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isMobilePhone(mobileNumber, 'any')) {
-                this.validation.mobile.invalid = true;
-                this.validation.mobile.valid = false;
-                this.validation.checkNotes.mobile = false;
-                this.activateSaveBtn();
-                this.validation.mobile.errorMessage = "ليس اقل من 3 ارقام";
-                return;
-            }
-            this.validation.mobile.invalid = false;
-            this.validation.mobile.valid = true;
-            this.validation.checkNotes.mobile = true;
+        invalidMobile: function invalidMobile(message) {
+            this.validation.mobile.invalid = true;
+            this.validation.mobile.valid = false;
+            this.validation.checkNotes.mobile = false;
             this.activateSaveBtn();
+            this.validation.mobile.errorMessage = message;
+        },
+        validateMobile: function validateMobile(e) {
+            var _this3 = this;
+
+            if (this.clientData.mobile) {
+                // not to send empty query
+                axios.get('/api/client/mobile/is_unique?mobile=' + this.clientData.mobile).then(function (response) {
+                    // is unique validation~1
+                    if (response.data.unique) {
+                        var mobileNumber = _this3.clientData.mobile[0] === '+' ? _this3.clientData.mobile.slice(1) : _this3.clientData.mobile;
+                        if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isMobilePhone(mobileNumber, 'any') && e.type === "input") {
+                            // is number, not less 3 numbers validation~3
+                            return _this3.invalidMobile("ارقام فقط وليس اقل من 3 ارقام");
+                        }
+                        // green style success validation~4
+                        _this3.validation.mobile.invalid = false;
+                        _this3.validation.mobile.valid = true;
+                        _this3.validation.checkNotes.mobile = true;
+                        _this3.activateSaveBtn();
+                    } else {
+                        return Promise.reject(new Error("mobile-taken"));
+                    } // is unique validation
+                }).catch(function (err) {
+                    if (err.message === "mobile-taken") {
+                        // is unique validation
+                        _this3.invalidMobile("الموبايل موجود");
+                    } else {
+                        console.log(err);
+                    }
+                });
+            } else if (!this.clientData.mobile && e.type === "blur") {
+                return this.invalidMobile("ادخل رقم الموبايل");
+            } // is empty validation~2
         },
         validateGender: function validateGender() {
             if (!this.clientData.gender) {
@@ -63034,32 +63056,55 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.validation.email.invalid = true;
             this.validation.email.valid = false;
             this.validation.email.errorMessage = message;
-            return true;
+            this.validation.checkNotes.email = false;
+            this.activateSaveBtn();
         },
-        validateEmail: function validateEmail() {
-            var _this3 = this;
+        validateEmail: function validateEmail(e) {
+            var _this4 = this;
 
-            // empty field
-            this.invalidEmail("");
-            this.validation.email.invalid = false;
-            this.validation.email.valid = false;
-            if (this.clientData.email) {
+            if (e.type === "input") {
+                var string = this.clientData.email.slice(this.clientData.email.lastIndexOf(".com"));
+                this.validation.email.invalid = false;
+                this.validation.email.valid = false;
+                // prevent save button from flashing while editing and ".com" exists
+                if (string !== ".com") this.validation.checkNotes.email = false;
+                // enable save button while empty field
+                if (!this.clientData.email) this.validation.checkNotes.email = true;
+                this.activateSaveBtn();
+            } // blue style @input
+            if (this.clientData.email && (e.type === "keyup" || e.type === "blur") || string === ".com" && e.type === "input") {
                 axios.get('/api/client/email/is_unique?email=' + this.clientData.email).then(function (response) {
-                    if (!response.data.unique) {
-                        // is unique validation
-                        return _this3.invalidEmail("الايميل موجود");
-                    }
-                }).then(function () {
-                    console.log(_this3.clientData.email);
-                    if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isEmail(_this3.clientData.email)) {
-                        // is email validation
-                        _this3.invalidEmail("الايميل غير صالح");
+                    if (response.data.unique) {
+                        // is unique validation~1
+                        if (!__WEBPACK_IMPORTED_MODULE_2_validator___default.a.isEmail(_this4.clientData.email)) {
+                            // is email validation~2
+                            _this4.invalidEmail("الايميل غير صالح");
+                        } else {
+                            _this4.validation.email.invalid = false;
+                            _this4.validation.email.valid = true;
+                            _this4.validation.checkNotes.email = true;
+                            _this4.activateSaveBtn();
+                        } // green style success validation~3
                     } else {
-                        // valid email
-                        _this3.invalidEmail("");
-                        _this3.validation.email.invalid = false;
-                        _this3.validation.email.valid = true;
+                        return Promise.reject(new Error("email-taken"));
                     }
+                }).catch(function (err) {
+                    if (err.message === "email-taken") {
+                        // is unique validation
+                        _this4.invalidEmail("الايميل موجود");
+                    } else {
+                        console.log(err);
+                    }
+                });
+            } // not to send empty query, check email @blur or enter and check email @input ".com"
+        },
+        saveData: function saveData() {
+            var _this5 = this;
+
+            if (!this.disableSaveBtn) {
+                axios.post("api/client", this.clientData).then(function (response) {
+                    console.log(response.data);
+                    _this5.show = false;
                 }).catch(function (err) {
                     console.log(err);
                 });
@@ -66131,12 +66176,16 @@ var render = function() {
                 }
                 return _vm.validateEmail($event)
               },
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.clientData, "email", $event.target.value)
-              }
+              input: [
+                function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.clientData, "email", $event.target.value)
+                },
+                _vm.validateEmail
+              ],
+              blur: _vm.validateEmail
             }
           }),
           _vm._v(" "),
@@ -66336,7 +66385,8 @@ var render = function() {
             "button",
             {
               staticClass: "btn btn-primary pull-left",
-              class: { disabled: _vm.disableSaveBtn }
+              class: { disabled: _vm.disableSaveBtn },
+              on: { click: _vm.saveData }
             },
             [_vm._v("\n            حفظ\n        ")]
           ),

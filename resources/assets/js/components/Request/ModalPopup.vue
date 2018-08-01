@@ -40,7 +40,7 @@
         <div class="form-group row">
             <div class="col-6 offset-3">
                 <input class="form-control" v-model="clientData.email"
-                    @keyup.enter="validateEmail"
+                    @keyup.enter="validateEmail" @input="validateEmail" @blur="validateEmail"
                        v-bind:class="{'is-invalid': validation.email.invalid,
                         'is-valid': validation.email.valid}">
                 <div class="invalid-feedback" v-if="validation.email.invalid">
@@ -106,7 +106,8 @@
 
 
         <div slot="modal-footer" class="w-100">
-            <button class="btn btn-primary pull-left" v-bind:class="{'disabled': disableSaveBtn}">
+            <button class="btn btn-primary pull-left" @click="saveData"
+                    v-bind:class="{'disabled': disableSaveBtn}">
                 حفظ
             </button>
             <button @click="cancel" class="btn btn-danger pull-left">الغاء</button>
@@ -161,6 +162,7 @@
                         name: false,
                         mobile: false,
                         gender: false,
+                        email: true,
                         country: false
                     }
                 },
@@ -205,6 +207,8 @@
                 this.validation.mobile.invalid = false;
                 this.validation.gender.valid = false;
                 this.validation.gender.invalid = false;
+                this.validation.email.valid = false;
+                this.validation.email.invalid = false;
                 $countryInput.removeClass("is-valid is-invalid");
                 for (let prop in this.clientData) {
                     this.clientData[prop] = null;
@@ -255,28 +259,44 @@
                 this.validation.checkNotes.name = true;
                 this.activateSaveBtn();
             },
-            validateMobile(e) {
-                if(!this.clientData.mobile && e.type === "blur"){
-                    this.validation.mobile.invalid = true;
-                    this.validation.checkNotes.mobile = false;
-                    this.activateSaveBtn();
-                    this.validation.mobile.errorMessage = "ادخل رقم الموبايل";
-                    return;
-                }
-                let mobileNumber = this.clientData.mobile[0] === '+' ? this.clientData.mobile.slice(1)
-                    : this.clientData.mobile;
-                if(!validator.isMobilePhone(mobileNumber, 'any')){
-                    this.validation.mobile.invalid = true;
-                    this.validation.mobile.valid = false;
-                    this.validation.checkNotes.mobile = false;
-                    this.activateSaveBtn();
-                    this.validation.mobile.errorMessage = "ليس اقل من 3 ارقام";
-                    return;
-                }
-                this.validation.mobile.invalid = false;
-                this.validation.mobile.valid = true;
-                this.validation.checkNotes.mobile = true;
+            invalidMobile(message) {
+                this.validation.mobile.invalid = true;
+                this.validation.mobile.valid = false;
+                this.validation.checkNotes.mobile = false;
                 this.activateSaveBtn();
+                this.validation.mobile.errorMessage = message;
+            },
+            validateMobile(e) {
+                if(this.clientData.mobile){ // not to send empty query
+                    axios.get(`/api/client/mobile/is_unique?mobile=${this.clientData.mobile}`)
+                        .then((response) => { // is unique validation~1
+                            if(response.data.unique){
+                                let mobileNumber = this.clientData.mobile[0] === '+' ? this.clientData.mobile.slice(1)
+                                    : this.clientData.mobile;
+                                if(!validator.isMobilePhone(mobileNumber, 'any') &&
+                                     e.type === "input"){
+                                    // is number, not less 3 numbers validation~3
+                                    return this.invalidMobile("ارقام فقط وليس اقل من 3 ارقام");
+                                }
+                                // green style success validation~4
+                                this.validation.mobile.invalid = false;
+                                this.validation.mobile.valid = true;
+                                this.validation.checkNotes.mobile = true;
+                                this.activateSaveBtn();
+                            }else {
+                                return Promise.reject(new Error("mobile-taken"));
+                            } // is unique validation
+                        })
+                        .catch((err) => {
+                            if(err.message === "mobile-taken"){ // is unique validation
+                                this.invalidMobile("الموبايل موجود");
+                            }else {
+                                console.log(err);
+                            }
+                        });
+                }else if(!this.clientData.mobile && e.type === "blur"){
+                    return this.invalidMobile("ادخل رقم الموبايل");
+                } // is empty validation~2
             },
             validateGender() {
                 if(!this.clientData.gender){
@@ -334,34 +354,57 @@
                 this.validation.email.invalid = true;
                 this.validation.email.valid = false;
                 this.validation.email.errorMessage = message;
-                return true;
+                this.validation.checkNotes.email = false;
+                this.activateSaveBtn();
             },
-            validateEmail() {
-                // empty field
-                this.invalidEmail("");
-                this.validation.email.invalid = false;
-                this.validation.email.valid = false;
-                if(this.clientData.email){
+            validateEmail(e) {
+                if(e.type === "input"){
+                    var string = this.clientData.email.slice(this.clientData.email.lastIndexOf(".com"));
+                    this.validation.email.invalid = false;
+                    this.validation.email.valid = false;
+                    // prevent save button from flashing while editing and ".com" exists
+                    if(string !== ".com") this.validation.checkNotes.email = false;
+                    // enable save button while empty field
+                    if(!this.clientData.email) this.validation.checkNotes.email = true;
+                    this.activateSaveBtn();
+                } // blue style @input
+                if(this.clientData.email && (e.type === "keyup" || e.type === "blur")
+                    || (string === ".com" && e.type === "input")) {
                     axios.get(`/api/client/email/is_unique?email=${this.clientData.email}`)
                         .then((response) => {
-                            if(!response.data.unique){ // is unique validation
-                                return this.invalidEmail("الايميل موجود");
+                            if (response.data.unique) { // is unique validation~1
+                                if (!validator.isEmail(this.clientData.email)) { // is email validation~2
+                                    this.invalidEmail("الايميل غير صالح");
+                                } else {
+                                    this.validation.email.invalid = false;
+                                    this.validation.email.valid = true;
+                                    this.validation.checkNotes.email = true;
+                                    this.activateSaveBtn();
+                                } // green style success validation~3
+                            }else {
+                                return Promise.reject(new Error("email-taken"));
                             }
                         })
-                        .then(() => {
-                            console.log(this.clientData.email)
-                            if(!validator.isEmail(this.clientData.email)){ // is email validation
-                                this.invalidEmail("الايميل غير صالح");
-                            }else{ // valid email
-                                this.invalidEmail("");
-                                this.validation.email.invalid = false;
-                                this.validation.email.valid = true;                            }
+                        .catch((err) => {
+                            if(err.message === "email-taken"){ // is unique validation
+                                this.invalidEmail("الايميل موجود");
+                            }else {
+                                console.log(err);
+                            }
+                        });
+                } // not to send empty query, check email @blur or enter and check email @input ".com"
+            },
+            saveData() {
+                if(!this.disableSaveBtn){
+                    axios.post("api/client", this.clientData)
+                        .then((response) => {
+                            console.log(response.data);
+                            this.show = false;
                         })
                         .catch((err) => {
                             console.log(err);
                         });
                 }
-
             }
         }
     }
