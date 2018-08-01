@@ -329,7 +329,7 @@
                     this.activateSaveBtn();
                     return;
                 }
-                if(!country && !$countryInput.is(':focus')){
+                if(!this.clientData.country && !$countryInput.is(':focus')){
                     this.invalidCountry($countryInput, "ادخل البلد");
                     return;
                 }
@@ -398,7 +398,7 @@
                 if(!this.disableSaveBtn){
                     axios.post("api/client", this.clientData)
                         .then((response) => {
-                            console.log(response.data);
+                            bus.$emit('new-client-saved', response.data.client);
                             this.show = false;
                         })
                         .catch((err) => {

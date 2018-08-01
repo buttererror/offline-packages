@@ -63031,7 +63031,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 this.activateSaveBtn();
                 return;
             }
-            if (!country && !$countryInput.is(':focus')) {
+            if (!this.clientData.country && !$countryInput.is(':focus')) {
                 this.invalidCountry($countryInput, "ادخل البلد");
                 return;
             }
@@ -63103,7 +63103,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             if (!this.disableSaveBtn) {
                 axios.post("api/client", this.clientData).then(function (response) {
-                    console.log(response.data);
+                    bus.$emit('new-client-saved', response.data.client);
                     _this5.show = false;
                 }).catch(function (err) {
                     console.log(err);
