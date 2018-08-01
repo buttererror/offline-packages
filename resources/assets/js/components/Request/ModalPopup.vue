@@ -199,7 +199,7 @@
                     return country.en_short_name.toLowerCase().startsWith(text.toLowerCase());
                 });
             },
-            cancel() {
+            removeValidationStyle() {
                 let $countryInput = $("#__BVID__7___BV_modal_outer_ .v-autocomplete-input-group input");
                 this.validation.name.valid = false;
                 this.validation.name.invalid = false;
@@ -210,14 +210,26 @@
                 this.validation.email.valid = false;
                 this.validation.email.invalid = false;
                 $countryInput.removeClass("is-valid is-invalid");
+            },
+            removeFormData() {
                 for (let prop in this.clientData) {
                     this.clientData[prop] = null;
                 }
+            },
+            deactivateSaveBtn() {
                 for (let check in this.validation.checkNotes){
                     this.validation.checkNotes[check] = false;
                 }
                 this.activateSaveBtn();
+            },
+            hidePopUpModal() {
                 this.show = false;
+            },
+            cancel() {
+                this.removeValidationStyle();
+                this.removeFormData();
+                this.deactivateSaveBtn();
+                this.hidePopUpModal();
             },
             selectedCountry(country) {
                 this.clientData.country_id = country.id;
@@ -399,7 +411,10 @@
                     axios.post("api/client", this.clientData)
                         .then((response) => {
                             bus.$emit('new-client-saved', response.data.client);
-                            this.show = false;
+                            this.hidePopUpModal();
+                            this.removeValidationStyle();
+                            this.removeFormData();
+                            this.deactivateSaveBtn();
                         })
                         .catch((err) => {
                             console.log(err);

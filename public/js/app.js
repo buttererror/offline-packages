@@ -62679,7 +62679,7 @@ exports = module.exports = __webpack_require__(7)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -62902,7 +62902,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return country.en_short_name.toLowerCase().startsWith(text.toLowerCase());
             });
         },
-        cancel: function cancel() {
+        removeValidationStyle: function removeValidationStyle() {
             var $countryInput = $("#__BVID__7___BV_modal_outer_ .v-autocomplete-input-group input");
             this.validation.name.valid = false;
             this.validation.name.invalid = false;
@@ -62913,14 +62913,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.validation.email.valid = false;
             this.validation.email.invalid = false;
             $countryInput.removeClass("is-valid is-invalid");
+        },
+        removeFormData: function removeFormData() {
             for (var prop in this.clientData) {
                 this.clientData[prop] = null;
             }
+        },
+        deactivateSaveBtn: function deactivateSaveBtn() {
             for (var check in this.validation.checkNotes) {
                 this.validation.checkNotes[check] = false;
             }
             this.activateSaveBtn();
+        },
+        hidePopUpModal: function hidePopUpModal() {
             this.show = false;
+        },
+        cancel: function cancel() {
+            this.removeValidationStyle();
+            this.removeFormData();
+            this.deactivateSaveBtn();
+            this.hidePopUpModal();
         },
         selectedCountry: function selectedCountry(country) {
             this.clientData.country_id = country.id;
@@ -63104,7 +63116,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (!this.disableSaveBtn) {
                 axios.post("api/client", this.clientData).then(function (response) {
                     bus.$emit('new-client-saved', response.data.client);
-                    _this5.show = false;
+                    _this5.hidePopUpModal();
+                    _this5.removeValidationStyle();
+                    _this5.removeFormData();
+                    _this5.deactivateSaveBtn();
                 }).catch(function (err) {
                     console.log(err);
                 });
