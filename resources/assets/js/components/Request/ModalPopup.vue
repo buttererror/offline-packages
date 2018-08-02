@@ -15,8 +15,9 @@
                 <input type="text"
                        dir="rtl" v-model.trim="clientData.name" class="form-control"
                        @input="validateName" @blur="validateName"
-                       v-bind:class="{'is-invalid': validation.name.invalid, 'is-valid': validation.name.valid}">
-                <div class="invalid-feedback" v-if="validation.name.invalid">
+                       v-bind:class="{'is-invalid': validation.name.state === 'invalid',
+                       'is-valid': validation.name.state === 'valid'}">
+                <div class="invalid-feedback" v-if="validation.name.state === 'invalid'">
                     {{validation.name.errorMessage}}
                 </div>
             </div>
@@ -28,9 +29,9 @@
             <div class="col-6 offset-3">
                 <input class="form-control" @input="validateMobile" @blur="validateMobile"
                        v-model.trim="clientData.mobile"
-                       v-bind:class="{'is-invalid': validation.mobile.invalid,
-                        'is-valid': validation.mobile.valid}">
-                <div class="invalid-feedback" v-if="validation.mobile.invalid">
+                       v-bind:class="{'is-invalid': validation.mobile.state === 'invalid',
+                        'is-valid': validation.mobile.state === 'valid'}">
+                <div class="invalid-feedback" v-if="validation.mobile.state === 'invalid'">
                     {{validation.mobile.errorMessage}}
                 </div>
             </div>
@@ -41,9 +42,9 @@
             <div class="col-6 offset-3">
                 <input class="form-control" v-model="clientData.email"
                     @keyup.enter="validateEmail" @input="validateEmail" @blur="validateEmail"
-                       v-bind:class="{'is-invalid': validation.email.invalid,
-                        'is-valid': validation.email.valid}">
-                <div class="invalid-feedback" v-if="validation.email.invalid">
+                       v-bind:class="{'is-invalid': validation.email.state === 'invalid',
+                        'is-valid': validation.email.state === 'valid'}">
+                <div class="invalid-feedback" v-if="validation.email.state === 'invalid'">
                 {{validation.email.errorMessage}}
             </div>
             </div>
@@ -54,12 +55,12 @@
             <div class="col-6 offset-3">
                 <select class="form-control" dir="rtl" v-model="clientData.gender"
                     @blur="validateGender" @change="validateGender"
-                        v-bind:class="{'is-invalid': validation.gender.invalid,
-                        'is-valid': validation.gender.valid}">
+                        v-bind:class="{'is-invalid': validation.gender.state === 'invalid',
+                        'is-valid': validation.gender.state === 'valid'}">
                     <option value="male">ذكر</option>
                     <option value="female">أنثى</option>
                 </select>
-                <div class="invalid-feedback" v-if="validation.gender.invalid">
+                <div class="invalid-feedback" v-if="validation.gender.state === 'invalid'">
                     {{validation.gender.errorMessage}}
                 </div>
             </div>
@@ -136,29 +137,25 @@
             return {
                 validation: {
                     name: {
-                        valid: false,
-                        invalid: false,
+                        state: "normal",
                         errorMessage: ""
                     },
                     mobile: {
-                        valid: false,
-                        invalid: false,
+                        state: "normal",
                         errorMessage: ""
                     },
                     gender: {
-                        valid: false,
-                        invalid: false,
+                        state: "normal",
                         errorMessage: ""
                     },
                     country: {
                         errorMessage: ""
                     },
                     email: {
-                        valid: false,
-                        invalid: false,
+                        state: "normal",
                         errorMessage: ""
                     },
-                    checkNotes: {
+                    checkList: {
                         name: false,
                         mobile: false,
                         gender: false,
@@ -201,14 +198,10 @@
             },
             removeValidationStyle() {
                 let $countryInput = $("#__BVID__7___BV_modal_outer_ .v-autocomplete-input-group input");
-                this.validation.name.valid = false;
-                this.validation.name.invalid = false;
-                this.validation.mobile.valid = false;
-                this.validation.mobile.invalid = false;
-                this.validation.gender.valid = false;
-                this.validation.gender.invalid = false;
-                this.validation.email.valid = false;
-                this.validation.email.invalid = false;
+                this.validation.name.state = "normal";
+                this.validation.mobile.state = "normal";
+                this.validation.gender.state = "normal";
+                this.validation.email.state = "normal";
                 $countryInput.removeClass("is-valid is-invalid");
             },
             removeFormData() {
@@ -217,8 +210,8 @@
                 }
             },
             deactivateSaveBtn() {
-                for (let check in this.validation.checkNotes){
-                    this.validation.checkNotes[check] = false;
+                for (let item in this.validation.checkList){
+                    this.validation.checkList[item] = false;
                 }
                 this.activateSaveBtn();
             },
@@ -252,30 +245,27 @@
             validateName(e) {
                 if(!this.clientData.name && e.type === 'blur'){
                     this.validation.name.errorMessage = "ادخل الاسم";
-                    this.validation.name.invalid = true;
-                    this.validation.checkNotes.name = false;
+                    this.validation.name.state = 'invalid';
+                    this.validation.checkList.name = false;
                     this.activateSaveBtn();
                     return;
                 }
                 let trimName = this.clientData.name.split(' ').join("");
                 if(!validator.isAlpha(trimName, 'ar') &&
                     !validator.isAlpha(trimName, 'en-US')) {
-                    this.validation.name.invalid = true;
-                    this.validation.name.valid = false;
-                    this.validation.checkNotes.name = false;
+                    this.validation.name.state = 'invalid';
+                    this.validation.checkList.name = false;
                     this.activateSaveBtn();
                     this.validation.name.errorMessage = "حروف فقط";
                     return;
                 }
-                this.validation.name.invalid = false;
-                this.validation.name.valid = true;
-                this.validation.checkNotes.name = true;
+                this.validation.name.state = 'valid';
+                this.validation.checkList.name = true;
                 this.activateSaveBtn();
             },
             invalidMobile(message) {
-                this.validation.mobile.invalid = true;
-                this.validation.mobile.valid = false;
-                this.validation.checkNotes.mobile = false;
+                this.validation.mobile.state = "invalid";
+                this.validation.checkList.mobile = false;
                 this.activateSaveBtn();
                 this.validation.mobile.errorMessage = message;
             },
@@ -292,9 +282,8 @@
                                     return this.invalidMobile("ارقام فقط وليس اقل من 3 ارقام");
                                 }
                                 // green style success validation~4
-                                this.validation.mobile.invalid = false;
-                                this.validation.mobile.valid = true;
-                                this.validation.checkNotes.mobile = true;
+                                this.validation.mobile.state = "valid";
+                                this.validation.checkList.mobile = true;
                                 this.activateSaveBtn();
                             }else {
                                 return Promise.reject(new Error("mobile-taken"));
@@ -313,13 +302,12 @@
             },
             validateGender() {
                 if(!this.clientData.gender){
-                    this.validation.gender.invalid = true;
+                    this.validation.gender.state = "invalid";
                     this.validation.gender.errorMessage = "اختر النوع";
                     return;
                 }
-                this.validation.gender.invalid = false;
-                this.validation.gender.valid = true;
-                this.validation.checkNotes.gender = true;
+                this.validation.gender.state = "valid";
+                this.validation.checkList.gender = true;
                 this.activateSaveBtn();
             },
             invalidCountry($countryInput, message){
@@ -328,7 +316,7 @@
                             ${this.validation.country.errorMessage}
                         </div>`;
                 $countryInput.removeClass("is-valid").addClass("is-invalid");
-                this.validation.checkNotes.country = false;
+                this.validation.checkList.country = false;
                 this.activateSaveBtn();
                 if($countryInput.parent().children().length < 2)
                     $(invalidFeedback).insertAfter($countryInput);
@@ -338,7 +326,7 @@
                 let $countryInput = $("#__BVID__7___BV_modal_outer_ .v-autocomplete-input-group input");
                 if(typeof country === 'object' || this.clientData.country){
                     $countryInput.removeClass("is-invalid").addClass("is-valid");
-                    this.validation.checkNotes.country = true;
+                    this.validation.checkList.country = true;
                     this.activateSaveBtn();
                     return;
                 }
@@ -351,12 +339,12 @@
                     return;
                 }
                 $countryInput.removeClass("is-valid is-invalid");
-                this.validation.checkNotes.country = false;
+                this.validation.checkList.country = false;
                 this.activateSaveBtn();
             },
             activateSaveBtn() {
-                for(let checkNote in this.validation.checkNotes){
-                    if(this.validation.checkNotes.hasOwnProperty(checkNote) && !this.validation.checkNotes[checkNote]){
+                for(let checkNote in this.validation.checkList){
+                    if(this.validation.checkList.hasOwnProperty(checkNote) && !this.validation.checkList[checkNote]){
                         this.disableSaveBtn = true;
                         return;
                     }
@@ -364,21 +352,19 @@
                 this.disableSaveBtn = false;
             },
             invalidEmail(message) {
-                this.validation.email.invalid = true;
-                this.validation.email.valid = false;
+                this.validation.email.state = "invalid";
                 this.validation.email.errorMessage = message;
-                this.validation.checkNotes.email = false;
+                this.validation.checkList.email = false;
                 this.activateSaveBtn();
             },
             validateEmail(e) {
                 if(e.type === "input"){
                     var string = this.clientData.email.slice(this.clientData.email.lastIndexOf(".com"));
-                    this.validation.email.invalid = false;
-                    this.validation.email.valid = false;
+                    this.validation.email.state = "normal";
                     // prevent save button from flashing while editing and ".com" exists
-                    if(string !== ".com") this.validation.checkNotes.email = false;
+                    if(string !== ".com") this.validation.checkList.email = false;
                     // enable save button while empty field
-                    if(!this.clientData.email) this.validation.checkNotes.email = true;
+                    if(!this.clientData.email) this.validation.checkList.email = true;
                     this.activateSaveBtn();
                 } // blue style @input
                 if(this.clientData.email && (e.type === "keyup" || e.type === "blur")
@@ -389,9 +375,8 @@
                                 if (!validator.isEmail(this.clientData.email)) { // is email validation~2
                                     this.invalidEmail("الايميل غير صالح");
                                 } else {
-                                    this.validation.email.invalid = false;
-                                    this.validation.email.valid = true;
-                                    this.validation.checkNotes.email = true;
+                                    this.validation.email.state = "valid";
+                                    this.validation.checkList.email = true;
                                     this.activateSaveBtn();
                                 } // green style success validation~3
                             }else {
