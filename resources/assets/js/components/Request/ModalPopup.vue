@@ -242,7 +242,16 @@
                 this.selectedCountry(country);
                 this.validateCountry(country);
             },
+            normalNameState(){
+                this.validation.name.state = 'normal';
+                this.validation.checkList.name = false;
+                this.activateSaveBtn();
+            },
             validateName(e) {
+                if(!this.clientData.name && e.type === 'input'){
+                    this.normalNameState();
+                    return;
+                }
                 if(!this.clientData.name && e.type === 'blur'){
                     this.validation.name.errorMessage = "ادخل الاسم";
                     this.validation.name.state = 'invalid';
@@ -251,12 +260,12 @@
                     return;
                 }
                 let trimName = this.clientData.name.split(' ').join("");
-                if(!validator.isAlpha(trimName, 'ar') &&
-                    !validator.isAlpha(trimName, 'en-US')) {
+                if(!(validator.isAlpha(trimName, 'ar') ||
+                    validator.isAlpha(trimName, 'en-US'))) {
                     this.validation.name.state = 'invalid';
                     this.validation.checkList.name = false;
                     this.activateSaveBtn();
-                    this.validation.name.errorMessage = "حروف فقط";
+                    this.validation.name.errorMessage = "حروف انجليزية فقط او عربية فقط";
                     return;
                 }
                 this.validation.name.state = 'valid';
@@ -270,17 +279,32 @@
                 this.validation.mobile.errorMessage = message;
             },
             validateMobile(e) {
-                if(this.clientData.mobile){ // not to send empty query
+                if(!this.clientData.mobile) this.clientData.mobile = "";
+                let mobileNumber = this.clientData.mobile[0] === '+' ? this.clientData.mobile.slice(1)
+                    : this.clientData.mobile;
+                if(!this.clientData.mobile && e.type === "blur"){ // is empty validation
+                    return this.invalidMobile("ادخل رقم الموبايل");
+                }
+                if(!Number.isInteger(Number(mobileNumber))) // is number validation
+                    return this.invalidMobile("ارقام فقط");
+                else if(mobileNumber.length < 3 && e.type === "input"){ // blue style
+                    this.validation.checkList.mobile = false;
+                    this.activateSaveBtn();
+                    this.validation.mobile.state = "normal";
+                    return;
+                }
+                if(!validator.isMobilePhone(mobileNumber, 'any')){ // numbers count validation
+                    return this.invalidMobile("(20 ~ 3)");
+                }
+                if(this.clientData.mobile && mobileNumber.length > 2){ // not to send empty query
                     axios.get(`/api/client/mobile/is_unique?mobile=${this.clientData.mobile}`)
-                        .then((response) => { // is unique validation~1
+                        .then((response) => { // is unique validation
+                            let mobileNumber = this.clientData.mobile[0] === '+' ? this.clientData.mobile.slice(1)
+                                : this.clientData.mobile;
+
+                            if(mobileNumber.length < 3 || !Number.isInteger(Number(mobileNumber)))
+                                return; // return if the response comes after writing an invalid value
                             if(response.data.unique){
-                                let mobileNumber = this.clientData.mobile[0] === '+' ? this.clientData.mobile.slice(1)
-                                    : this.clientData.mobile;
-                                if(!validator.isMobilePhone(mobileNumber, 'any') &&
-                                     e.type === "input"){
-                                    // is number, not less 3 numbers validation~3
-                                    return this.invalidMobile("ارقام فقط وليس اقل من 3 ارقام");
-                                }
                                 // green style success validation~4
                                 this.validation.mobile.state = "valid";
                                 this.validation.checkList.mobile = true;
@@ -290,15 +314,13 @@
                             } // is unique validation
                         })
                         .catch((err) => {
-                            if(err.message === "mobile-taken"){ // is unique validation
+                            if(err.message === "mobile-taken"){
                                 this.invalidMobile("الموبايل موجود");
                             }else {
                                 console.log(err);
                             }
                         });
-                }else if(!this.clientData.mobile && e.type === "blur"){
-                    return this.invalidMobile("ادخل رقم الموبايل");
-                } // is empty validation~2
+                }
             },
             validateGender() {
                 if(!this.clientData.gender){
