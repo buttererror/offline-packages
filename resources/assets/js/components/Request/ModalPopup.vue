@@ -188,9 +188,6 @@
                 }
             }
         },
-        render() {
-            return
-        },
         methods: {
             getLabel(country) {
                 if (country) {
@@ -317,7 +314,7 @@
                 if(!this.clientData.country && !$("#countryInput").is(':focus')){
                     return this.fieldState("country", "is-invalid", false, "ادخل البلد");
                 }
-                if(typeof country === 'string' && validator.isAlpha(country, "ar")){
+                if(typeof country === 'string' && !validator.isAlpha(country, "en-US") && country){
                     return this.fieldState("country", "is-invalid", false, "حروف انجليزية فقط");
                 }
                 this.fieldState("country", "normal", false, null);
