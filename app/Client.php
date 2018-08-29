@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
@@ -16,6 +17,12 @@ class Client extends Model
         'age'
     ];
 
+    protected $searchable = [
+        'name',
+        'email',
+        'mobile'
+    ];
+
     public function packages()
     {
         return $this->hasMany('App/Package');
@@ -23,8 +30,10 @@ class Client extends Model
 
     public function scopeSearch($builder, $searchText)
     {
-        return $builder->where('name', 'like', "{$searchText}%")
-            ->orWhere('mobile', 'like', "{$searchText}%")
-            ->orWhere('email', 'like', "{$searchText}%");
+        return $builder->where('name', 'like', "%{$searchText}%")
+            ->orWhere('mobile', 'like', "%{$searchText}%")
+            ->orWhere('email', 'like', "%{$searchText}%");
     }
+
+
 }
