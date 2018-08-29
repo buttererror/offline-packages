@@ -17,6 +17,7 @@ class CreateCitiesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('code');
+            $table->boolean('top_destination')->default(false);
             $table->unsignedInteger('country_id');
             $table->timestamps();
         });
