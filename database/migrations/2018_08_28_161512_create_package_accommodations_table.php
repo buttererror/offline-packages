@@ -22,6 +22,7 @@ class CreatePackageAccommodationsTable extends Migration
             $table->json('rooms')->nullable();
             $table->date('checkin');
             $table->date('checkout');
+            $table->unsignedInteger('nights');
             $table->string('hotel_name')->nullable();
             $table->string('area_name')->nullable();
             $table->string('room_type')->nullable();

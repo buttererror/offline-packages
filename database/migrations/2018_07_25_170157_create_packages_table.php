@@ -20,7 +20,10 @@ class CreatePackagesTable extends Migration
             $table->string('title')->nullable();
             $table->date('start_date');
             $table->date('end_date');
+            $table->unsignedInteger('nights');
             $table->unsignedInteger('adults');
+            $table->unsignedInteger('number_of_destinations');
+            $table->json('countries');
             $table->json('children')->nullable();
             $table->boolean('transfer')->default(false);
             $table->enum('status',['s1','s2','s3','s4','s5','s6'])->default('s1');;
