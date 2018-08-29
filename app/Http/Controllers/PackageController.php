@@ -53,8 +53,8 @@ class PackageController extends Controller
             'children'=>'nullable|array',
             'children.*'=>'min:0|max:11|integer'
         ]) ;
-
         $package = Package::create([
+            'user_id' => auth()->user()->id,
             'client_id'=>$request->client_id,
             'start_date'=>$request->start_date,
             'title'=>$request->title,
