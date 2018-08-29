@@ -14,6 +14,12 @@ class Package extends Model
         'note'
     ];
 
+    protected $casts = [
+        'countries' => 'collection',
+        'children' => 'collection',
+        'transfer' => 'boolean'
+    ];
+
     public function accommodationRequests(){
         return $this->hasMany('App/AccommodationReuests');
     }
