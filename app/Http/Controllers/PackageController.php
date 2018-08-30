@@ -70,6 +70,8 @@ class PackageController extends Controller
             'children'=>$request->children,
         ]);
 
+        Package::with(['client'])->get();
+
         return response()->json([
             'package'=>$package
         ]);
