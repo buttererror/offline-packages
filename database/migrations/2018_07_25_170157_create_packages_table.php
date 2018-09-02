@@ -27,7 +27,7 @@ class CreatePackagesTable extends Migration
             $table->json('countries');
             $table->json('children')->nullable();
             $table->boolean('transfer')->default(false);
-            $table->enum('status',['s1','s2','s3','s4','s5','s6'])->default('s1');;
+            $table->enum('status',['s1','s2','s3','s4','s5','s6'])->default('s1');
             $table->string('start_place')->nullable();
             $table->text('note')->nullable();
             $table->timestamps();

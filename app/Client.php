@@ -28,11 +28,14 @@ class Client extends Model
         return $this->hasMany('App/Package');
     }
 
-    public function scopeSearch($builder, $searchText)
+    public function scopeSearch($builder,$searchText)
     {
         return $builder->where('name', 'like', "%{$searchText}%")
             ->orWhere('mobile', 'like', "%{$searchText}%")
             ->orWhere('email', 'like', "%{$searchText}%");
+    }
+    public function country(){
+        return $this->belongsTo("App/Country");
     }
 
 
