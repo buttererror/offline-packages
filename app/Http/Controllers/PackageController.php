@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\City;
 use App\Package;
 use Carbon\Carbon;
 use Validator;
@@ -176,5 +177,10 @@ class PackageController extends Controller
         $start = (new Carbon($request->start_date))->startOfDay();
         $end = (new Carbon($request->end_date))->startOfDay();
         return $start->diffInDays($end);
+    }
+    public  function showCities(Request $request){
+        return response()->json([
+            'cities'=>City::search($request->searchToken)->get()
+        ]);
     }
 }
