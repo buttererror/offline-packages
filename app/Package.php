@@ -9,9 +9,25 @@ class Package extends Model
     protected $fillable = [
         'client_id',
         'title',
+        'user_id',
+        'nights',
         'start_date',
         'star_place',
+        'adults',
+        'children_count',
+        'number_of_destinations',
+        'countries',
+        'children',
+        'transfer',
+        'status',
+        'start_place',
         'note'
+    ];
+
+    protected $casts = [
+        'countries' => 'collection',
+        'children' => 'collection',
+        'transfer' => 'boolean'
     ];
 
     public function accommodationRequests(){
@@ -24,6 +40,11 @@ class Package extends Model
 
     public function client(){
         return $this->belongsTo('App/Client');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class)
     }
 }
 
