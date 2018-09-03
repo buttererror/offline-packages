@@ -1,35 +1,35 @@
 <template>
-    <v-container grid-list-md>
-        <v-layout row wrap>
-            <v-flex xs12 lg12>
-                <v-menu
-                        :close-on-content-click="false"
-                        v-model="menu2"
-                        :nudge-right="40"
-                        lazy
-                        transition="scale-transition"
-                        offset-y
-                        full-width
-                        max-width="290px"
-                        min-width="290px"
-                        @blur="getBirthDate"
-                >
-                    <v-text-field
-                            slot="activator"
-                            v-model="computedDateFormatted"
-                            label="Date (read only text field)"
-                            hint="MM/DD/YYYY format"
-                            persistent-hint
-                            prepend-icon="event"
-                            readonly
-                    >
+    <v-layout>
+        <v-flex>
+            <v-menu
+                ref="menu"
+                :close-on-content-click="false"
+                v-model="menu"
+                :nudge-right="40"
+                lazy
+                transition="scale-transition"
+                offset-y
+                full-width
+                min-width="290px"
+            >
+                <v-text-field
+                    slot="activator"
+                    v-model="date"
+                    label="تاريخ الميلاد"
+                    prepend-icon="event"
+                    readonly
+                ></v-text-field>
 
-                    </v-text-field>
-                    <v-date-picker v-model="date" no-title @input="menu2 = false"></v-date-picker>
-                </v-menu>
-            </v-flex>
-        </v-layout>
-    </v-container>
+                <v-date-picker
+                    ref="picker"
+                    v-model="date"
+                    :max="new Date().toISOString().substr(0, 10)"
+                    min="1950-01-01"
+                    @change="getBirthDate"
+                ></v-date-picker>
+            </v-menu>
+        </v-flex>
+    </v-layout>
 </template>
 
     <script>
@@ -37,9 +37,8 @@
             data: () => ({
                 date: null,
                 dateFormatted: null,
-                menu2: false
+                menu: false
             }),
-
             computed: {
                 computedDateFormatted () {
                     return this.formatDate(this.date)
@@ -47,8 +46,11 @@
             },
 
             watch: {
-                date (val) {
-                    this.dateFormatted = this.formatDate(this.date)
+                // date (val) {
+                //     this.dateFormatted = this.formatDate(this.date)
+                // }s
+                menu (val) {
+                    val && this.$nextTick(() => (this.$refs.picker.activePicker = 'YEAR'))
                 }
             },
 

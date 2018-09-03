@@ -113,7 +113,9 @@
         </div>
 
         <div class="form-group row">
-            <DatePicker></DatePicker>
+            <div class="col-6 offset-3">
+                <DatePicker></DatePicker>
+            </div>
         </div>
 
 
@@ -145,6 +147,10 @@
             });
             bus.$on('new-client-clicked', () => {
                 this.show = true;
+            });
+            bus.$on("client-birthDate", (birthDate) => {
+                console.log("modalPopup " + birthDate);
+                this.clientData.birthDate = birthDate;
             });
         },
         data() {
@@ -192,7 +198,7 @@
                     gender: null,
                     address: null,
                     age: null,
-                    birthDate:null,
+                    birthDate:null
                 }
             }
         },
@@ -258,6 +264,7 @@
                 this.activateSaveBtn();
             },
             validateName(e) {
+                console.log("here")
                 if(!this.clientData.name && e.type === 'input'){
                     return this.fieldState("name", "normal", false, null);
                 }
@@ -269,6 +276,7 @@
                     return this.fieldState("name", "invalid", false, "حروف انجليزية فقط او عربية فقط");
                 }
                 this.fieldState("name", "valid", true, null);
+                console.log(this.clientData.name)
             },
             validateMobile(e) {
                 if(!this.clientData.mobile) this.clientData.mobile = "";
@@ -354,12 +362,9 @@
                 } // not to send empty query, check email @blur or enter and check email @input ".com"
             },
             saveData() {
-                bus.$on("client-birthDate", (birthDate) => {
-                    console.log("modalPopup " + birthDate);
-                    this.clientData.birthDate = birthDate;
-                });
+                console.log(this.clientData);
+                console.log(this.clientData);
                 if(!this.disableSaveBtn){
-                    console.log(this.clientData);
                     axios.post("api/client", this.clientData)
                         .then((response) => {
                             bus.$emit('new-client-saved', response.data.client);
