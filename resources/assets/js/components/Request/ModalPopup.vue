@@ -151,6 +151,7 @@
             bus.$on("client-birthDate", (birthDate) => {
                 console.log("modalPopup " + birthDate);
                 this.clientData.birthDate = birthDate;
+
             });
         },
         data() {
@@ -234,6 +235,7 @@
                 for (let item in this.validation.checkList){
                     this.validation.checkList[item] = false;
                 }
+                this.validation.checkList.email=true;
                 this.activateSaveBtn();
             },
             hidePopUpModal() {
@@ -365,6 +367,7 @@
                 console.log(this.clientData);
                 console.log(this.clientData);
                 if(!this.disableSaveBtn){
+
                     axios.post("api/client", this.clientData)
                         .then((response) => {
                             bus.$emit('new-client-saved', response.data.client);

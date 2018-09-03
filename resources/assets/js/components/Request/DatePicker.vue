@@ -30,6 +30,7 @@
             </v-menu>
         </v-flex>
     </v-layout>
+
 </template>
 
     <script>
@@ -62,8 +63,7 @@
                     return `${month}/${day}/${year}`
                 },
                 parseDate (date) {
-                    if (!date) return null
-
+                    if (!date) return null;
                     const [month, day, year] = date.split('/')
                     return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
                 },

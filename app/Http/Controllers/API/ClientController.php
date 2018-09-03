@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Client;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ClientRequest;
 use Illuminate\Http\Request;
 use Psy\Util\Json;
 
@@ -17,21 +18,15 @@ class ClientController extends Controller
         return Client::search($request->searchText)->take(7)->get();
     }
 
-    public function store(Request $request)
+    public function store(ClientRequest $request)
     {
         if (!$request->isJson()) {
-            abort(400);
+        abort(400);
         }
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'nullable|email|unique:clients,email',
-            'mobile' => 'required|unique:clients,mobile',
-            'country_id' => 'required|integer',
-            'address' => 'nullable|string|max:500',
-            'gender' => 'required|string|in:male,female',
-            'age' => 'nullable|integer|min:0|max:100',
-        ]);
-        $client = Client::create($request->all());
+
+        $data=$request->all();
+        $data['age']=Client::getAge($data['birthDate']);
+        $client = Client::create($data);
         $client->refresh();
         return response()->json([
             'client' => $client
@@ -41,10 +36,7 @@ class ClientController extends Controller
 
     public function isMobileUnique(Request $request)
     {
-        $request->validate([
-            'mobile' => 'required'
-        ]);
-        $count = Client::where('mobile', $request->mobile)->count();
+        $count = Client::isMobileUnique($request->mobile);
         return response()->json([
             'unique' => $count == 0
         ]);
@@ -52,10 +44,7 @@ class ClientController extends Controller
 
     public function isEmailUnique(Request $request)
     {
-        $request->validate([
-            'email' => 'required'
-        ]);
-        $count = Client::where('email', $request->email)->count();
+        $count = Client::isEmailUnique($request->email);
         return response()->json([
             'unique' => $count == 0
         ]);
