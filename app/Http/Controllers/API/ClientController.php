@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Client;
+use App\File;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
 use Illuminate\Http\Request;
@@ -49,4 +50,14 @@ class ClientController extends Controller
             'unique' => $count == 0
         ]);
     }
+    public function saveFile(Request $request){
+        $uploaded_file=$request->file('file');
+        $destinationPath = public_path('/uploads');
+        $uploaded_file->move($destinationPath,$uploaded_file->getClientOriginalName());
+        $file=new File();
+        $file->name=$uploaded_file->getClientOriginalName();
+        $file->save();
+        return response()->json(['file_id'=>$file->id]);
+    }
+
 }

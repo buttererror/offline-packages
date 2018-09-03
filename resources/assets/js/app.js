@@ -14,6 +14,9 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import Vuetify from 'vuetify';
 import '@fortawesome/fontawesome-free/css/all.css'
 import colors from 'vuetify/es5/util/colors'
+import FileUpload from 'v-file-upload'
+
+Vue.use(FileUpload)
 
 Vue.use(Vuetify, {
     rtl: true,

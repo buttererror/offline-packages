@@ -23,6 +23,7 @@ class CreateClientsTable extends Migration
             $table->enum('gender',['male','female'])->default('male');
             $table->string('passport_no')->nullable();
             $table->integer('age')->nullable();
+            $table->integer('file_id')->nullable();
             $table->timestamps();
         });
     }

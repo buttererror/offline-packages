@@ -1,3 +1,4 @@
+
 <template>
     <v-layout>
         <v-flex>
@@ -30,7 +31,6 @@
             </v-menu>
         </v-flex>
     </v-layout>
-
 </template>
 
     <script>

@@ -26,7 +26,7 @@ class AgeValidate implements Rule
      */
     public function passes($attribute, $value)
     {
-      if(Client::getAge($value)>100||Client::getAge($value)<0)
+      if(Client::getAge($value)>50||Client::getAge($value)<0)
         return false;
       else{
           return true;

@@ -118,6 +118,10 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <UploadFile></UploadFile>
+        </div>
+
 
         <div slot="modal-footer" class="w-100">
             <button class="btn btn-primary pull-left" @click="saveData"
@@ -132,6 +136,7 @@
 <script>
     import Autocomplete from 'v-autocomplete';
     import DatePicker from './DatePicker';
+    import UploadFile from './FileUpload';
     import CountryTemplate from './CountryAutocompleteItem';
 
     import validator from 'validator';
@@ -139,7 +144,8 @@
     export default {
         components: {
             Autocomplete,
-            DatePicker
+            DatePicker,
+            UploadFile
         },
         mounted() {
             axios.get('/api/countries').then(response => {
@@ -149,8 +155,11 @@
                 this.show = true;
             });
             bus.$on("client-birthDate", (birthDate) => {
-                console.log("modalPopup " + birthDate);
                 this.clientData.birthDate = birthDate;
+
+            });
+            bus.$on("client-passport", (file_id) => {
+                this.clientData.file_id = file_id;
 
             });
         },
@@ -199,7 +208,8 @@
                     gender: null,
                     address: null,
                     age: null,
-                    birthDate:null
+                    birthDate:null,
+                    file_id:null
                 }
             }
         },
