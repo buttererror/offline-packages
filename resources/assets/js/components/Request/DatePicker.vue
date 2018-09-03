@@ -10,6 +10,9 @@
                         transition="scale-transition"
                         offset-y
                         full-width
+                        max-width="290px"
+                        min-width="290px"
+                        @blur="getBirthDate"
                 >
                     <v-text-field
                             slot="activator"
@@ -61,6 +64,10 @@
 
                     const [month, day, year] = date.split('/')
                     return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+                },
+                getBirthDate() {
+                    console.log("datePicker " + this.computedDateFormatted);
+                    bus.$emit("client-birthDate", this.computedDateFormatted);
                 }
             }
         }

@@ -191,7 +191,8 @@
                     country_id: null,
                     gender: null,
                     address: null,
-                    age: null
+                    age: null,
+                    birthDate:null,
                 }
             }
         },
@@ -353,7 +354,12 @@
                 } // not to send empty query, check email @blur or enter and check email @input ".com"
             },
             saveData() {
+                bus.$on("client-birthDate", (birthDate) => {
+                    console.log("modalPopup " + birthDate);
+                    this.clientData.birthDate = birthDate;
+                });
                 if(!this.disableSaveBtn){
+                    console.log(this.clientData);
                     axios.post("api/client", this.clientData)
                         .then((response) => {
                             bus.$emit('new-client-saved', response.data.client);
