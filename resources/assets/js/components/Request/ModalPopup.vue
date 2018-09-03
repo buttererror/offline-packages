@@ -112,6 +112,10 @@
             <div class="col-form-label col-3 text-right">العنوان</div>
         </div>
 
+        <div class="form-group row">
+            <DatePicker></DatePicker>
+        </div>
+
 
         <div slot="modal-footer" class="w-100">
             <button class="btn btn-primary pull-left" @click="saveData"
@@ -125,12 +129,15 @@
 
 <script>
     import Autocomplete from 'v-autocomplete';
+    import DatePicker from './DatePicker';
     import CountryTemplate from './CountryAutocompleteItem';
+
     import validator from 'validator';
 
     export default {
         components: {
             Autocomplete,
+            DatePicker
         },
         mounted() {
             axios.get('/api/countries').then(response => {

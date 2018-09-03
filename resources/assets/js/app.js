@@ -10,7 +10,20 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import BootstrapVue from 'bootstrap-vue'
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import Vuetify from 'vuetify';
+import '@fortawesome/fontawesome-free/css/all.css'
+import colors from 'vuetify/es5/util/colors'
 
+Vue.use(Vuetify, {
+    rtl: true,
+    iconfont: 'fa',
+    theme: {
+        primary: colors.red.darken1, // #E53935
+        secondary: colors.red.lighten4, // #FFCDD2
+        accent: colors.indigo.base // #3F51B5
+    }
+});
 Vue.use(BootstrapVue);
 
 /**
@@ -29,4 +42,6 @@ const app = new Vue({
 });
 
 
+
 import 'v-autocomplete/dist/v-autocomplete.css';
+import 'vuetify/dist/vuetify.css';
