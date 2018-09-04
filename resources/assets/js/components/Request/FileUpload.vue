@@ -22,6 +22,7 @@
         },
         methods: {
             thumbUrl(file) {
+                console.log(file.myThumbUrlProperty);
                 this.file_id = file.file_id;
                 bus.$emit("client-passport", this.file_id);
                 return file.myThumbUrlProperty

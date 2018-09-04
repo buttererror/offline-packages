@@ -15,10 +15,10 @@ import Vuetify from 'vuetify';
 import '@fortawesome/fontawesome-free/css/all.css'
 import colors from 'vuetify/es5/util/colors'
 import FileUpload from 'v-file-upload'
-import Datepicker from 'vuejs-datepicker';
+// import Datepicker from 'vuejs-datepicker';
 
 Vue.use(FileUpload)
-Vue.use(Datepicker)
+// Vue.use(Datepicker)
 
 Vue.use(Vuetify, {
     rtl: true,
@@ -50,3 +50,4 @@ const app = new Vue({
 
 import 'v-autocomplete/dist/v-autocomplete.css';
 import 'vuetify/dist/vuetify.css';
+import 'vue-multiselect/dist/vue-multiselect.min.css'

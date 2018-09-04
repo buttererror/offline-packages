@@ -101,27 +101,34 @@
 
         <div class="form-group row">
             <div class="col-6 offset-3">
+                <multiselect
+                    v-model="selected" :options="options" tagPosition="bottom"
+                    :preserveSearch="true" :showNoResults="false" selectLabel=""
+                >
 
-                <autocomplete
-                    ref="cityAutocomplete"
-                    :input-attrs="{
-                            class: 'form-control ' +  validation.city.state,
-                            id: 'cityInput'
-                        }"
-                    id="city-autocomplete"
-                    dir="rtl"
-                    :items="filteredCites"
-                    v-model="clientData.city"
-                    :get-label="cityGetLabel"
-                    :component-item='cityTemplate'
-                    @update-items="updateCityList"
-                    :auto-select-one-item="false"
-                    @item-selected="cityAutocompleteItemSelectedHandler"
-                    @blur="cityAutocompleteBlurHandler"
-                    @change="validateCity"
-                    :min-len="0">
+                </multiselect>
 
-                </autocomplete>
+                <!--<autocomplete-->
+                    <!--ref="cityAutocomplete"-->
+                    <!--:input-attrs="{-->
+                            <!--class: 'form-control ' +  validation.city.state,-->
+                            <!--id: 'cityInput'-->
+                        <!--}"-->
+                    <!--id="city-autocomplete"-->
+                    <!--dir="rtl"-->
+                    <!--:items="filteredCites"-->
+                    <!--v-model="clientData.city"-->
+                    <!--:get-label="cityGetLabel"-->
+                    <!--:component-item='cityTemplate'-->
+                    <!--@update-items="updateCityList"-->
+                    <!--:auto-select-one-item="false"-->
+                    <!--@item-selected="cityAutocompleteItemSelectedHandler"-->
+                    <!--@blur="cityAutocompleteBlurHandler"-->
+                    <!--@change="validateCity"-->
+                    <!--:min-len="0">-->
+
+                <!--</autocomplete>-->
+
                 <div class="invalid-feedback d-block" v-if="validation.city.state === 'is-invalid'">
                     {{this.validation.city.errorMessage}}
                 </div>
@@ -172,8 +179,10 @@
             <div class="col-form-label col-3 text-right">تاريخ الميلاد</div>
         </div>
 
-        <div class="form-group">
-            <UploadFile></UploadFile>
+        <div class="form-group row">
+            <div class="col-6 offset-3">
+                <UploadFile></UploadFile>
+            </div>
         </div>
 
 
@@ -197,12 +206,14 @@
     import {en, ar} from 'vuejs-datepicker/dist/locale'
 
     import validator from 'validator';
+    import Multiselect from 'vue-multiselect'
 
     export default {
         components: {
             Autocomplete,
             Datepicker,
-            UploadFile
+            UploadFile,
+            Multiselect
         },
         mounted() {
             axios.get('/api/countries').then(response => {
@@ -288,7 +299,11 @@
                     address: null,
                     birthDate: null,
                     file_id: null
-                }
+                },
+                options: ['Mahmoud', 'Mohamed', 'Ahmed', 'Gamal', 'Rania', 'Ibrahim', 'Abdo',
+                    'Soha', 'Karim', 'Basant', 'Magdy'],
+                selected:''
+
             }
         },
         methods: {
