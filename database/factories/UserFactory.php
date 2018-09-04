@@ -22,13 +22,13 @@ $factory->define(App\User::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(App\Client::class, function (Faker $faker) {
-    return [
-        'name' => $faker->name,
-        'email' => rand(1,2) == 1 ? $faker->unique()->safeEmail: null,
-        'mobile' => $faker->phoneNumber,
-        'country_id' => rand(1,100),
-        'gender' => $faker->randomElement(['male','female'])
-    ];
-});
+//$factory->define(App\Client::class, function (Faker $faker) {
+//    return [
+//        'name' => $faker->name,
+//        'email' => rand(1,2) == 1 ? $faker->unique()->safeEmail: null,
+//        'mobile' => $faker->phoneNumber,
+//        'country_id' => rand(1,100),
+//        'gender' => $faker->randomElement(['male','female'])
+//    ];
+//});
 

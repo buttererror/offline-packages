@@ -12,4 +12,9 @@ class Country extends Model
     public function cities(){
         return $this->hasMany("App/City");
     }
+
+    public static  function getCities($country_id){
+        $cities=City::where('country_id',$country_id)->get();
+        return $cities;
+    }
 }

@@ -15,7 +15,8 @@ class Client extends Model
         'country_id',
         'address',
         'gender',
-        'age'
+        'age',
+        'file_id'
     ];
 
     protected $searchable = [
