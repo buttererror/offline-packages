@@ -11,4 +11,9 @@ class CountryController extends Controller
     {
         return Country::all();
     }
+
+    public function cities($country_id){
+        return response()->json(['cities'=>Country::getCities($country_id)]);
+    }
+
 }

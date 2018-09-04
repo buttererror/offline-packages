@@ -44,3 +44,4 @@ Route::get('client/email/is_unique','ClientController@isEmailUnique')
     ->name('client_email_is_unique.isEmailُUnique');
 
 Route::get('package/request','PackageController@index');
+Route::get('cities/{country_id}','CountryController@cities');
