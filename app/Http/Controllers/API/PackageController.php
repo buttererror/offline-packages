@@ -8,6 +8,11 @@ use App\Http\Controllers\Controller;
 
 class PackageController extends Controller
 {
+
+    public function index(){
+
+        return view('home');
+    }
     public function store(Request $request)
     {
         if (!$request->isJson()) {

@@ -25,7 +25,7 @@
         </div>
 
         <div class="card-footer">
-            <button class="btn btn-primary">التالي</button>
+            <button class="btn btn-primary" @click="changeComponent(ClientDetails)">التالي</button>
         </div>
 
     </div>
@@ -34,6 +34,7 @@
 <script>
     import Autocomplete from 'v-autocomplete';
     import ClientAutocompleteItem from './ClientAutocompleteItem';
+    import ClientDetails from './ClientDetails';
 
     export default {
         components: {
@@ -48,7 +49,8 @@
             return {
                 clients: [],
                 client: null,
-                clientTemplate: ClientAutocompleteItem
+                clientTemplate: ClientAutocompleteItem,
+                component: ClientDetails
             }
         },
         methods: {
