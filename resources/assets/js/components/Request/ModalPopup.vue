@@ -69,13 +69,6 @@
 
         <div class="form-group row">
             <div class="col-6 offset-3">
-                <input class="form-control" dir="rtl" v-model="clientData.age">
-            </div>
-            <div class="col-form-label col-3 text-right">السن</div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6 offset-3">
 
                 <autocomplete
                         ref="countryAutocomplete"
@@ -114,8 +107,14 @@
 
         <div class="form-group row">
             <div class="col-6 offset-3">
-                <DatePicker></DatePicker>
+                <datepicker placeholder="ضع تاريخ ميلادك" class="text-right"
+                            v-model="clientData.birthDate"
+                            :bootstrap-styling="true"
+                            :language="ar"
+
+                ></datepicker>
             </div>
+            <div class="col-form-label col-3 text-right">تاريخ الميلاد</div>
         </div>
 
         <div class="form-group">
@@ -135,16 +134,17 @@
 
 <script>
     import Autocomplete from 'v-autocomplete';
-    import DatePicker from './DatePicker';
+    import Datepicker from 'vuejs-datepicker';
     import UploadFile from './FileUpload';
     import CountryTemplate from './CountryAutocompleteItem';
+    import {en, ar} from 'vuejs-datepicker/dist/locale'
 
     import validator from 'validator';
 
     export default {
         components: {
             Autocomplete,
-            DatePicker,
+            Datepicker,
             UploadFile
         },
         mounted() {
@@ -195,6 +195,7 @@
                     }
                 },
                 disableSaveBtn: true,
+                ar: ar,
                 show: false,
                 countries: [],
                 filteredCountries: [],
@@ -207,7 +208,6 @@
                     country_id: null,
                     gender: null,
                     address: null,
-                    age: null,
                     birthDate:null,
                     file_id:null
                 }
