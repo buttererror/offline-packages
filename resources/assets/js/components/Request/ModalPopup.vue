@@ -81,7 +81,7 @@
                     dir="rtl"
                     :items="filteredCountries"
                     v-model="clientData.country"
-                    :get-label="getLabel"
+                    :get-label="countryGetLabel"
                     :component-item='countryTemplate'
                     @update-items="updateCountryList"
                     :auto-select-one-item="false"
@@ -112,8 +112,8 @@
                     dir="rtl"
                     :items="filteredCites"
                     v-model="clientData.city"
-                    :get-label="getLabel"
-                    :component-item='countryTemplate'
+                    :get-label="cityGetLabel"
+                    :component-item='cityTemplate'
                     @update-items="updateCityList"
                     :auto-select-one-item="false"
                     @item-selected="cityAutocompleteItemSelectedHandler"
@@ -142,8 +142,8 @@
                     dir="rtl"
                     :items="filteredNationalities"
                     v-model="clientData.nationality"
-                    :get-label="getLabel"
-                    :component-item='countryTemplate'
+                    :get-label="nationalityGetLabel"
+                    :component-item='nationalityTemplate'
                     @update-items="updateNationalityList"
                     :auto-select-one-item="false"
                     @item-selected="nationalityAutocompleteItemSelectedHandler"
@@ -192,6 +192,8 @@
     import Datepicker from 'vuejs-datepicker';
     import UploadFile from './FileUpload';
     import CountryTemplate from './CountryAutocompleteItem';
+    import CityTemplate from './CityAutocompleteItem';
+    import NationalityTemplate from './NationalityAutocompleteItem';
     import {en, ar} from 'vuejs-datepicker/dist/locale'
 
     import validator from 'validator';
@@ -205,7 +207,7 @@
         mounted() {
             axios.get('/api/countries').then(response => {
                 this.countries = response.data;
-                console.log(this.countries);
+                this.nationalities = response.data;
             });
             bus.$on('new-client-clicked', () => {
                 this.show = true;
@@ -264,12 +266,14 @@
                 ar: ar,
                 show: false,
                 countries: [],
-                cites: [],
+                cities: [],
                 nationalities: [],
                 filteredCountries: [],
                 filteredCites: [],
                 filteredNationalities: [],
                 countryTemplate: CountryTemplate,
+                cityTemplate: CityTemplate,
+                nationalityTemplate: NationalityTemplate,
                 clientData: {
                     name: null,
                     email: null,
@@ -288,11 +292,21 @@
             }
         },
         methods: {
-            getLabel(countryOrCityOrNationality) {
-                if (countryOrCityOrNationality) {
-                    return countryOrCityOrNationality.en_short_name
+            countryGetLabel(country) {
+                if (country) {
+                    return country.en_short_name
                 }
                 return ''
+            },
+            cityGetLabel(city) {
+                if(city) {
+                    return city.name;
+                }
+            },
+            nationalityGetLabel(nationality) {
+                if(nationality) {
+                    return nationality.nationality;
+                }
             },
             updateCountryList(text) {
                 if (!text) {
@@ -302,15 +316,18 @@
                 this.filteredCountries = this.countries.filter(country => {
                     return country.en_short_name.toLowerCase().startsWith(text.toLowerCase());
                 });
+                console.log("filteredCountries", this.filteredCountries);
             },
             updateCityList(text) {
                 if (!text) {
                     this.filteredCites = [];
                     return;
                 }
-                this.filteredCites = this.cites.filter(city => {
-                    return city.en_short_name.toLowerCase().startsWith(text.toLowerCase());
+                console.log("text", text);
+                this.filteredCites = this.cities.filter(city => {
+                    return city.name.toLowerCase().startsWith(text.toLowerCase());
                 });
+                console.log("filteredCites", this.filteredCites);
             },
             updateNationalityList(text) {
                 if (!text) {
@@ -318,8 +335,9 @@
                     return;
                 }
                 this.filteredNationalities = this.nationalities.filter(nationality => {
-                    return nationality.en_short_name.toLowerCase().startsWith(text.toLowerCase());
+                    return nationality.nationality.toLowerCase().startsWith(text.toLowerCase());
                 });
+                console.log(this.filteredNationalities);
             },
             removeValidationStyle() {
                 this.validation.name.state = "normal";
@@ -466,6 +484,12 @@
             },
             validateCountry(country) {
                 if (typeof country === 'object' || this.clientData.country) {
+                    axios.get(`/api/cities/${country.id}`).then((response) => {
+                        this.cities = response.data.cities;
+                        console.log(this.cities);
+                    }).catch((err) => {
+                        console.log(err);
+                    });
                     return this.fieldState("country", "is-valid", true, null);
                 }
                 if (!this.clientData.country && !$("#countryInput").is(':focus')) {
