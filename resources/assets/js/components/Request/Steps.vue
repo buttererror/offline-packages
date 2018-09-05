@@ -1,12 +1,13 @@
 <template>
     <div>
-        <component @changeComponent="changeComponent" v-bind:is="component"></component>
+        <component @change-component="changeComponent" v-bind:is="component"></component>
     </div>
 </template>
 
 <script>
     import JourneyStart from "./JourneyStart";
     import ClientDetails from './ClientDetails';
+    import MultiSteps from './multiSteps/MultiSteps';
     import Accommodation from './Accommodation';
     import NewOrOldClient from './NewOrOldClient';
 
@@ -14,6 +15,7 @@
         components: {
             JourneyStart,
             ClientDetails,
+            MultiSteps,
             Accommodation,
             NewOrOldClient
         },
@@ -22,11 +24,12 @@
         },
         data() {
             return {
-                component: 'NewOrOldClient'
+                component: 'MultiSteps'
             }
         },
         methods: {
             changeComponent(component){
+                console.log("component");
                 this.component = component;
             }
         }

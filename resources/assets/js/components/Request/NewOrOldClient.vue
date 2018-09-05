@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card" v-if="show">
         <div class="card-header">Dashboard</div>
 
         <div class="card-body">
@@ -25,7 +25,7 @@
         </div>
 
         <div class="card-footer">
-            <button class="btn btn-primary" @click="changeComponent(ClientDetails)">التالي</button>
+            <button class="btn btn-primary" @click="changeComponent">التالي</button>
         </div>
 
     </div>
@@ -33,7 +33,7 @@
 
 <script>
     import Autocomplete from 'v-autocomplete';
-    import ClientAutocompleteItem from './ClientAutocompleteItem';
+    import ClientAutocompleteItem from './autocompleteTemplate/ClientAutocompleteItem';
     import ClientDetails from './ClientDetails';
 
     export default {
@@ -50,7 +50,8 @@
                 clients: [],
                 client: null,
                 clientTemplate: ClientAutocompleteItem,
-                component: ClientDetails
+                component: ClientDetails,
+                show: true
             }
         },
         methods: {
@@ -75,6 +76,9 @@
             },
             handleNewClientClicked() {
                 bus.$emit('new-client-clicked');
+            },
+            changeComponent() {
+                bus.$emit('change-component', 'App');
             }
         }
 

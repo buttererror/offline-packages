@@ -200,9 +200,9 @@
     import Autocomplete from 'v-autocomplete';
     import Datepicker from 'vuejs-datepicker';
     import UploadFile from './FileUpload';
-    import CountryTemplate from './CountryAutocompleteItem';
-    import CityTemplate from './CityAutocompleteItem';
-    import NationalityTemplate from './NationalityAutocompleteItem';
+    import CountryTemplate from './autocompleteTemplate/CountryAutocompleteItem';
+    import CityTemplate from './autocompleteTemplate/CityAutocompleteItem';
+    import NationalityTemplate from './autocompleteTemplate/NationalityAutocompleteItem';
     import {en, ar} from 'vuejs-datepicker/dist/locale'
 
     import validator from 'validator';
