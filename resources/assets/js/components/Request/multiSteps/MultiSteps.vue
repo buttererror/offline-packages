@@ -1,11 +1,21 @@
 <template>
     <div id="detailsContainer">
-        <section class="section" style="padding-top: .5rem">
-                    <div class="">
+        <div class="card">
+            <div class="card-header">Package Request</div>
+
+            <div class="card-body">
+                <section class="section" style="padding-top: .5rem">
+                    <div>
                         <horizontal-stepper :steps="steps" @completed-step="completeStep" :top-buttons="true"
                                             @active-step="isStepActive" @stepper-finished="alert"></horizontal-stepper>
                     </div>
-        </section>
+                </section>
+            </div>
+            <div class="card-footer text-right">
+                <button class="btn btn-primary" @click.prevent="changeComponent">رجوع</button>
+            </div>
+        </div>
+
     </div>
 
 </template>
@@ -21,9 +31,9 @@
     // const repoUrl = 'https://github.com/PygmySlowLoris/vue-stepper';
 
     export default {
-        name: 'app',
+        name: 'MultiSteps',
         components: {
-            HorizontalStepper
+            HorizontalStepper,
         },
         data() {
             return {
@@ -61,7 +71,14 @@
             }
         },
         mounted() {
-            $("#detailsContainer .content").css({overflow: 'visible'});
+            $("#detailsContainer .content").css({
+                'overflow': 'visible',
+                'margin-top': '5%'
+            });
+            $("#detailsContainer .stepper-box").css({
+                'box-shadow': 'none',
+                '-webkit-box-shadow': 'none'
+            });
         },
         computed: {},
         methods: {
@@ -83,82 +100,14 @@
             },
             alert(payload) {
                 alert('end')
+            },
+            changeComponent() {
+                this.$emit('change-component', 'NewOrOldClient');
             }
         }
     }
 </script>
 
 <style scoped>
-    /*#app {*/
-        /*-webkit-font-smoothing: antialiased;*/
-        /*-moz-osx-font-smoothing: grayscale;*/
-        /*text-align: center;*/
-        /*color: #2c3e50;*/
-    /*}*/
 
-    /*.pointer {*/
-        /*cursor: pointer;*/
-    /*}*/
-
-    /*h1, h2 {*/
-        /*font-weight: normal;*/
-    /*}*/
-
-    /*hr {*/
-        /*background-color: transparent;*/
-        /*border: none;*/
-        /*display: block;*/
-        /*height: inherit;*/
-        /*margin: 1.5rem 0;*/
-        /*border-top: dashed 1px;*/
-    /*}*/
-
-    /*li {*/
-        /*display: inline-block;*/
-        /*margin: 0 10px;*/
-    /*}*/
-
-    /*a {*/
-        /*color: #0b99b9;*/
-        /*text-decoration: underline;*/
-    /*}*/
-
-    /*.text-medium-grey {*/
-        /*color: #333;*/
-    /*}*/
-
-    /*.text-light-grey {*/
-        /*color: #888;*/
-    /*}*/
-
-    /*.box.formated {*/
-        /*position: relative;*/
-        /*padding: 0;*/
-    /*}*/
-
-    /*.box.formated .heading {*/
-        /*font-size: 1rem;*/
-        /*text-transform: capitalize;*/
-        /*padding: .8rem 1.5rem;*/
-        /*background-color: #fafafa;*/
-    /*}*/
-
-    /*.box.formated .content {*/
-        /*padding: 1rem 2rem;*/
-    /*}*/
-
-    /*i.top-left {*/
-        /*position: absolute;*/
-        /*left: 1.5rem;*/
-        /*top: 0.8rem;*/
-    /*}*/
-
-    /*.vertical-separator {*/
-        /*display: flex;*/
-        /*justify-content: space-around;*/
-    /*}*/
-
-    /*.vertical-separator .line {*/
-        /*border-right: 1px solid #cccccc;*/
-    /*}*/
 </style>

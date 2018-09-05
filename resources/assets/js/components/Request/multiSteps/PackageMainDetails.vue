@@ -1,13 +1,15 @@
 <template>
     <div class="form-group row">
         <div class="col-6 offset-3">
-            <datepicker placeholder="ضع تاريخ ميلادك" class="text-right"
+            <datepicker placeholder="ضع تاريخ ميلادك"
+                        input-class="text-right form-control form-control-lg"
+                        calendar-class="h5 w-100"
                         :bootstrap-styling="true"
-                        :language="ar" @selected="activateBtn"
+                        :language="ar" @selected="activateBtn">
 
-            ></datepicker>
+            </datepicker>
         </div>
-        <div class="col-form-label col-3">تاريخ </div>
+        <div class="col-form-label col-form-label-lg col-3">تاريخ</div>
     </div>
 
 </template>
@@ -28,7 +30,7 @@
             }
         },
         methods: {
-            activateBtn () {
+            activateBtn() {
                 this.$emit('can-continue', {value: true});
             }
         }

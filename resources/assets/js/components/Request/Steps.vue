@@ -24,12 +24,11 @@
         },
         data() {
             return {
-                component: 'MultiSteps'
+                component: 'NewOrOldClient'
             }
         },
         methods: {
             changeComponent(component){
-                console.log("component");
                 this.component = component;
             }
         }

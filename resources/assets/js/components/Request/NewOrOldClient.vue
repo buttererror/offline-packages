@@ -25,7 +25,7 @@
         </div>
 
         <div class="card-footer">
-            <button class="btn btn-primary" @click="changeComponent">التالي</button>
+            <button class="btn btn-primary" @click.prevent="changeComponent">التالي</button>
         </div>
 
     </div>
@@ -35,6 +35,7 @@
     import Autocomplete from 'v-autocomplete';
     import ClientAutocompleteItem from './autocompleteTemplate/ClientAutocompleteItem';
     import ClientDetails from './ClientDetails';
+    import PackageMainDetails from './multiSteps/PackageMainDetails';
 
     export default {
         components: {
@@ -50,7 +51,8 @@
                 clients: [],
                 client: null,
                 clientTemplate: ClientAutocompleteItem,
-                component: ClientDetails,
+                // component: ClientDetails,
+                component: PackageMainDetails,
                 show: true
             }
         },
@@ -78,7 +80,7 @@
                 bus.$emit('new-client-clicked');
             },
             changeComponent() {
-                bus.$emit('change-component', 'App');
+                this.$emit('change-component', 'MultiSteps');
             }
         }
 
