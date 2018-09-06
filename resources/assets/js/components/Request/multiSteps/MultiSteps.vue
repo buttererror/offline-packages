@@ -24,6 +24,7 @@
     import HorizontalStepper from 'vue-stepper/src/HorizontalStepper.vue';
 
     import  PackageMainDetails from './PackageMainDetails';
+    import  HotelDetails from './HotelDetails';
     import StepTwo from './StepTwo.vue';
 
     export default {
@@ -43,20 +44,19 @@
                         completed: false
 
                     },
-                    {
-                        icon: 'report_problem',
-                        name: 'second',
-                        title: 'Sample title 2',
-                        subtitle: 'Subtitle sample',
-                        component: StepTwo,
-                        completed: false
-                    },
+                    // {
+                    //     icon: 'report_problem',
+                    //     name: 'second',
+                    //     title: 'Sample title 2',
+                    //     subtitle: 'Subtitle sample',
+                    //     component: StepTwo,
+                    //     completed: false
+                    // },
                     {
                         icon: 'announcement',
                         name: 'third',
-                        title: 'Sample title 3',
-                        subtitle: 'Subtitle sample',
-                        component: PackageMainDetails,
+                        title: 'Hotel Details Selection',
+                        component: HotelDetails,
                         completed: false
                     }
                 ],
