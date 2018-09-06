@@ -29,6 +29,9 @@
                 ar
             }
         },
+        mounted() {
+            this.$emit('can-continue', {value: true});
+        },
         methods: {
             activateBtn() {
                 this.$emit('can-continue', {value: true});

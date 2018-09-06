@@ -7,7 +7,7 @@
 <script>
     import JourneyStart from "./JourneyStart";
     import ClientDetails from './ClientDetails';
-    import MultiSteps from './multiSteps/MultiSteps';
+    import PackageRequest from './PackageRequest/PackageRequest';
     import Accommodation from './Accommodation';
     import NewOrOldClient from './NewOrOldClient';
 
@@ -15,7 +15,7 @@
         components: {
             JourneyStart,
             ClientDetails,
-            MultiSteps,
+            PackageRequest,
             Accommodation,
             NewOrOldClient
         },

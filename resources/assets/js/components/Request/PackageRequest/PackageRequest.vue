@@ -6,8 +6,12 @@
             <div class="card-body">
                 <section class="section" style="padding-top: .5rem">
                     <div>
-                        <horizontal-stepper :steps="steps" @completed-step="completeStep" :top-buttons="true"
-                                            @active-step="isStepActive" @stepper-finished="alert"></horizontal-stepper>
+                        <horizontal-stepper :steps="steps" @completed-step="completeStep"
+                                            :top-buttons="true"
+                                            @active-step="isStepActive"
+                                            @stepper-finished="alert">
+
+                        </horizontal-stepper>
                     </div>
                 </section>
             </div>
@@ -24,14 +28,15 @@
     import HorizontalStepper from 'vue-stepper/src/HorizontalStepper.vue';
 
     import  PackageMainDetails from './PackageMainDetails';
-    // import StepOne from './StepOne.vue';
-    import StepTwo from './StepTwo.vue';
+    import  DestinationDetails from './DestinationDetails';
 
+    // import StepOne from './StepOne.vue';
+    // import StepTwo from './StepTwo.vue';
     // const teamUrl = 'https://github.com/PygmySlowLoris';
     // const repoUrl = 'https://github.com/PygmySlowLoris/vue-stepper';
 
     export default {
-        name: 'MultiSteps',
+        name: 'PackageRequest',
         components: {
             HorizontalStepper,
         },
@@ -43,7 +48,7 @@
                     {
                         icon: 'mail',
                         name: 'PackageMainDetails',
-                        title: 'PackageMainDetails',
+                        title: 'Package Main Details',
                         subtitle: '',
                         component: PackageMainDetails,
                         completed: false
@@ -51,10 +56,10 @@
                     },
                     {
                         icon: 'report_problem',
-                        name: 'second',
-                        title: 'Sample title 2',
-                        subtitle: 'Subtitle sample',
-                        component: StepTwo,
+                        name: 'DestinationDetails',
+                        title: 'Destination Details',
+                        subtitle: '',
+                        component: DestinationDetails,
                         completed: false
                     },
                     {
@@ -83,6 +88,7 @@
         computed: {},
         methods: {
             completeStep(payload) {
+                console.log("payload", payload);
                 this.steps.forEach((step) => {
                     if (step.name === payload.name) {
                         step.completed = true;

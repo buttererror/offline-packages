@@ -33,9 +33,9 @@
 
 <script>
     import Autocomplete from 'v-autocomplete';
-    import ClientAutocompleteItem from './autocompleteTemplate/ClientAutocompleteItem';
+    import ClientAutocompleteItem from './AutocompleteTemplate/ClientAutocompleteItem';
     import ClientDetails from './ClientDetails';
-    import PackageMainDetails from './multiSteps/PackageMainDetails';
+    import PackageMainDetails from './PackageRequest/PackageMainDetails';
 
     export default {
         components: {
@@ -80,7 +80,7 @@
                 bus.$emit('new-client-clicked');
             },
             changeComponent() {
-                this.$emit('change-component', 'MultiSteps');
+                this.$emit('change-component', 'PackageRequest');
             }
         }
 
