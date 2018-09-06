@@ -1,6 +1,11 @@
 <template>
     <div>
-        <component @change-component="changeComponent" v-bind:is="component"></component>
+        <component @change-component="changeComponent" v-bind:is="clientDetails.component"
+                   :clientDetails="clientDetails.data"
+
+        >
+
+        </component>
     </div>
 </template>
 
@@ -24,12 +29,16 @@
         },
         data() {
             return {
-                component: 'NewOrOldClient'
+                clientDetails: {
+                    component: 'NewOrOldClient',
+                    data: {}
+                }
             }
         },
         methods: {
-            changeComponent(component){
-                this.component = component;
+            changeComponent(clientDetails){
+                this.clientDetails.component = clientDetails.component;
+                this.clientDetails.data = clientDetails.clientDetails;
             }
         }
     }

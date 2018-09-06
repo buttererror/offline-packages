@@ -19,7 +19,6 @@
                 <button class="btn btn-primary" @click.prevent="changeComponent">رجوع</button>
             </div>
         </div>
-
     </div>
 
 </template>
@@ -37,6 +36,9 @@
 
     export default {
         name: 'PackageRequest',
+        props: {
+            clientDetails: Object
+        },
         components: {
             HorizontalStepper,
         },
@@ -79,6 +81,7 @@
             }
         },
         mounted() {
+            console.log("clientDetails", this.clientDetails)
             $("#detailsContainer .content").css({
                 'overflow': 'visible',
                 'margin-top': '5%'
@@ -91,7 +94,6 @@
         computed: {},
         methods: {
             completeStep(payload) {
-                console.log("payload", payload);
                 this.steps.forEach((step) => {
                     if (step.name === payload.name) {
                         step.completed = true;
