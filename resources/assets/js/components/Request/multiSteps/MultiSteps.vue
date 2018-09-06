@@ -24,11 +24,7 @@
     import HorizontalStepper from 'vue-stepper/src/HorizontalStepper.vue';
 
     import  PackageMainDetails from './PackageMainDetails';
-    // import StepOne from './StepOne.vue';
     import StepTwo from './StepTwo.vue';
-
-    // const teamUrl = 'https://github.com/PygmySlowLoris';
-    // const repoUrl = 'https://github.com/PygmySlowLoris/vue-stepper';
 
     export default {
         name: 'MultiSteps',
@@ -37,8 +33,6 @@
         },
         data() {
             return {
-                // repoUrl: repoUrl,
-                // teamUrl: teamUrl,
                 steps: [
                     {
                         icon: 'mail',
@@ -67,7 +61,12 @@
                     }
                 ],
                 activeStep: 0,
-                show: false
+                show: false,
+                packageDetails:{
+                    startPlace:'',
+                    startDate:'',
+                    endDate:''
+                }
             }
         },
         mounted() {
@@ -99,7 +98,6 @@
                 })
             },
             alert(payload) {
-                alert('end')
             },
             changeComponent() {
                 this.$emit('change-component', 'NewOrOldClient');
