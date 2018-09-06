@@ -35,9 +35,9 @@
         <div class="row form-group">
             <div class="col-6 offset-3">
                 <multiselect
-                        v-model="selectedCountries"
-                        :options="countries"
-                        :multiple="true"
+                    v-model="selectedCountries"
+                    :options="countries"
+                    :multiple="true"
                 ></multiselect>
             </div>
             <div class="col-form-label col-form-label-lg col-3">المدن</div>
@@ -111,6 +111,7 @@
 
 
     export default {
+        props: ['clickedNext', 'currentStep'],
         name: "PackageMainDetails",
         components: {
             Datepicker,
@@ -123,18 +124,34 @@
                 selectedCountries: '',
                 show: false,
                 childrenNum: '',
-                childAge: ''
+                childAge: '',
+                packageDetails: {
+                    start: 0,
+                    end: 1
+                }
             }
         },
         mounted() {
+            // this.$emit('change-next', {nextBtnValue: true});
             this.$emit('can-continue', {value: true});
+            // setTimeout(() => {
+            //     console.log(this.clickedNext, this.currentStep)
+            // }, 2000);
+        },
+        watch: {
+            clickedNext(val) {
+                console.log(val);
+                // if (val === true) {
+                //     this.$v.form.$touch();
+                // }
+            }
         },
         methods: {
             activateBtn() {
                 this.$emit('can-continue', {value: true});
             },
             updateChildAge() {
-                this.childrenNum=parseInt(this.childrenNum)
+                this.childrenNum = parseInt(this.childrenNum)
                 if (this.childrenNum > 0) {
                     this.show = true
                 }

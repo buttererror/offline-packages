@@ -17,11 +17,17 @@
 
 
     export default {
+        props: ['clickedNext', 'currentStep'],
         name: "DestinationDetails",
         components: {
 
         },
         mounted() {
+            $("#detailsContainer .previous").css({
+                'border': '2px solid #3383c8',
+                'box-shadow': '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)'
+            });
+            console.log(this.clickedNext, this.currentStep)
             this.$emit('can-continue', {value: true});
         },
         data() {

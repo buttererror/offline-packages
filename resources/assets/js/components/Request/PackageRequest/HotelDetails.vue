@@ -14,23 +14,6 @@
 
         <div v-if="show" role="tablist">
                 <div v-for="(index) in roomsNum">
-
-                    <!--<b-card no-body class="mb-1">-->
-                        <!--<b-card-header header-tag="header" class="p-1" role="tab">-->
-                            <!--<b-btn block href="#" v-b-toggle.accordion1 variant="info">Accordion 1</b-btn>-->
-                        <!--</b-card-header>-->
-                        <!--<b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">-->
-                            <!--<b-card-body>-->
-                                <!--<p class="card-text">-->
-                                    <!--I start opened because <code>visible</code> is <code>true</code>-->
-                                <!--</p>-->
-                                <!--<p class="card-text">-->
-                                    <!--{{ text }}-->
-                                <!--</p>-->
-                            <!--</b-card-body>-->
-                        <!--</b-collapse>-->
-                    <!--</b-card>-->
-
                     <b-card no-body class="mb-1">
                         <b-card-header header-tag="header" class="p-1" role="tab">
                             <b-btn href="#" block v-b-toggle="`room_${index}`" variant="info">
@@ -68,53 +51,54 @@
                     </b-card>
                 </div>
         </div>
-
-        <div class="row form-group">
-            <div class="col-6 offset-3">
-                <multiselect
-                    v-model="selectedRoomType"
-                    :options="roomType"
-                    :multiple="false"
-                ></multiselect>
+        <div class="mt-4">
+            <div class="row form-group">
+                <div class="col-6 offset-3">
+                    <multiselect
+                        v-model="selectedRoomType"
+                        :options="roomType"
+                        :multiple="false"
+                    ></multiselect>
+                </div>
+                <div class="col-form-label col-form-label-lg col-3">نوع الغرفة</div>
             </div>
-            <div class="col-form-label col-form-label-lg col-3">نوع الغرفة</div>
-        </div>
 
-        <div class="row form-group">
-            <div class="col-6 offset-3">
-                <multiselect
-                    v-model="selectedRoomView"
-                    :options="roomView"
-                    :multiple="false"
-                ></multiselect>
+            <div class="row form-group">
+                <div class="col-6 offset-3">
+                    <multiselect
+                        v-model="selectedRoomView"
+                        :options="roomView"
+                        :multiple="false"
+                    ></multiselect>
+                </div>
+                <div class="col-form-label col-form-label-lg col-3">منظر الرؤيه للغرفة</div>
             </div>
-            <div class="col-form-label col-form-label-lg col-3">منظر الرؤيه للغرفة</div>
-        </div>
 
-        <div class="row form-group">
-            <div class="col-6 offset-3">
-                <multiselect
-                    v-model="selectedStars"
-                    :options="stars"
-                    :multiple="false"
-                ></multiselect>
+            <div class="row form-group">
+                <div class="col-6 offset-3">
+                    <multiselect
+                        v-model="selectedStars"
+                        :options="stars"
+                        :multiple="false"
+                    ></multiselect>
+                </div>
+                <div class="col-form-label col-form-label-lg col-3">عدد النجوم</div>
             </div>
-            <div class="col-form-label col-form-label-lg col-3">عدد النجوم</div>
-        </div>
 
-        <div class="form-group row">
-            <div class="col-6 offset-3">
-                <input type="text" placeholder="اسم الفندق" v-model="hotelName" style="text-align: right"
-                       class="form-control"/>
+            <div class="form-group row">
+                <div class="col-6 offset-3">
+                    <input type="text" placeholder="اسم الفندق" v-model="hotelName" style="text-align: right"
+                           class="form-control"/>
+                </div>
+                <div class="col-form-label col-form-label-lg col-3"> اسم الفندق</div>
             </div>
-            <div class="col-form-label col-form-label-lg col-3"> اسم الفندق</div>
-        </div>
 
-        <div class="form-group row">
-            <div class="col-6 offset-3">
-                <input type="text" placeholder="المنطقة" v-model="area" style="text-align: right" class="form-control"/>
+            <div class="form-group row">
+                <div class="col-6 offset-3">
+                    <input type="text" placeholder="المنطقة" v-model="area" style="text-align: right" class="form-control"/>
+                </div>
+                <div class="col-form-label col-form-label-lg col-3">المنطقة</div>
             </div>
-            <div class="col-form-label col-form-label-lg col-3">المنطقة</div>
         </div>
 
     </div>
@@ -125,6 +109,10 @@
 
     export default {
         name: "HotelDetails",
+        components: {
+            Multiselect
+        },
+        props: ['currentStep'],
         data() {
             return {
                 selectedRoomType: '',
@@ -145,9 +133,10 @@
 
             }
         },
-        components: {
-            Multiselect
+        mounted() {
+            console.log(this.currentStep);
         },
+
         methods: {
             update() {
                 this.roomsNum = parseInt(this.roomsNum)

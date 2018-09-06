@@ -9,7 +9,10 @@
                         <horizontal-stepper :steps="steps" @completed-step="completeStep"
                                             :top-buttons="true"
                                             @active-step="isStepActive"
-                                            @stepper-finished="alert">
+                                            @stepper-finished="alert"
+                                            :keep-alive="false"
+
+                        >
 
                         </horizontal-stepper>
                     </div>
@@ -52,7 +55,8 @@
                         title: 'Package Main Details',
                         subtitle: '',
                         component: PackageMainDetails,
-                        completed: false
+                        completed: false,
+                        data: this.clientDetails
 
                     },
                     {
@@ -73,7 +77,7 @@
                     // },
                     {
                         icon: 'location_city',
-                        name: 'third',
+                        name: 'HotelDetails',
                         title: 'Hotel Details Selection',
                         component: HotelDetails,
                         completed: false
@@ -89,7 +93,6 @@
             }
         },
         mounted() {
-            console.log("clientDetails", this.clientDetails)
             $("#detailsContainer .content").css({
                 'overflow': 'visible',
                 'margin-top': '5%'
@@ -98,11 +101,20 @@
                 'box-shadow': 'none',
                 '-webkit-box-shadow': 'none'
             });
+            $("#detailsContainer .next").css({
+                'border': '2px solid rgb(51, 131, 200)',
+                'background-color': 'white',
+                'color': 'black',
+                'box-shadow': '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)'
+            });
+
         },
         computed: {},
         methods: {
             completeStep(payload) {
+                console.log(payload);
                 this.steps.forEach((step) => {
+                    console.log(step);
                     if (step.name === payload.name) {
                         step.completed = true;
                     }
