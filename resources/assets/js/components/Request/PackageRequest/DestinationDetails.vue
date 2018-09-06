@@ -22,7 +22,7 @@
 
         },
         mounted() {
-
+            this.$emit('can-continue', {value: true});
         },
         data() {
             return {

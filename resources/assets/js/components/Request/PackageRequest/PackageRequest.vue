@@ -28,12 +28,12 @@
 
     import  PackageMainDetails from './PackageMainDetails';
     import  DestinationDetails from './DestinationDetails';
+    import HotelDetails from './HotelDetails';
 
     // import StepOne from './StepOne.vue';
     // import StepTwo from './StepTwo.vue';
     // const teamUrl = 'https://github.com/PygmySlowLoris';
     // const repoUrl = 'https://github.com/PygmySlowLoris/vue-stepper';
-    import  HotelDetails from './HotelDetails';
     import StepTwo from './StepTwo.vue';
     export default {
         name: 'PackageRequest',
@@ -47,7 +47,7 @@
             return {
                 steps: [
                     {
-                        icon: 'mail',
+                        icon: 'info',
                         name: 'PackageMainDetails',
                         title: 'Package Main Details',
                         subtitle: '',
@@ -56,7 +56,7 @@
 
                     },
                     {
-                        icon: 'report_problem',
+                        icon: 'place',
                         name: 'DestinationDetails',
                         title: 'Destination Details',
                         subtitle: '',
@@ -72,7 +72,7 @@
                     //     completed: false
                     // },
                     {
-                        icon: 'announcement',
+                        icon: 'location_city',
                         name: 'third',
                         title: 'Hotel Details Selection',
                         component: HotelDetails,
@@ -120,7 +120,7 @@
             alert(payload) {
             },
             changeComponent() {
-                this.$emit('change-component', 'NewOrOldClient');
+                this.$emit('change-component', {component: 'NewOrOldClient'});
             }
         }
     }
