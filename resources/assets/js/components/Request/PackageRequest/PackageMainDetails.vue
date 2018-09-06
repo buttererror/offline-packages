@@ -6,7 +6,6 @@
                 <input type="text" placeholder="مكان البدايه" style="text-align: right" class="form-control"/>
             </div>
             <div class="col-form-label col-form-label-lg col-3"> مكان البداية</div>
-
         </div>
         <div class="form-group row">
             <div class="col-6 offset-3">

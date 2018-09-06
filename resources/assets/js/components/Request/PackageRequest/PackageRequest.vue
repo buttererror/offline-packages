@@ -33,7 +33,8 @@
     // import StepTwo from './StepTwo.vue';
     // const teamUrl = 'https://github.com/PygmySlowLoris';
     // const repoUrl = 'https://github.com/PygmySlowLoris/vue-stepper';
-
+    import  HotelDetails from './HotelDetails';
+    import StepTwo from './StepTwo.vue';
     export default {
         name: 'PackageRequest',
         props: {
@@ -62,12 +63,19 @@
                         component: DestinationDetails,
                         completed: false
                     },
+                    // {
+                    //     icon: 'report_problem',
+                    //     name: 'second',
+                    //     title: 'Sample title 2',
+                    //     subtitle: 'Subtitle sample',
+                    //     component: StepTwo,
+                    //     completed: false
+                    // },
                     {
                         icon: 'announcement',
                         name: 'third',
-                        title: 'Sample title 3',
-                        subtitle: 'Subtitle sample',
-                        component: PackageMainDetails,
+                        title: 'Hotel Details Selection',
+                        component: HotelDetails,
                         completed: false
                     }
                 ],
