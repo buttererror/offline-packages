@@ -42,8 +42,6 @@
         },
         data() {
             return {
-                // repoUrl: repoUrl,
-                // teamUrl: teamUrl,
                 steps: [
                     {
                         icon: 'mail',
@@ -72,7 +70,12 @@
                     }
                 ],
                 activeStep: 0,
-                show: false
+                show: false,
+                packageDetails:{
+                    startPlace:'',
+                    startDate:'',
+                    endDate:''
+                }
             }
         },
         mounted() {
@@ -105,7 +108,6 @@
                 })
             },
             alert(payload) {
-                alert('end')
             },
             changeComponent() {
                 this.$emit('change-component', 'NewOrOldClient');
