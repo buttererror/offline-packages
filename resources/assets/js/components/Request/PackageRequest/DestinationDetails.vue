@@ -29,6 +29,9 @@
             });
         },
         mounted() {
+            bus.$on('change-back', () => {
+                $("#detailsContainer .stepper-button-top.next").show();
+            });
             bus.$on('change-next', () => {
                 console.log("send to hotels");
                 let {clientDetails} = this.data;

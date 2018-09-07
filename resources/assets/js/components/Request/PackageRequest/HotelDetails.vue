@@ -149,6 +149,7 @@
             });
         },
         mounted() {
+            $("#detailsContainer .stepper-button-top.next").hide();
             this.$emit('can-continue', {value: true});
             bus.$on("package-completed", () => {
                 console.log(this.packageRequestDetails);

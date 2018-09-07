@@ -131,9 +131,9 @@
                 })
             },
             stepBack() {
-                setTimeout(() => {
+                // setTimeout(() => {
                     bus.$emit("change-back");
-                }, 2000);
+                // }, 2000);
             },
             alert(payload) {
                 bus.$emit("package-completed");
