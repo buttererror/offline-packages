@@ -40,6 +40,7 @@ Vue.use(BootstrapVue);
 import BaseComponent from './components/Request/BaseComponent';
 
 window.bus = new Vue();
+export const detailBus = new Vue();
 
 const app = new Vue({
     el: '#app',

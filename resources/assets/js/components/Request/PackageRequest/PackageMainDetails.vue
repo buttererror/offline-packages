@@ -13,7 +13,7 @@
                             input-class="text-right form-control form-control-lg"
                             calendar-class="h5 w-100"
                             :bootstrap-styling="true"
-                            :language="ar" @selected="activateBtn">
+                            :language="ar">
 
                 </datepicker>
             </div>
@@ -25,7 +25,7 @@
                             input-class="text-right form-control form-control-lg"
                             calendar-class="h5 w-100"
                             :bootstrap-styling="true"
-                            :language="ar" @selected="activateBtn">
+                            :language="ar">
 
                 </datepicker>
             </div>
@@ -119,6 +119,7 @@
         },
         data() {
             return {
+                clientDetails: null,
                 ar,
                 countries: ['Egypt', 'Angola', 'france', "Ethiopia"],
                 selectedCountries: '',
@@ -132,24 +133,37 @@
             }
         },
         mounted() {
-            // this.$emit('change-next', {nextBtnValue: true});
+            bus.$on('change-next', (val) => {
+                console.log(this.packageDetails);
+                if (val === true) {
+                    console.log("send to destination");
+                    setTimeout(() => {
+                        bus.$emit("data-to-destination", {
+                            clientDetails: this.clientDetails,
+                            packageDetails: this.packageDetails
+                        });
+
+                    }, 3000);
+
+                }
+            });
+            bus.$on('data-to-main', (clientDetails) => {
+                console.log("inside main", clientDetails);
+                this.clientDetails = clientDetails;
+            });
+
             this.$emit('can-continue', {value: true});
-            // setTimeout(() => {
-            //     console.log(this.clickedNext, this.currentStep)
-            // }, 2000);
         },
         watch: {
             clickedNext(val) {
-                console.log(val);
-                // if (val === true) {
-                //     this.$v.form.$touch();
-                // }
+                console.log("inside watch", val);
+                data.packageDetails = this.PackageDetails;
+                if (val === true) {
+                    bus.$emit("data-to-destination", data);
+                }
             }
         },
         methods: {
-            activateBtn() {
-                this.$emit('can-continue', {value: true});
-            },
             updateChildAge() {
                 this.childrenNum = parseInt(this.childrenNum)
                 if (this.childrenNum > 0) {

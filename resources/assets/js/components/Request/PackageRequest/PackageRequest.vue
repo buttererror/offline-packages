@@ -10,8 +10,6 @@
                                             :top-buttons="true"
                                             @active-step="isStepActive"
                                             @stepper-finished="alert"
-                                            :keep-alive="false"
-
                         >
 
                         </horizontal-stepper>
@@ -55,9 +53,7 @@
                         title: 'Package Main Details',
                         subtitle: '',
                         component: PackageMainDetails,
-                        completed: false,
-                        data: this.clientDetails
-
+                        completed: false
                     },
                     {
                         icon: 'place',
@@ -93,6 +89,7 @@
             }
         },
         mounted() {
+            bus.$emit("data-to-main", this.clientDetails);
             $("#detailsContainer .content").css({
                 'overflow': 'visible',
                 'margin-top': '5%'
@@ -112,13 +109,13 @@
         computed: {},
         methods: {
             completeStep(payload) {
-                console.log(payload);
                 this.steps.forEach((step) => {
-                    console.log(step);
                     if (step.name === payload.name) {
                         step.completed = true;
                     }
-                })
+                });
+                console.log("step completed");
+                bus.$emit('change-next', true);
             },
             isStepActive(payload) {
                 this.steps.forEach((step) => {
