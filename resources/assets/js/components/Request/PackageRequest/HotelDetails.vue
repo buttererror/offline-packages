@@ -115,6 +115,12 @@
         props: ['currentStep'],
         data() {
             return {
+                packageRequestDetails: {
+                    clientDetails: {},
+                    packageDetails: {},
+                    destinationDetails: {},
+                    hotelDetails: {}
+                },
                 selectedRoomType: '',
                 roomType: ['Standard', 'Deluxe'],
                 selectedRoomView: '',
@@ -133,7 +139,24 @@
 
             }
         },
+        created() {
+            bus.$on("data-to-hotels", (data) => {
+                console.log("inside hotels");
+                this.packageRequestDetails.clientDetails = data.clientDetails;
+                this.packageRequestDetails.packageDetails = data.packageDetails;
+                this.packageRequestDetails.destinationDetails = data.destinationDetails;
+                console.log(data);
+            });
+        },
         mounted() {
+            this.$emit('can-continue', {value: true});
+            bus.$on("package-completed", () => {
+                console.log(this.packageRequestDetails);
+                // axios
+            });
+            bus.$on('change-back', () => {
+
+            });
             console.log(this.currentStep);
         },
 

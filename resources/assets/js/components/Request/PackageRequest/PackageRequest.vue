@@ -10,6 +10,7 @@
                                             :top-buttons="true"
                                             @active-step="isStepActive"
                                             @stepper-finished="alert"
+                                            @clicking-back="stepBack"
                         >
 
                         </horizontal-stepper>
@@ -112,10 +113,13 @@
                 this.steps.forEach((step) => {
                     if (step.name === payload.name) {
                         step.completed = true;
+                        console.log("step completed");
+                        setTimeout(() => {
+                            bus.$emit('change-next');
+                        }, 2000);
                     }
                 });
-                console.log("step completed");
-                bus.$emit('change-next', true);
+
             },
             isStepActive(payload) {
                 this.steps.forEach((step) => {
@@ -126,7 +130,13 @@
                     }
                 })
             },
+            stepBack() {
+                setTimeout(() => {
+                    bus.$emit("change-back");
+                }, 2000);
+            },
             alert(payload) {
+                bus.$emit("package-completed");
             },
             changeComponent() {
                 this.$emit('change-component', {component: 'NewOrOldClient'});

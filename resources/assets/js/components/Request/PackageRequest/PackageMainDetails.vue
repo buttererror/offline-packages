@@ -133,19 +133,12 @@
             }
         },
         mounted() {
-            bus.$on('change-next', (val) => {
-                console.log(this.packageDetails);
-                if (val === true) {
-                    console.log("send to destination");
-                    setTimeout(() => {
-                        bus.$emit("data-to-destination", {
-                            clientDetails: this.clientDetails,
-                            packageDetails: this.packageDetails
-                        });
-
-                    }, 3000);
-
-                }
+            bus.$on('change-next', () => {
+                console.log("send to destination");
+                bus.$emit("data-to-destination", {
+                    clientDetails: this.clientDetails,
+                    packageDetails: this.packageDetails
+                });
             });
             bus.$on('data-to-main', (clientDetails) => {
                 console.log("inside main", clientDetails);
@@ -155,13 +148,13 @@
             this.$emit('can-continue', {value: true});
         },
         watch: {
-            clickedNext(val) {
-                console.log("inside watch", val);
-                data.packageDetails = this.PackageDetails;
-                if (val === true) {
-                    bus.$emit("data-to-destination", data);
-                }
-            }
+            // clickedNext(val) {
+            //     console.log("inside watch", val);
+            //     data.packageDetails = this.PackageDetails;
+            //     if (val === true) {
+            //         bus.$emit("data-to-destination", data);
+            //     }
+            // }
         },
         methods: {
             updateChildAge() {

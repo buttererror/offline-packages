@@ -22,11 +22,24 @@
         components: {
 
         },
-        mounted() {
+        created() {
             bus.$on("data-to-destination", (data) => {
                 console.log("inside destination", data);
-                 this.data = data;
+                this.data = data;
             });
+        },
+        mounted() {
+            bus.$on('change-next', () => {
+                console.log("send to hotels");
+                let {clientDetails} = this.data;
+                let {packageDetails} = this.data;
+                bus.$emit('data-to-hotels', {
+                    clientDetails: clientDetails,
+                    packageDetails: packageDetails,
+                    destinationDetails: this.destinationDetails
+                });
+            });
+
             $("#detailsContainer .previous").css({
                 'border': '2px solid #3383c8',
                 'box-shadow': '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)'
@@ -35,7 +48,8 @@
         },
         data() {
             return {
-                data: null
+                data: null,
+                destinationDetails: {}
             }
         }
 
