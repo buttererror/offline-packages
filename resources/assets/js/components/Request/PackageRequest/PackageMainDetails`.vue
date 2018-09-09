@@ -156,9 +156,6 @@
                     carLevel:['standard','premium'],
                     reserveAccomodation:false,
                     accomodationType:['hotel','appartment']
-
-
-
                 }
             }
         },

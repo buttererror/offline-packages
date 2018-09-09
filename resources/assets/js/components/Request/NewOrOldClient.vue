@@ -49,7 +49,7 @@
                 clients: [],
                 client: null,
                 clientTemplate: ClientAutocompleteItem,
-                nextComponent: "PackageRequest",
+                nextComponent: "PackageDetails",
                 show: true
             }
         },

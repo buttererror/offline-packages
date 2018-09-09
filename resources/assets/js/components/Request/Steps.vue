@@ -12,7 +12,7 @@
 <script>
     import JourneyStart from "./JourneyStart";
     import ClientDetails from './ClientDetails';
-    import PackageRequest from './PackageRequest/PackageRequest';
+    import PackageDetails from './PackageRequest/PackageDetails';
     import Accommodation from './Accommodation';
     import NewOrOldClient from './NewOrOldClient';
 
@@ -20,7 +20,7 @@
         components: {
             JourneyStart,
             ClientDetails,
-            PackageRequest,
+            PackageDetails,
             Accommodation,
             NewOrOldClient
         },

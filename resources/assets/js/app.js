@@ -11,24 +11,12 @@ window.Vue = require('vue');
 
 import BootstrapVue from 'bootstrap-vue'
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
-import Vuetify from 'vuetify';
-import '@fortawesome/fontawesome-free/css/all.css'
-import colors from 'vuetify/es5/util/colors'
-import FileUpload from 'v-file-upload'
-// import Datepicker from 'vuejs-datepicker';
+// import '@fortawesome/fontawesome-free/css/all.css'
+import FileUpload from 'v-file-upload';
+import ToggleButton from 'vue-js-toggle-button';
 
-Vue.use(FileUpload)
-// Vue.use(Datepicker)
-
-Vue.use(Vuetify, {
-    rtl: true,
-    iconfont: 'fa',
-    theme: {
-        primary: colors.red.darken1, // #E53935
-        secondary: colors.red.lighten4, // #FFCDD2
-        accent: colors.indigo.base // #3F51B5
-    }
-});
+Vue.use(ToggleButton);
+Vue.use(FileUpload);
 Vue.use(BootstrapVue);
 
 /**
@@ -40,7 +28,6 @@ Vue.use(BootstrapVue);
 import BaseComponent from './components/Request/BaseComponent';
 
 window.bus = new Vue();
-export const detailBus = new Vue();
 
 const app = new Vue({
     el: '#app',
@@ -50,5 +37,4 @@ const app = new Vue({
 
 
 import 'v-autocomplete/dist/v-autocomplete.css';
-import 'vuetify/dist/vuetify.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css'
