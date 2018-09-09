@@ -52,13 +52,18 @@
         <div class="form-group row">
             <div class="col-4 offset-3">
                 <div class="checkbox">
-                    <label style="float:right;"><input type="checkbox" v-model="packageDetails.rentCar">تاجير
+                    <label style="float:right;">
+                        <input type="checkbox" v-model="packageDetails.rentCar" @change="viewCarLevel">تاجير
                         سياره</label>
                 </div>
             </div>
             <div class="col-4 offset-3">
                 <div class="checkbox">
-                    <label style="float:right;"><input type="checkbox" v-model="packageDetails.rentCarWithDriver">تاجير
+                    <label style="float:right;">
+                        <input type="checkbox"
+                               v-model="packageDetails.rentCarWithDriver"
+                               @change="viewCarLevel"
+                        >تاجير
                         سياره مع سائق</label>
                 </div>
             </div>
@@ -72,14 +77,35 @@
         <div v-if="show">
             <div class="form-group">
                 <multiselect
-                        v-model="selected" :options="packageDetails.carLevel" tagPosition="bottom"
+                        v-model="packageDetails.selectedCarLevel" :options="packageDetails.carLevel"
+                        tagPosition="bottom"
                         :preserveSearch="true" :showNoResults="false" selectLabel=""
                 >
 
                 </multiselect>
             </div>
         </div>
+        <div class="form-group row">
+            <div class="col-4 offset-3">
+                <div class="checkbox">
+                    <label style="float:right;"><input type="checkbox" v-model="packageDetails.reserveAccomodation"
+                                                       @change="updateAccomodationType"
 
+                    >حجز اقامة</label>
+                </div>
+            </div>
+        </div>
+        <div v-if="showAccomodationType">
+            <multiselect
+                    v-model="packageDetails.selectedAccomodationType" :options="packageDetails.accomodationType"
+                    tagPosition="bottom"
+                    :preserveSearch="true" :showNoResults="false" selectLabel=""
+            >
+
+            </multiselect>
+        </div>
+
+        <HotelDetail></HotelDetail>
     </div>
 </template>
 
@@ -87,6 +113,7 @@
 
     import Datepicker from 'vuejs-datepicker';
     import Multiselect from 'vue-multiselect'
+    import HotelDetail from './HotelDetails'
 
     import {en, ar} from 'vuejs-datepicker/dist/locale'
 
@@ -95,8 +122,22 @@
         name: "DestinationDetails",
         components: {
             Datepicker,
-            Multiselect
+            Multiselect,
+            HotelDetail
         },
+        data() {
+            return {
+                packageDetails: {},
+                clientDetails: {},
+                destinationDetails: {},
+                updateCheckOutDate: '',
+                show: false,
+                ar,
+                en,
+                showAccomodationType: false
+            }
+        },
+
         created() {
             bus.$on("data-to-destination", (data) => {
                 this.packageDetails = data;
@@ -124,15 +165,19 @@
             });
             this.$emit('can-continue', {value: true});
         },
-        data() {
-            return {
-                packageDetails: {},
-                clientDetails: {},
-                destinationDetails: {},
-                updateCheckOutDate: '',
-                show:false,
-                ar,
-                en
+
+        methods: {
+            viewCarLevel() {
+                if (this.packageDetails.rentCar) {
+                    this.show = true;
+                }
+
+            },
+            updateAccomodationType() {
+                if (this.packageDetails.reserveAccomodation) {
+
+                    this.showAccomodationType = true;
+                }
             }
         },
         watch: {

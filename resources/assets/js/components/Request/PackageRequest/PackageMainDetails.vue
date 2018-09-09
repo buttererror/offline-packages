@@ -118,13 +118,12 @@
     import {en, ar} from 'vuejs-datepicker/dist/locale'
     import Multiselect from 'vue-multiselect'
 
-
     export default {
         props: ['clickedNext', 'currentStep'],
         name: "PackageMainDetails",
         components: {
             Datepicker,
-            Multiselect
+            Multiselect,
         },
         data() {
             return {
@@ -155,10 +154,9 @@
                     needTours:false,
                     carLevel:['standard','premium'],
                     reserveAccomodation:false,
-                    accomodationType:['hotel','appartment']
-
-
-
+                    accomodationType:['hotel','appartment'],
+                    selectedAccomodationType:'',
+                    selectedCarLevel:''
                 }
             }
         },
