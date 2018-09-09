@@ -11,6 +11,6 @@ class CountriesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Country::class,100)->create();
+        \Illuminate\Support\Facades\Artisan::call('seed:countries');
     }
 }
