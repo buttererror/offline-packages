@@ -3,7 +3,7 @@
 
         <div class="form-group row">
             <div class="col-6 offset-3">
-                <input type="text" placeholder="مكان البدايه" style="text-align: right" class="form-control"/>
+                <input type="text" placeholder="مكان البدايه" v-model="packageDetails.startPlace" style="text-align: right" class="form-control"/>
             </div>
             <div class="col-form-label col-form-label-lg col-3"> مكان البداية</div>
         </div>
@@ -13,7 +13,10 @@
                             input-class="text-right form-control form-control-lg"
                             calendar-class="h5 w-100"
                             :bootstrap-styling="true"
-                            :language="ar">
+                            :language="ar"
+                            :value  = "packageDetails.startDate"
+                            v-model = "packageDetails.startDate"
+                >
 
                 </datepicker>
             </div>
@@ -25,7 +28,9 @@
                             input-class="text-right form-control form-control-lg"
                             calendar-class="h5 w-100"
                             :bootstrap-styling="true"
-                            :language="ar">
+                            :language="ar"
+                            v-model="packageDetails.endDate"
+                >
 
                 </datepicker>
             </div>
@@ -35,7 +40,7 @@
         <div class="row form-group">
             <div class="col-6 offset-3">
                 <multiselect
-                    v-model="selectedCountries"
+                    v-model="packageDetails.countries"
                     :options="countries"
                     :multiple="true"
                 ></multiselect>
@@ -45,7 +50,11 @@
 
         <div class="form-group row">
             <div class="col-6 offset-3">
-                <input type="text" placeholder="عدد الاماكن" style="text-align: right" class="form-control"/>
+                <input type="text" placeholder="عدد الاماكن"
+                       style="text-align: right"
+                       class="form-control"
+                       v-model="packageDetails.placesNum"
+                />
             </div>
             <div class="col-form-label col-form-label-lg col-3">
                 الاماكن
@@ -55,7 +64,7 @@
         <div class="form-group row">
             <div class="col-6 offset-3">
                 <div class="checkbox">
-                    <label style="float:right;"><input type="checkbox" value="">هل تحتاج لسياره تنقل</label>
+                    <label style="float:right;"><input type="checkbox" v-model="packageDetails.transfer" >هل تحتاج لسياره تنقل</label>
                 </div>
             </div>
         </div>
@@ -65,7 +74,7 @@
             <div class="col-6 offset-3">
             </div>
             <div class="col-6 offset-3">
-                <input type="text" placeholder="عدد البالغين" style="text-align: right" class="form-control"/>
+                <input type="text" placeholder="عدد البالغين" style="text-align: right" class="form-control" v-model="packageDetails.adultsNum"/>
             </div>
             <div class="col-form-label col-form-label-lg col-3">عدد البالغين</div>
         </div>
@@ -74,7 +83,7 @@
             </div>
             <div class="col-6 offset-3">
                 <input type="text" placeholder="عدد الاطفال" style="text-align: right"
-                       v-model="childrenNum"
+                       v-model="packageDetails.childrenNum"
                        class="form-control"
                        @change="updateChildAge"
                 />
@@ -84,13 +93,13 @@
 
         <div v-if="show">
 
-            <div v-for="num in childrenNum">
+            <div v-for="(num,key) in packageDetails.childrenNum">
                 <div class="form-group row">
                     <div class="col-6 offset-3">
                     </div>
                     <div class="col-6 offset-3">
                         <input type="text" placeholder="عمر الطفل"
-                               v-model="childAge"
+                               v-model="packageDetails.childAge[key]"
                                style="text-align: right"
                                class="form-control"/>
                     </div>
@@ -121,20 +130,40 @@
             return {
                 clientDetails: null,
                 ar,
+                en,
                 countries: ['Egypt', 'Angola', 'france', "Ethiopia"],
                 selectedCountries: '',
                 show: false,
                 childrenNum: '',
                 childAge: '',
-                packageDetails: {
-                    start: 0,
-                    end: 1
+                packageDetails:{
+                    startPlace:'',
+                    startDate:'',
+                    endDate:'',
+                    countries:[],
+                    city:[],
+                    placesNum:null,
+                    transfer:false,
+                    adultsNum:null,
+                    childrenNum:null,
+                    childAge:[],
+                    checkInDate:'',
+                    checkOutDate:'',
+                    nightsNum:'',
+                    rentCar:false,
+                    rentCarWithDriver:false,
+                    needTours:false,
+                    carLevel:['standard','premium'],
+                    reserveAccomodation:false,
+                    accomodationType:['hotel','appartment']
+
+
+
                 }
             }
         },
         mounted() {
             bus.$on('change-next', () => {
-                console.log("send to destination");
                 bus.$emit("data-to-destination", {
                     clientDetails: this.clientDetails,
                     packageDetails: this.packageDetails
@@ -145,26 +174,16 @@
                 this.clientDetails = clientDetails;
             });
 
-            this.$emit('can-continue', {value: true});
-        },
-        watch: {
-            // clickedNext(val) {
-            //     console.log("inside watch", val);
-            //     data.packageDetails = this.PackageDetails;
-            //     if (val === true) {
-            //         bus.$emit("data-to-destination", data);
-            //     }
-            // }
+            this.$emit('can-continue', {value: true}); //for next button activation
         },
         methods: {
             updateChildAge() {
-                this.childrenNum = parseInt(this.childrenNum)
-                if (this.childrenNum > 0) {
+                this.packageDetails.childrenNum = parseInt(this.packageDetails.childrenNum);
+                if (this.packageDetails.childrenNum > 0) {
                     this.show = true
                 }
                 else {
                     this.show = false
-
                 }
             }
 

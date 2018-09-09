@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Http\Requests\PackageRequest;
 use App\Package;
 use Carbon\Carbon;
 use Validator;
@@ -38,21 +39,12 @@ class PackageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request):JsonResponse
+    public function store(PackageRequest $request):JsonResponse
     {
         //validate request
-        $validator = Validator::make($request->all(),$this->rules());
-        if($validator->fails() || !$this->validateChildrenCount($request)){
-            //gets any error message from the validator
-            $errors = $validator->errors()->toArray();
-            if(!$this->validateChildrenCount($request)){
-                //add error message for the children_count field
-                $errors['children_count'] = ['children_count must equal to the children'];
-            }
-            //return response with the errors messages
-            return response()->json([
-                'errors' => $errors
-            ]);
+        if(!$this->validateChildrenCount($request)){
+            //add error message for the children_count field
+            $errors['children_count'] = ['children_count must equal to the children'];
         }
         //store the the package
         $package = Package::create([
@@ -116,62 +108,16 @@ class PackageController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Package  $package
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Package $package)
     {
         //
     }
 
-    /**
-     * Get the validation rules
-     *
-     * @return array
-     */
-    private function rules():array
-    {
-        return [
-            'client_id' => 'required|integer',
-            'start_date' => 'required|date',
-            'title' => 'nullable|string',
-            'end_date' => 'required|date|after:start_date',
-            'number_of_destinations' => 'required|integer|min:1',
-            'transfer' => 'boolean',
-            'status' => [
-                Rule::in('s1','s2','s3','s4','s5','s6')
-            ],
-            'start_place' => 'nullable|string',
-            'note' => 'nullable|string',
-            'countries' => 'required|array|min:1',
-            'countries.*' => 'exists:countries,id',
-            'adults' => 'required|integer|min:1',
-            'children_count' => 'nullable|integer',
-            'children' => 'nullable|array',
-            'children.*' => 'min:0|max:11|integer'
-        ];
-    }
-
-    /**
-     * Validate the children count
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return bool
-     */
     private function validateChildrenCount(Request $request):bool
     {
         return $request->children_count == count($request->children);
     }
 
-    /**
-     * Calculate the package nights
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return int
-     */
     private function nights(Request $request):int
     {
         $start = (new Carbon($request->start_date))->startOfDay();

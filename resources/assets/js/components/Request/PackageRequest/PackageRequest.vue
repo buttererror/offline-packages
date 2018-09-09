@@ -26,17 +26,15 @@
 </template>
 
 <script>
-    import HorizontalStepper from 'vue-stepper/src/HorizontalStepper.vue';
-
+    import  HorizontalStepper from 'vue-stepper/src/HorizontalStepper.vue';
     import  PackageMainDetails from './PackageMainDetails';
     import  DestinationDetails from './DestinationDetails';
-    import HotelDetails from './HotelDetails';
+    import  HotelDetails from './HotelDetails';
 
     // import StepOne from './StepOne.vue';
     // import StepTwo from './StepTwo.vue';
     // const teamUrl = 'https://github.com/PygmySlowLoris';
     // const repoUrl = 'https://github.com/PygmySlowLoris/vue-stepper';
-    import StepTwo from './StepTwo.vue';
     export default {
         name: 'PackageRequest',
         props: {
@@ -64,14 +62,6 @@
                         component: DestinationDetails,
                         completed: false
                     },
-                    // {
-                    //     icon: 'report_problem',
-                    //     name: 'second',
-                    //     title: 'Sample title 2',
-                    //     subtitle: 'Subtitle sample',
-                    //     component: StepTwo,
-                    //     completed: false
-                    // },
                     {
                         icon: 'location_city',
                         name: 'HotelDetails',
@@ -81,12 +71,8 @@
                     }
                 ],
                 activeStep: 0,
-                show: false,
-                packageDetails:{
-                    startPlace:'',
-                    startDate:'',
-                    endDate:''
-                }
+                show: false
+
             }
         },
         mounted() {
