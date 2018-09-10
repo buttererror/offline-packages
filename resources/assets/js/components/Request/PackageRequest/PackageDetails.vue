@@ -136,7 +136,7 @@
     import Datepicker from 'vuejs-datepicker';
     import {en, ar} from 'vuejs-datepicker/dist/locale';
     import Multiselect from 'vue-multiselect';
-
+    import DestinationDetails from'./DestinationDetails'
     export default {
         name: 'PackageDetails',
         props: {
@@ -144,7 +144,8 @@
         },
         components: {
             Datepicker,
-            Multiselect
+            Multiselect,
+            DestinationDetails
         },
         data() {
             return {

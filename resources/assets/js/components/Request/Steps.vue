@@ -15,6 +15,8 @@
     import PackageDetails from './PackageRequest/PackageDetails';
     import Accommodation from './Accommodation';
     import NewOrOldClient from './NewOrOldClient';
+    import DestinationDetails from './PackageRequest/DestinationDetails';
+    import FinalNote from './PackageRequest/FinalNote';
 
     export default {
         components: {
@@ -22,7 +24,9 @@
             ClientDetails,
             PackageDetails,
             Accommodation,
-            NewOrOldClient
+            NewOrOldClient,
+            DestinationDetails,
+            FinalNote
         },
         mounted(){
 

@@ -1,111 +1,122 @@
 <template>
-    <div>
-        <div class="form-group row">
-            <div class="col-6 offset-3">
-                <select class="form-control">
-                    <option>الاسكندرية</option>
-                    <option>القاهرة</option>
-                    <option>اسيوط</option>
-                </select>
-            </div>
-            <div class="col-form-label col-form-label-lg col-3">المدينة</div>
-        </div>
+    <div id="destination_details">
+        <div class="card">
+            <div class="card-header">Destination Details</div>
 
-        <div class="form-group row">
-            <div class="col-6 offset-3">
-                <datepicker placeholder=" تاريخ البداية" class="text-right"
-                            :bootstrap-styling="true"
-                            :value="packageDetails.startDate"
-                            v-model="packageDetails.checkInDate"
-                            :language="ar"
-
-                ></datepicker>
-            </div>
-            <div class="col-form-label col-3 text-right">تاريخ البدايه</div>
-        </div>
-
-
-        <div class="form-group row">
-            <div class="col-6 offset-3">
-                <input type="text" placeholder="عدد الليالى"
-                       style="text-align: right"
-                       class="form-control"
-                       v-model="updateCheckOutDate"
-                />
-            </div>
-            <div class="col-form-label col-3 text-right">عدد الليالى</div>
-        </div>
-
-
-        <div class="form-group row">
-            <div class="col-6 offset-3">
-                <datepicker placeholder="ضع تاريخ النهاية" class="text-right"
-                            :bootstrap-styling="true"
-                            :language="ar"
-                            :value="packageDetails.checkOutDate"
-                            v-model="packageDetails.checkOutDate"
-
-                ></datepicker>
-            </div>
-            <div class="col-form-label col-3 text-right">تاريخ النهاية</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-4 offset-3">
-                <div class="checkbox">
-                    <label style="float:right;">
-                        <input type="checkbox" v-model="packageDetails.rentCar" @change="viewCarLevel">تاجير
-                        سياره</label>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-6 offset-3">
+                        <select class="form-control">
+                            <option>الاسكندرية</option>
+                            <option>القاهرة</option>
+                            <option>اسيوط</option>
+                        </select>
+                    </div>
+                    <div class="col-form-label col-form-label-lg col-3">المدينة</div>
                 </div>
-            </div>
-            <div class="col-4 offset-3">
-                <div class="checkbox">
-                    <label style="float:right;">
-                        <input type="checkbox"
-                               v-model="packageDetails.rentCarWithDriver"
-                               @change="viewCarLevel"
-                        >تاجير
-                        سياره مع سائق</label>
+
+                <div class="form-group row">
+                    <div class="col-6 offset-3">
+                        <datepicker placeholder=" تاريخ البداية" class="text-right"
+                                    :bootstrap-styling="true"
+                                    :value="packageDetails.startDate"
+                                    v-model="packageDetails.checkInDate"
+                                    :language="ar"
+
+                        ></datepicker>
+                    </div>
+                    <div class="col-form-label col-3 text-right">تاريخ البدايه</div>
                 </div>
-            </div>
-            <div class="col-4 offset-3">
-                <div class="checkbox">
-                    <label style="float:right;"><input type="checkbox" v-model="packageDetails.needTours">الحاجة لجولات</label>
+
+
+                <div class="form-group row">
+                    <div class="col-6 offset-3">
+                        <input type="text" placeholder="عدد الليالى"
+                               style="text-align: right"
+                               class="form-control"
+                               v-model="updateCheckOutDate"
+                        />
+                    </div>
+                    <div class="col-form-label col-3 text-right">عدد الليالى</div>
                 </div>
-            </div>
-        </div>
 
-        <div v-if="show">
-            <div class="form-group">
-                <multiselect
-                        v-model="packageDetails.selectedCarLevel" :options="packageDetails.carLevel"
-                        tagPosition="bottom"
-                        :preserveSearch="true" :showNoResults="false" selectLabel=""
-                >
 
-                </multiselect>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-4 offset-3">
-                <div class="checkbox">
-                    <label style="float:right;"><input type="checkbox" v-model="packageDetails.reserveAccomodation"
-                                                       @change="updateAccomodationType"
+                <div class="form-group row">
+                    <div class="col-6 offset-3">
+                        <datepicker placeholder="ضع تاريخ النهاية" class="text-right"
+                                    :bootstrap-styling="true"
+                                    :language="ar"
+                                    :value="packageDetails.checkOutDate"
+                                    v-model="packageDetails.checkOutDate"
 
-                    >حجز اقامة</label>
+                        ></datepicker>
+                    </div>
+                    <div class="col-form-label col-3 text-right">تاريخ النهاية</div>
                 </div>
+                <div class="form-group row">
+                    <div class="col-4 offset-3">
+                        <div class="checkbox">
+                            <label style="float:right;">
+                                <input type="checkbox" v-model="packageDetails.rentCar" @change="viewCarLevel">تاجير
+                                سياره</label>
+                        </div>
+                    </div>
+                    <div class="col-4 offset-3">
+                        <div class="checkbox">
+                            <label style="float:right;">
+                                <input type="checkbox"
+                                       v-model="packageDetails.rentCarWithDriver"
+                                       @change="viewCarLevel"
+                                >تاجير
+                                سياره مع سائق</label>
+                        </div>
+                    </div>
+                    <div class="col-4 offset-3">
+                        <div class="checkbox">
+                            <label style="float:right;"><input type="checkbox" v-model="packageDetails.needTours">الحاجة
+                                لجولات</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="show">
+                    <div class="form-group">
+                        <multiselect
+                                v-model="packageDetails.selectedCarLevel" :options="packageDetails.carLevel"
+                                tagPosition="bottom"
+                                :preserveSearch="true" :showNoResults="false" selectLabel=""
+                        >
+
+                        </multiselect>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4 offset-3">
+                        <div class="checkbox">
+                            <label style="float:right;"><input type="checkbox"
+                                                               v-model="packageDetails.reserveAccomodation"
+                                                               @change="updateAccomodationType"
+
+                            >حجز اقامة</label>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="showAccomodationType">
+                    <multiselect
+                            v-model="packageDetails.selectedAccomodationType" :options="packageDetails.accomodationType"
+                            tagPosition="bottom"
+                            :preserveSearch="true" :showNoResults="false" selectLabel=""
+                    >
+
+                    </multiselect>
+                </div>
+
+                <HotelDetail></HotelDetail>
+            </div>
+            <div class="card-footer text-right">
+                <button class="btn btn-primary" @click.prevent="changeComponent">التالى</button>
             </div>
         </div>
-        <div v-if="showAccomodationType">
-            <multiselect
-                    v-model="packageDetails.selectedAccomodationType" :options="packageDetails.accomodationType"
-                    tagPosition="bottom"
-                    :preserveSearch="true" :showNoResults="false" selectLabel=""
-            >
-
-            </multiselect>
-        </div>
-
-        <HotelDetail></HotelDetail>
     </div>
 </template>
 
@@ -167,6 +178,9 @@
         },
 
         methods: {
+            changeComponent() {
+                this.$emit('change-component', {component: 'FinalNote'});
+            },
             viewCarLevel() {
                 if (this.packageDetails.rentCar) {
                     this.show = true;
