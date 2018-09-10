@@ -36,6 +36,8 @@ Route::get('client/search', 'ClientController@search')
 
 Route::get('countries','CountryController@index')
     ->name('country.index');
+Route::post('countries','CountryController@searchCountry');
+
 
 Route::get('client/mobile/is_unique','ClientController@isMobileUnique')
     ->name('client_mobile_is_unique.isMobileUnique');

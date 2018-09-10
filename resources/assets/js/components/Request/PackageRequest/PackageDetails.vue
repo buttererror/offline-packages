@@ -2,7 +2,6 @@
     <div id="detailsContainer">
         <div class="card">
             <div class="card-header">Package Request</div>
-
             <div class="card-body">
                 <div class="form-group row">
                     <div class="col-6 offset-3">
@@ -44,9 +43,17 @@
                 <div class="row form-group">
                     <div class="col-6 offset-3">
                         <multiselect
-                            v-model="packageDetails.countries"
-                            :options="countries"
-                            :multiple="true"
+
+                                v-model="selectedCountries"
+                                placeholder="Type to search"
+                                :options="packageDetails.countries"
+                                label="en_short_name"
+                                track-by="id"
+                                :multiple="true"
+                                :searchable="true"
+                                :loading="isLoading"
+                                @search-change="countryFind"
+
                         ></multiselect>
                     </div>
                     <div class="col-form-label col-form-label-lg col-3">المدن</div>
@@ -136,7 +143,8 @@
     import Datepicker from 'vuejs-datepicker';
     import {en, ar} from 'vuejs-datepicker/dist/locale';
     import Multiselect from 'vue-multiselect';
-    import DestinationDetails from'./DestinationDetails'
+    import DestinationDetails from './DestinationDetails'
+
     export default {
         name: 'PackageDetails',
         props: {
@@ -151,16 +159,19 @@
             return {
                 ar,
                 en,
-                countries: ['Egypt', 'Angola', 'france', "Ethiopia"],
                 selectedCountries: '',
                 show: false,
                 childrenNum: '',
                 childAge: '',
+                isLoading: false,
                 packageDetails: {
                     startPlace: '',
                     startDate: '',
                     endDate: '',
-                    countries: [],
+                    countries: [
+                        {id: '', en_short_name: ''}
+                    ],
+                    selectedCountries: [],
                     city: [],
                     placesNum: null,
                     transfer: false,
@@ -181,6 +192,11 @@
             }
         },
         mounted() {
+            axios.get('/api/countries').then(response => {
+                console.log(response.data);
+                this.packageDetails.countries = response.data;
+            });
+
             bus.$emit("data-to-destination", {
                 clientDetails: this.clientDetails,
                 packageDetails: this.packageDetails
@@ -200,8 +216,17 @@
                 else {
                     this.show = false
                 }
-            }
-        }
+            },
+            countryFind(query) {
+                this.isLoading = true
+                axios.post('/api/countries', {query: query}).then(response => {
+                    this.packageDetails.countries = response.data;
+                    this.isLoading = false
+
+                });
+            },
+        },
+
     }
 </script>
 
