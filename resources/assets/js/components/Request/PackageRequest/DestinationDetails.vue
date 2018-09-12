@@ -10,7 +10,7 @@
                                 v-model="destinationDetails.selectedCity"
                                 placeholder="Type to search"
                                 :options="destinationDetails.cities"
-                                label="en_short_name"
+                                label="name"
                                 track-by="id"
                                 :multiple="false"
                                 :searchable="true"
@@ -166,13 +166,19 @@
         },
         mounted() {
             bus.$on("data-to-destination", (data) => {
-               alert('haw');
-                this.packageDetails = data;
-                console.log(this.packageDetails)
+                this.packageDetails = data.packageDetails;
+                let selectedCountries=this.packageDetails.selectedCountries;
+                let selectedCountriesIds=[];
+                selectedCountries.forEach(function (element) {
+                    selectedCountriesIds.push(element.id)
+                });
+                axios.post('/api/cities',{'country_ids':selectedCountriesIds}).then(response=>{
+                    this.destinationDetails.cities=response.data.cities;
+                    console.log(this.destinationDetails.cities);
+
+                });
             });
-            // axios.get('/api/cities').then(function (response) {
-            //
-            // });
+
 
 
             $("#detailsContainer .previous").css({
