@@ -2,25 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\Country;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
-class SeedCountries extends Command
+class Cities extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'seed:countries';
+    protected $signature = 'seed:cities';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Seeds Countries Table';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -39,6 +38,6 @@ class SeedCountries extends Command
      */
     public function handle()
     {
-    \DB::unprepared(file_get_contents(public_path('countries.sql')));
+        DB::unprepared(file_get_contents(public_path('cities.sql')));
     }
 }
