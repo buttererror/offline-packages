@@ -14,7 +14,7 @@ class Country extends Model
     }
 
     public static  function getCities($country_id){
-        $cities=City::whereIn('country_id',$country_id)->get();
+        $cities=City::whereIn('country_id',$country_id)->orderBy('top_destination','desc')->get();
         return $cities;
     }
 }

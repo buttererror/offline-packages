@@ -30,6 +30,7 @@ class AccommodationRequest extends Model
     {
         return $this->belongsTo('App/Package');
     }
+
 }
 
 
