@@ -44,7 +44,7 @@
                     <div class="col-6 offset-3">
                         <multiselect
 
-                                v-model="selectedCountries"
+                                v-model="packageDetails.selectedCountries"
                                 placeholder="Type to search"
                                 :options="packageDetails.countries"
                                 label="en_short_name"
@@ -159,7 +159,6 @@
             return {
                 ar,
                 en,
-                selectedCountries: '',
                 show: false,
                 childrenNum: '',
                 childAge: '',
