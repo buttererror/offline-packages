@@ -193,20 +193,24 @@
         },
         mounted() {
             axios.get('/api/countries').then(response => {
-                console.log(response.data);
                 this.packageDetails.countries = response.data;
             });
 
-            bus.$emit("data-to-destination", {
-                clientDetails: this.clientDetails,
-                packageDetails: this.packageDetails
-            });
+
 
         },
         computed: {},
         methods: {
             changeComponent() {
                 this.$emit('change-component', {component: 'DestinationDetails'});
+                setTimeout(() => {
+                    bus.$emit("data-to-destination", {
+                        clientDetails: this.clientDetails,
+                        packageDetails: this.packageDetails
+                    });
+                }, 1000);
+
+
             },
             updateChildAge() {
                 this.packageDetails.childrenNum = parseInt(this.packageDetails.childrenNum);
@@ -218,7 +222,7 @@
                 }
             },
             countryFind(query) {
-                this.isLoading = true
+                this.isLoading = true;
                 axios.post('/api/countries', {query: query}).then(response => {
                     this.packageDetails.countries = response.data;
                     this.isLoading = false

@@ -3,7 +3,7 @@
         <div class="form-group row">
 
             <div class="col-6 offset-3">
-                <input type="text" placeholder="عدد الغرف" v-model="roomsNum" style="text-align: right"
+                <input type="number" min="0" placeholder="عدد الغرف" v-model="roomsNum" style="text-align: right"
                        class="form-control"
                        @change="update()"
                 />
@@ -112,7 +112,6 @@
         components: {
             Multiselect
         },
-        props: ['currentStep'],
         data() {
             return {
                 packageRequestDetails: {
@@ -155,10 +154,6 @@
                 console.log(this.packageRequestDetails);
                 // axios
             });
-            bus.$on('change-back', () => {
-
-            });
-            console.log(this.currentStep);
         },
 
         methods: {

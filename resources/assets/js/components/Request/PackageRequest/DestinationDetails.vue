@@ -6,11 +6,16 @@
             <div class="card-body">
                 <div class="form-group row">
                     <div class="col-6 offset-3">
-                        <select class="form-control">
-                            <option>الاسكندرية</option>
-                            <option>القاهرة</option>
-                            <option>اسيوط</option>
-                        </select>
+                        <multiselect
+                                v-model="destinationDetails.selectedCity"
+                                placeholder="Type to search"
+                                :options="destinationDetails.cities"
+                                label="en_short_name"
+                                track-by="id"
+                                :multiple="false"
+                                :searchable="true"
+
+                        ></multiselect>
                     </div>
                     <div class="col-form-label col-form-label-lg col-3">المدينة</div>
                 </div>
@@ -20,7 +25,7 @@
                         <datepicker placeholder=" تاريخ البداية" class="text-right"
                                     :bootstrap-styling="true"
                                     :value="packageDetails.startDate"
-                                    v-model="packageDetails.checkInDate"
+                                    v-model="destinationDetails.checkInDate"
                                     :language="ar"
 
                         ></datepicker>
@@ -34,7 +39,7 @@
                         <input type="text" placeholder="عدد الليالى"
                                style="text-align: right"
                                class="form-control"
-                               v-model="updateCheckOutDate"
+                               v-model="destinationDetails.updateCheckOutDate"
                         />
                     </div>
                     <div class="col-form-label col-3 text-right">عدد الليالى</div>
@@ -46,8 +51,8 @@
                         <datepicker placeholder="ضع تاريخ النهاية" class="text-right"
                                     :bootstrap-styling="true"
                                     :language="ar"
-                                    :value="packageDetails.checkOutDate"
-                                    v-model="packageDetails.checkOutDate"
+                                    :value="destinationDetails.checkOutDate"
+                                    v-model="destinationDetails.checkOutDate"
 
                         ></datepicker>
                     </div>
@@ -57,7 +62,7 @@
                     <div class="col-4 offset-3">
                         <div class="checkbox">
                             <label style="float:right;">
-                                <input type="checkbox" v-model="packageDetails.rentCar" @change="viewCarLevel">تاجير
+                                <input type="checkbox" v-model="destinationDetails.rentCar" @change="viewCarLevel">تاجير
                                 سياره</label>
                         </div>
                     </div>
@@ -65,7 +70,7 @@
                         <div class="checkbox">
                             <label style="float:right;">
                                 <input type="checkbox"
-                                       v-model="packageDetails.rentCarWithDriver"
+                                       v-model="destinationDetails.rentCarWithDriver"
                                        @change="viewCarLevel"
                                 >تاجير
                                 سياره مع سائق</label>
@@ -73,7 +78,7 @@
                     </div>
                     <div class="col-4 offset-3">
                         <div class="checkbox">
-                            <label style="float:right;"><input type="checkbox" v-model="packageDetails.needTours">الحاجة
+                            <label style="float:right;"><input type="checkbox" v-model="destinationDetails.needTours">الحاجة
                                 لجولات</label>
                         </div>
                     </div>
@@ -82,7 +87,7 @@
                 <div v-if="show">
                     <div class="form-group">
                         <multiselect
-                                v-model="packageDetails.selectedCarLevel" :options="packageDetails.carLevel"
+                                v-model="destinationDetails.selectedCarLevel" :options="destinationDetails.carLevel"
                                 tagPosition="bottom"
                                 :preserveSearch="true" :showNoResults="false" selectLabel=""
                         >
@@ -94,7 +99,7 @@
                     <div class="col-4 offset-3">
                         <div class="checkbox">
                             <label style="float:right;"><input type="checkbox"
-                                                               v-model="packageDetails.reserveAccomodation"
+                                                               v-model="destinationDetails.reserveAccomodation"
                                                                @change="updateAccomodationType"
 
                             >حجز اقامة</label>
@@ -103,7 +108,7 @@
                 </div>
                 <div v-if="showAccomodationType">
                     <multiselect
-                            v-model="packageDetails.selectedAccomodationType" :options="packageDetails.accomodationType"
+                            v-model="destinationDetails.selectedAccomodationType" :options="destinationDetails.accomodationType"
                             tagPosition="bottom"
                             :preserveSearch="true" :showNoResults="false" selectLabel=""
                     >
@@ -140,7 +145,10 @@
             return {
                 packageDetails: {},
                 clientDetails: {},
-                destinationDetails: {},
+                destinationDetails: {
+                    cities:[],
+                    selectedCity:''
+                },
                 updateCheckOutDate: '',
                 show: false,
                 ar,
@@ -150,31 +158,27 @@
         },
 
         created() {
-            bus.$on("data-to-destination", (data) => {
+            bus.$on("destination", (data) => {
+                alert('haw');
                 this.packageDetails = data;
                 console.log(this.packageDetails)
             });
         },
         mounted() {
-            bus.$on('change-back', () => {
-                $("#detailsContainer .stepper-button-top.next").show();
+            bus.$on("data-to-destination", (data) => {
+               alert('haw');
+                this.packageDetails = data;
+                console.log(this.packageDetails)
             });
-            bus.$on('change-next', () => {
-                console.log("send to hotels");
-                let {clientDetails} = this.clientDetails;
-                let {packageDetails} = this.packageDetails;
-                bus.$emit('data-to-hotels', {
-                    clientDetails: clientDetails,
-                    packageDetails: packageDetails,
-                    destinationDetails: this.destinationDetails
-                });
-            });
+            // axios.get('/api/cities').then(function (response) {
+            //
+            // });
+
 
             $("#detailsContainer .previous").css({
                 'border': '2px solid #3383c8',
                 'box-shadow': '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)'
             });
-            this.$emit('can-continue', {value: true});
         },
 
         methods: {
@@ -196,14 +200,14 @@
         },
         watch: {
             updateCheckOutDate: function () {
-                if (this.updateCheckOutDate !== '') {
-                    let result = new Date(this.packageDetails.checkInDate);
+                alert('haw');
+                    let result = new Date(this.destinationDetails.checkInDate);
                     result.setDate(result.getDate() + parseInt(Math.abs(this.updateCheckOutDate)));
-                    packageDetails.nightsNum = this.updateCheckOutDate;
-                    this.packageDetails.checkOutDate = result;
+                // destinationDetails.nightsNum = this.updateCheckOutDate;
+                    this.destinationDetails.checkOutDate = result;
                 }
             }
-        }
+
 
 
     }
