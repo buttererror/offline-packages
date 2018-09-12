@@ -1,7 +1,7 @@
 <template>
     <div>
-        <component @change-component="changeComponent" v-bind:is="clientDetails.component"
-                   :clientDetails="clientDetails.data"
+        <component @change-component="changeComponent" v-bind:is="component"
+                   :clientDetails="clientDetails" :data="package"
 
         >
 
@@ -12,14 +12,14 @@
 <script>
     import PackageDetails from './PackageRequest/PackageDetails';
     import NewOrOldClient from './NewOrOldClient';
-    import DestinationDetails from './PackageRequest/DestinationDetails';
+    import DestinationBase from './PackageRequest/DestinationBase';
     import FinalNote from './PackageRequest/FinalNote';
 
     export default {
         components: {
             PackageDetails,
             NewOrOldClient,
-            DestinationDetails,
+            DestinationBase,
             FinalNote
         },
         mounted(){
@@ -27,16 +27,16 @@
         },
         data() {
             return {
-                clientDetails: {
-                    component: 'NewOrOldClient',
-                    data: {}
-                }
+                component: 'NewOrOldClient',
+                clientDetails: {},
+                package: {}
             }
         },
         methods: {
-            changeComponent(clientDetails){
-                this.clientDetails.component = clientDetails.component;
-                this.clientDetails.data = clientDetails.clientDetails;
+            changeComponent(data){
+                this.component = data.component;
+                this.clientDetails = data.clientDetails;
+                this.package = data.package;
             }
         }
     }

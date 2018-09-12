@@ -3,7 +3,9 @@
         <div class="form-group row">
 
             <div class="col-6 offset-3">
-                <input type="number" min="0" placeholder="عدد الغرف" v-model="roomsNum" style="text-align: right"
+                <input type="number" min="0" placeholder="عدد الغرف"
+                       @keypress="onlyNumbers"
+                       v-model="hotelDetails.roomsNum" style="text-align: right"
                        class="form-control"
                        @change="update()"
                 />
@@ -13,7 +15,7 @@
         </div>
 
         <div v-if="show" role="tablist">
-                <div v-for="(index) in roomsNum">
+                <div v-for="(index) in hotelDetails.roomsNum">
                     <b-card no-body class="mb-1">
                         <b-card-header header-tag="header" class="p-1" role="tab">
                             <b-btn href="#" block v-b-toggle="`room_${index}`" variant="info">
@@ -26,7 +28,7 @@
                                 <div class="row form-group">
                                     <div class="col-12">
                                         <multiselect
-                                            v-model="selectedAdultsNum"
+                                            v-model="hotelDetails.selectedAdultsNum"
                                             :options="adultsNum"
                                             :multiple="false"
                                         ></multiselect>
@@ -38,7 +40,7 @@
 
                                     <div class="col-12 ">
                                         <multiselect
-                                            v-model="selectedChildrenNum"
+                                            v-model="hotelDetails.selectedChildrenNum"
                                             :options="childrenNum"
                                             :multiple="true"
                                         ></multiselect>
@@ -55,7 +57,7 @@
             <div class="row form-group">
                 <div class="col-6 offset-3">
                     <multiselect
-                        v-model="selectedRoomType"
+                        v-model="hotelDetails.selectedRoomType"
                         :options="roomType"
                         :multiple="false"
                     ></multiselect>
@@ -66,7 +68,7 @@
             <div class="row form-group">
                 <div class="col-6 offset-3">
                     <multiselect
-                        v-model="selectedRoomView"
+                        v-model="hotelDetails.selectedRoomView"
                         :options="roomView"
                         :multiple="false"
                     ></multiselect>
@@ -77,7 +79,7 @@
             <div class="row form-group">
                 <div class="col-6 offset-3">
                     <multiselect
-                        v-model="selectedStars"
+                        v-model="hotelDetails.selectedStars"
                         :options="stars"
                         :multiple="false"
                     ></multiselect>
@@ -87,7 +89,8 @@
 
             <div class="form-group row">
                 <div class="col-6 offset-3">
-                    <input type="text" placeholder="اسم الفندق" v-model="hotelName" style="text-align: right"
+                    <input type="text" placeholder="اسم الفندق"
+                           v-model="hotelDetails.hotelName" style="text-align: right"
                            class="form-control"/>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3"> اسم الفندق</div>
@@ -95,7 +98,9 @@
 
             <div class="form-group row">
                 <div class="col-6 offset-3">
-                    <input type="text" placeholder="المنطقة" v-model="area" style="text-align: right" class="form-control"/>
+                    <input type="text" placeholder="المنطقة"
+                           v-model="hotelDetails.area" style="text-align: right"
+                           class="form-control"/>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3">المنطقة</div>
             </div>
@@ -114,52 +119,44 @@
         },
         data() {
             return {
-                packageRequestDetails: {
-                    clientDetails: {},
-                    packageDetails: {},
-                    destinationDetails: {},
-                    hotelDetails: {}
-                },
-                selectedRoomType: '',
                 roomType: ['Standard', 'Deluxe'],
-                selectedRoomView: '',
                 roomView: ['Sea View', 'Garden View'],
-                selectedStars: '',
                 stars: [1, 2, 3, 4, 5],
-                hotelName: '',
-                area: '',
-                roomsNum: '',
                 adultsNum: ['adult 1', 'adult 2', 'adult 3'],
                 childrenNum: ['child 1', 'child 2', 'child 3'],
                 show: false,
-                selectedAdultsNum: '',
-                selectedChildrenNum: ''
-
-
+                hotelDetails: {
+                    selectedRoomType: '',
+                    selectedRoomView: '',
+                    selectedStars: '',
+                    hotelName: '',
+                    area: '',
+                    roomsNum: '',
+                    selectedAdultsNum: '',
+                    selectedChildrenNum: ''
+                }
             }
         },
-        created() {
-            bus.$on("data-to-hotels", (data) => {
-                console.log("inside hotels");
-                this.packageRequestDetails.clientDetails = data.clientDetails;
-                this.packageRequestDetails.packageDetails = data.packageDetails;
-                this.packageRequestDetails.destinationDetails = data.destinationDetails;
-                console.log(data);
-            });
-        },
         mounted() {
+            bus.$on("next-destination", () => {
+                bus.$emit("send-hotel-details", this.hotelDetails);
+            });
             $("#detailsContainer .stepper-button-top.next").hide();
             this.$emit('can-continue', {value: true});
             bus.$on("package-completed", () => {
-                console.log(this.packageRequestDetails);
                 // axios
             });
         },
 
         methods: {
+            onlyNumbers(event) {
+                return null;
+                // console.log(event);
+                // return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57
+            },
             update() {
-                this.roomsNum = parseInt(this.roomsNum)
-                if (this.roomsNum > 0) {
+                this.hotelDetails.roomsNum = parseInt(this.hotelDetails.roomsNum)
+                if (this.hotelDetails.roomsNum > 0) {
                     this.show = true
                 }
                 else {
