@@ -10,20 +10,14 @@
 </template>
 
 <script>
-    import JourneyStart from "./JourneyStart";
-    import ClientDetails from './ClientDetails';
     import PackageDetails from './PackageRequest/PackageDetails';
-    import Accommodation from './Accommodation';
     import NewOrOldClient from './NewOrOldClient';
     import DestinationDetails from './PackageRequest/DestinationDetails';
     import FinalNote from './PackageRequest/FinalNote';
 
     export default {
         components: {
-            JourneyStart,
-            ClientDetails,
             PackageDetails,
-            Accommodation,
             NewOrOldClient,
             DestinationDetails,
             FinalNote

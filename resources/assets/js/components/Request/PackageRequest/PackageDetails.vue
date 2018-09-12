@@ -79,8 +79,8 @@
 
                                        :sync="true"
                                        :labels="{checked: 'نعم', unchecked: 'لا'}"
-                                       :width="100"
-                                       :height="40"
+                                       :width="80"
+                                       :height="35"
                                        switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
                         />
                     </div>
