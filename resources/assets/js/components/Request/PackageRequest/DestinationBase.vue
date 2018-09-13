@@ -5,7 +5,7 @@
             <div class="card-body">
                 <div v-for="n in 3">
                     <keep-alive>
-                        <DestinationDetails v-if="n === cityNumber" :cities="cities">
+                        <DestinationDetails v-if="n === cityNumber" :cityNumber="n" :cities="cities">
                         </DestinationDetails>
                     </keep-alive>
                 </div>
@@ -39,39 +39,25 @@
             return {
                 cityNumber: 1,
                 cities: [],
-                package: {
-                    clientDetails: {},
-                    packageMainDetails: {},
-                    destinations: [],
-                }
+                packageMainDetails: window.packageDetails.packageMainDetails,
+                destinationsDetails: window.packageDetails.destinationsDetails,
             }
         },
         mounted() {
-            // this.$on("change-component", (data) => {
-                console.log('parent');
-                console.log(this.data);
-                this.package.clientDetails = this.data.clientDetails;
-                this.package.packageMainDetails = this.data.packageMainDetails;
-                let selectedCountries = this.package.packageMainDetails.selectedCountries;
-                let selectedCountriesIds = [];
-                selectedCountries.forEach(function (element) {
-                    selectedCountriesIds.push(element.id)
-                });
-                axios.post('/api/cities', {'country_ids': selectedCountriesIds}).then(response => {
-                    this.cities = response.data.cities;
-                    console.log("axios", this.cities);
-                    // bus.$emit("destination-details", this.cities);
-                });
-            // });
-            // bus.$on(`destination-details-${this.cityNumber}`, (data) => {
-            //
-            // });
+            window.packageDetails.destinationsDetails = [];
+            let selectedCountries = this.packageMainDetails.selectedCountries;
+            let selectedCountriesIds = [];
+            selectedCountries.forEach(function (element) {
+                selectedCountriesIds.push(element.id)
+            });
+            axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
+                this.cities = response.data.cities;
+                console.log("axios", this.cities);
+            });
         },
         methods: {
             nextDestination() {
-                // setTimeout(() => {
-                //     bus.$emit("destination-details", this.cities);
-                // }, 1000);
+                bus.$emit(`destination-details-${this.cityNumber}`);
                 this.cityNumber++;
             },
             changeComponent() {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b>{{item.nationality}}</b>
+        <b>{{item.en_short_name}}</b>
     </div>
 
 </template>

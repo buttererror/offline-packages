@@ -77,7 +77,8 @@
                 bus.$emit('new-client-clicked');
             },
             changeComponent(client) {
-                this.$emit('change-component', {component: this.nextComponent, clientDetails: client});
+                window.packageDetails.clientDetails = client;
+                this.$emit('change-component', {component: this.nextComponent});
             }
         }
 

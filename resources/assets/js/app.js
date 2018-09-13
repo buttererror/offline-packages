@@ -34,6 +34,8 @@ const app = new Vue({
     components: {BaseComponent}
 });
 
+window.packageDetails = {};
+
 
 
 import 'v-autocomplete/dist/v-autocomplete.css';

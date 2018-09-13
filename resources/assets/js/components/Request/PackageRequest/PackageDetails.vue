@@ -6,7 +6,7 @@
                 <div class="form-group row">
                     <div class="col-6 offset-3">
                         <input type="text" placeholder="مكان البدايه"
-                               v-model="package.packageMainDetails.startPlace"
+                               v-model="packageMainDetails.startPlace"
                                style="text-align: right" class="form-control"/>
                     </div>
                     <label class="col-form-label col-form-label-lg col-3"> مكان البداية</label>
@@ -18,8 +18,8 @@
                                     calendar-class="h5 w-100"
                                     :bootstrap-styling="true"
                                     :language="ar"
-                                    :value="package.packageMainDetails.startDate"
-                                    v-model="package.packageMainDetails.startDate"
+                                    :value="packageMainDetails.startDate"
+                                    v-model="packageMainDetails.startDate"
                         >
 
                         </datepicker>
@@ -33,7 +33,7 @@
                                     calendar-class="h5 w-100"
                                     :bootstrap-styling="true"
                                     :language="ar"
-                                    v-model="package.packageMainDetails.endDate"
+                                    v-model="packageMainDetails.endDate"
                         >
 
                         </datepicker>
@@ -45,7 +45,7 @@
                     <div class="col-6 offset-3">
                         <multiselect
 
-                                v-model="package.packageMainDetails.selectedCountries"
+                                v-model="packageMainDetails.selectedCountries"
                                 placeholder="Type to search"
                                 :options="countries"
                                 label="en_short_name"
@@ -65,7 +65,7 @@
                         <input type="text" placeholder="عدد الاماكن"
                                style="text-align: right"
                                class="form-control"
-                               v-model="package.packageMainDetails.placesNum"
+                               v-model="packageMainDetails.placesNum"
                         />
                     </div>
                     <label class="col-form-label col-form-label-lg col-3">الاماكن</label>
@@ -73,7 +73,7 @@
 
                 <div class="form-group row">
                     <div class="col-6 offset-3">
-                        <toggle-button v-model="package.packageMainDetails.transfer" :value="false"
+                        <toggle-button v-model="packageMainDetails.transfer" :value="false"
 
                                        :sync="true"
                                        :labels="{checked: 'نعم', unchecked: 'لا'}"
@@ -82,7 +82,7 @@
                                        switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
                         />
                     </div>
-                        <label class="col-form-label col-form-label-lg col-3 text-nowrap">الانتقالات</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-nowrap">الانتقالات</label>
                 </div>
 
 
@@ -91,7 +91,7 @@
                     </div>
                     <div class="col-6 offset-3">
                         <input type="text" placeholder="عدد البالغين" style="text-align: right" class="form-control"
-                               v-model="package.packageMainDetails.adultsNum"/>
+                               v-model="packageMainDetails.adultsNum"/>
                     </div>
                     <label class="col-form-label col-form-label-lg col-3">عدد البالغين</label>
                 </div>
@@ -100,9 +100,9 @@
                     </div>
                     <div class="col-6 offset-3">
                         <input type="text" placeholder="عدد الاطفال" style="text-align: right"
-                               v-model="package.packageMainDetails.childrenNum"
+                               v-model="packageMainDetails.childrenNum"
                                class="form-control"
-                               @change="updateChildAge"
+                               @input="updateChildAge"
                         />
                     </div>
                     <label class="col-form-label col-form-label-lg col-3">عدد الاطفال</label>
@@ -110,13 +110,13 @@
 
                 <div v-if="show">
 
-                    <div v-for="(num,key) in package.packageMainDetails.childrenNum">
+                    <div v-for="(num,key) in packageMainDetails.childrenNum">
                         <div class="form-group row">
                             <div class="col-6 offset-3">
                             </div>
                             <div class="col-6 offset-3">
                                 <input type="text" placeholder="عمر الطفل"
-                                       v-model="package.childAge[key]"
+                                       v-model="packageMainDetails.childAge[key]"
                                        style="text-align: right"
                                        class="form-control"/>
                             </div>
@@ -143,9 +143,6 @@
 
     export default {
         name: 'PackageDetails',
-        props: {
-            clientDetails: Object
-        },
         components: {
             Datepicker,
             Multiselect,
@@ -156,56 +153,57 @@
                 ar,
                 en,
                 show: false,
-                childAge: '',
                 isLoading: false,
                 countries: [
                     {id: '', en_short_name: ''}
                 ],
-                package: {
-                    clientDetails: this.clientDetails,
-                    packageMainDetails: {
-                        startPlace: '',
-                        startDate: '',
-                        endDate: '',
-                        selectedCountries: [],
-                        placesNum: null,
-                        transfer: false,
-                        adultsNum: null,
-                        childrenNum: null,
-                        childAge: [],
-                    },
-
-                }
+                packageMainDetails: {
+                    startPlace: '',
+                    startDate: '',
+                    endDate: '',
+                    selectedCountries: [],
+                    placesNum: null,
+                    transfer: false,
+                    adultsNum: null,
+                    childrenNum: null,
+                    childAge: [],
+                },
 
             }
-        },
+        }
+        ,
         mounted() {
             axios.get('/api/countries').then(response => {
                 this.countries = response.data;
             });
 
 
-
-        },
-        computed: {},
+        }
+        ,
+        computed: {}
+        ,
         methods: {
             changeComponent() {
-                this.$emit('change-component', {component: 'DestinationBase', package: this.package});
+                window.packageDetails.packageMainDetails = this.packageMainDetails;
+                this.$emit('change-component', {component: 'DestinationBase'});
                 // setTimeout(() => {
                 //     bus.$emit("data-to-destination", this.package);
                 // }, 1000);
 
 
-            },
+            }
+            ,
             updateChildAge() {
-                this.package.packageMainDetails.childrenNum = parseInt(this.package.packageMainDetails.childrenNum);
-                if (this.package.packageMainDetails.childrenNum > 0) {
+                console.log(this.packageMainDetails.childrenNum);
+                this.packageMainDetails.childrenNum = parseInt(this.packageMainDetails.childrenNum);
+                if (this.packageMainDetails.childrenNum > 0) {
                     this.show = true
                 }
                 else {
                     this.show = false
                 }
-            },
+            }
+            ,
             countryFind(query) {
                 this.isLoading = true;
                 axios.post('/api/countries', {query: query}).then(response => {
@@ -213,8 +211,10 @@
                     this.isLoading = false
 
                 });
-            },
-        },
+            }
+            ,
+        }
+        ,
 
     }
 </script>

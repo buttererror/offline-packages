@@ -11,7 +11,7 @@
 
             </b-form-textarea>
         </div>
-        <div class="card-footer text-right">
+        <div class="card-footer">
             <button class="btn btn-primary" @click.prevent="changeComponent">حفظ</button>
 
         </div>
@@ -24,6 +24,9 @@
             return {
                 noteText: ''
             }
+        },
+        mounted() {
+            console.log(window.packageDetails);
         },
         changeComponent(){
 

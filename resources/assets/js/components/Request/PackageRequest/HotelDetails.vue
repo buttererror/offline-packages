@@ -7,7 +7,7 @@
                        @keypress="onlyNumbers"
                        v-model="hotelDetails.roomsNum" style="text-align: right"
                        class="form-control"
-                       @change="update()"
+                       @input="update()"
                 />
             </div>
             <div class="col-form-label col-form-label-lg col-3">عدد الغرف</div>
@@ -114,6 +114,7 @@
 
     export default {
         name: "HotelDetails",
+        props: ["n"],
         components: {
             Multiselect
         },
@@ -139,10 +140,8 @@
         },
         mounted() {
             bus.$on("next-destination", () => {
-                bus.$emit("send-hotel-details", this.hotelDetails);
+                bus.$emit(`destination-details-${n}`, this.hotelDetails);
             });
-            $("#detailsContainer .stepper-button-top.next").hide();
-            this.$emit('can-continue', {value: true});
             bus.$on("package-completed", () => {
                 // axios
             });

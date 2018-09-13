@@ -8,6 +8,9 @@
                     :options="cities"
                     label="name"
                     track-by="id"
+                    group-values="cities"
+                    group-label="target"
+                    :group-select="false"
                     :multiple="false"
                     :searchable="true"
 
@@ -117,7 +120,7 @@
             </multiselect>
         </div>
 
-        <HotelDetail></HotelDetail>
+        <HotelDetail :n="cityNumber"></HotelDetail>
     </div>
 
 </template>
@@ -132,7 +135,7 @@
 
     export default {
         name: "DestinationDetails",
-        props: ["cities"],
+        props: ["cities", "cityNumber"],
         components: {
             Datepicker,
             Multiselect,
@@ -163,14 +166,9 @@
             }
         },
         mounted() {
-            console.log('child');
-            console.log("mounted", this.cities);
-            // bus.$on("destination-details", (cities) => {
-            //     this.cities = cities;
-            // });
-
-            bus.$on("send-hotel-details", (hotelDetails) => {
+            bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
+                window.packageDetails.destinationsDetails.push(this.destinationDetails);
             });
             $("#detailsContainer .previous").css({
                 'border': '2px solid #3383c8',

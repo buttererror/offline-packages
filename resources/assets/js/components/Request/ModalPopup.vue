@@ -269,7 +269,7 @@
                         gender: false,
                         email: true,
                         country: false,
-                        city: false,
+                        // city: false,
                         nationality: false
                     }
                 },
@@ -320,7 +320,7 @@
             },
             nationalityGetLabel(nationality) {
                 if(nationality) {
-                    return nationality.nationality;
+                    return nationality.en_short_name;
                 }
             },
             updateCountryList(text) {
@@ -331,18 +331,15 @@
                 this.filteredCountries = this.countries.filter(country => {
                     return country.en_short_name.toLowerCase().startsWith(text.toLowerCase());
                 });
-                console.log("filteredCountries", this.filteredCountries);
             },
             updateCityList(text) {
                 if (!text) {
                     this.filteredCites = [];
                     return;
                 }
-                console.log("text", text);
                 this.filteredCites = this.cities.filter(city => {
                     return city.name.toLowerCase().startsWith(text.toLowerCase());
                 });
-                console.log("filteredCites", this.filteredCites);
             },
             updateNationalityList(text) {
                 if (!text) {
@@ -350,9 +347,8 @@
                     return;
                 }
                 this.filteredNationalities = this.nationalities.filter(nationality => {
-                    return nationality.nationality.toLowerCase().startsWith(text.toLowerCase());
+                    return nationality.en_short_name.toLowerCase().startsWith(text.toLowerCase());
                 });
-                console.log(this.filteredNationalities);
             },
             removeValidationStyle() {
                 this.validation.name.state = "normal";
@@ -450,7 +446,6 @@
                     return this.fieldState("name", "invalid", false, "حروف انجليزية فقط او عربية فقط");
                 }
                 this.fieldState("name", "valid", true, null);
-                console.log(this.clientData.name)
             },
             validateMobile(e) {
                 if (!this.clientData.mobile) this.clientData.mobile = "";
@@ -499,9 +494,8 @@
             },
             validateCountry(country) {
                 if (typeof country === 'object' || this.clientData.country) {
-                    axios.get(`/api/cities/${country.id}`).then((response) => {
+                    axios.post("/api/cities", {country_ids: [country.id]}).then((response) => {
                         this.cities = response.data.cities;
-                        console.log(this.cities);
                     }).catch((err) => {
                         console.log(err);
                     });
@@ -566,7 +560,6 @@
                 } // not to send empty query, check email @blur or enter and check email @input ".com"
             },
             saveData() {
-                console.log(this.clientData);
                 if (!this.disableSaveBtn) {
                     axios.post("api/client", this.clientData)
                         .then((response) => {

@@ -1,9 +1,6 @@
 <template>
     <div>
-        <component @change-component="changeComponent" v-bind:is="component"
-                   :clientDetails="clientDetails" :data="package"
-
-        >
+        <component @change-component="changeComponent" v-bind:is="component">
 
         </component>
     </div>
@@ -28,14 +25,12 @@
         data() {
             return {
                 component: 'NewOrOldClient',
-                clientDetails: {},
                 package: {}
             }
         },
         methods: {
             changeComponent(data){
                 this.component = data.component;
-                this.clientDetails = data.clientDetails;
                 this.package = data.package;
             }
         }
