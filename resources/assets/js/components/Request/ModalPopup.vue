@@ -102,8 +102,9 @@
         <div class="form-group row">
             <div class="col-6 offset-3">
                 <multiselect
-                    v-model="selected" :options="options" tagPosition="bottom"
-                    :preserveSearch="true" :showNoResults="false" selectLabel=""
+                    v-model="selected" :options="cities" tagPosition="bottom"
+                    placeholder="" label="name"
+                    selectLabel="" @select="doThis"
                 >
 
                 </multiselect>
@@ -217,6 +218,7 @@
         },
         mounted() {
             axios.get('/api/countries').then(response => {
+                console.log(response);
                 this.countries = response.data;
                 this.nationalities = response.data;
             });
@@ -230,6 +232,13 @@
             bus.$on("client-passport", (file_id) => {
                 this.clientData.file_id = file_id;
 
+            });
+            bus.$on("select-country", () => {
+                axios.post("/api/cities", {country_ids: [this.clientData.country_id]}).then((response) => {
+                    this.cities = response.data.cities;
+                }).catch((err) => {
+                    console.log(err);
+                });
             });
         },
         data() {
@@ -300,8 +309,8 @@
                     birthDate: null,
                     file_id: null
                 },
-                options: ['Mahmoud', 'Mohamed', 'Ahmed', 'Gamal', 'Rania', 'Ibrahim', 'Abdo',
-                    'Soha', 'Karim', 'Basant', 'Magdy'],
+                // options: ['Mahmoud', 'Mohamed', 'Ahmed', 'Gamal', 'Rania', 'Ibrahim', 'Abdo',
+                //     'Soha', 'Karim', 'Basant', 'Magdy'],
                 selected:''
 
             }
@@ -360,6 +369,7 @@
                 this.validation.nationality.state = "normal";
             },
             removeFormData() {
+                console.log("removing");
                 for (let prop in this.clientData) {
                     this.clientData[prop] = null;
                 }
@@ -419,6 +429,8 @@
             countryAutocompleteItemSelectedHandler(country) {
                 this.selectedCountry(country);
                 this.validateCountry(country);
+                console.log("selected");
+                bus.$emit("select-country");
             },
             cityAutocompleteItemSelectedHandler(city) {
                 this.selectedCity(city);
@@ -494,11 +506,6 @@
             },
             validateCountry(country) {
                 if (typeof country === 'object' || this.clientData.country) {
-                    axios.post("/api/cities", {country_ids: [country.id]}).then((response) => {
-                        this.cities = response.data.cities;
-                    }).catch((err) => {
-                        console.log(err);
-                    });
                     return this.fieldState("country", "is-valid", true, null);
                 }
                 if (!this.clientData.country && !$("#countryInput").is(':focus')) {
@@ -560,6 +567,7 @@
                 } // not to send empty query, check email @blur or enter and check email @input ".com"
             },
             saveData() {
+                console.log(this.clientData);
                 if (!this.disableSaveBtn) {
                     axios.post("api/client", this.clientData)
                         .then((response) => {
@@ -587,6 +595,9 @@
                 this.removeFormData();
                 this.deactivateSaveBtn();
                 this.hidePopUpModal();
+            },
+            doThis() {
+                console.log(this.selected);
             }
         }
     }

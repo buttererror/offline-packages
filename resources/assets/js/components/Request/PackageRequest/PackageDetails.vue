@@ -52,6 +52,8 @@
                                 track-by="id"
                                 :multiple="true"
                                 :searchable="true"
+                                :close-on-select="false"
+                                :hide-selected="true"
                                 :loading="isLoading"
                                 @search-change="countryFind"
 
