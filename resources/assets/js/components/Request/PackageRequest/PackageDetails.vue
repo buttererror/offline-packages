@@ -1,7 +1,9 @@
 <template>
     <div id="detailsContainer">
         <div class="card">
-            <div class="card-header">Package Request</div>
+            <div class="card-header bg-danger text-white">
+                <h4 class="card-title text-center">Package Details</h4>
+            </div>
             <div class="card-body">
                 <div class="form-group row">
                     <div class="col-6 offset-3">
@@ -112,7 +114,7 @@
 
                 <div v-if="show">
 
-                    <div v-for="(num,key) in packageMainDetails.childrenNum">
+                    <div v-for="(num, key) in packageMainDetails.childrenNum">
                         <div class="form-group row">
                             <div class="col-6 offset-3">
                             </div>
@@ -175,11 +177,12 @@
         }
         ,
         mounted() {
+            bus.$on('go-back', (component) => {
+                this.$emit('rechange-component', component);
+            });
             axios.get('/api/countries').then(response => {
                 this.countries = response.data;
             });
-
-
         }
         ,
         computed: {}
@@ -187,7 +190,10 @@
         methods: {
             changeComponent() {
                 window.packageDetails.packageMainDetails = this.packageMainDetails;
-                this.$emit('change-component', {component: 'DestinationBase'});
+                this.$emit('change-component', {
+                    component: 'DestinationBase',
+                    step: 'Destination Details'
+                });
                 // setTimeout(() => {
                 //     bus.$emit("data-to-destination", this.package);
                 // }, 1000);

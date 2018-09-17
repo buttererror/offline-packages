@@ -1,7 +1,9 @@
 <template>
     <div id="destination_details">
         <div class="card">
-            <div class="card-header">Destination Details</div>
+            <div class="card-header bg-danger text-white">
+                <h4 class="card-title text-center">Destination Details</h4>
+            </div>
             <div class="card-body">
                 <div v-for="n in 3">
                     <keep-alive>
@@ -52,7 +54,6 @@
             });
             axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
                 this.cities = response.data.cities;
-                console.log("axios", this.cities);
             });
         },
         methods: {
@@ -61,7 +62,10 @@
                 this.cityNumber++;
             },
             changeComponent() {
-                this.$emit('change-component', {component: 'FinalNote'});
+                this.$emit('change-component', {
+                    component: 'FinalNote',
+                    step: 'Finalize'
+                });
             },
         }
     }

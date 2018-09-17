@@ -1,6 +1,8 @@
 <template>
     <div class="card">
-        <div class="card-header">Final Note</div>
+        <div class="card-header bg-danger text-white">
+            <h4 class="card-title text-center">Finalize</h4>
+        </div>
 
         <div class="card-body">
             <b-form-textarea id="note"
