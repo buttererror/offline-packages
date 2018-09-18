@@ -10,7 +10,8 @@
             </ol>
         </nav>
 
-        <component @change-component="changeComponent" @rechange-component="reChangeComponent" v-bind:is="component">
+        <component @next-component="nextComponent" @selected-component="goToSelected"
+                   @previous-component="previousComponent" v-bind:is="component">
 
         </component>
     </div>
@@ -46,31 +47,24 @@
             }
         },
         methods: {
-            changeComponent(data) {
-                console.log(data.component)
+            nextComponent(data) {
                 this.component = data.component;
                 this.breadcrumbs.push(data);
             },
+            previousComponent(component) {
+                this.component = component;
+                this.breadcrumbs.pop();
+            },
             removeCrumb(crumb) {
-                // console.log("before", this.component);
                 bus.$emit('go-back', crumb.component);
-                // console.log("after", this.component);
-                // console.log(this.breadcrumbs.length);
                 for(let i = 0; i < this.breadcrumbs.length; i++){
-                    // console.log("breadcrumb array", this.breadcrumbs[i].component);
-                    // console.log("current component", this.component);
-                    console.log("i", i);
                     if(this.breadcrumbs[i].component === this.component) {
                         var startRemovingFrom = i;
                     }
-                    if(i > startRemovingFrom){
-                        this.breadcrumbs.splice(i);
-                    }
-                    // console.log("length", this.breadcrumbs.length);
+                    if(i > startRemovingFrom) this.breadcrumbs.splice(i);
                 }
             },
-            reChangeComponent(component) {
-                // console.log("changing");
+            goToSelected(component) {
                 this.component = component;
             }
         }

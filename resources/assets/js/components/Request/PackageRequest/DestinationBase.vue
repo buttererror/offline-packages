@@ -20,8 +20,9 @@
                    class="btn btn-link btn-outline-primary m-4 disabled"
                 >المدينة السابقة</a>
             </div>
-            <div class="card-footer">
-                <button class="btn btn-primary" @click.prevent="changeComponent">التالى</button>
+            <div class="card-footer d-flex justify-content-between">
+                <button class="btn btn-primary" @click.prevent="nextComponent">التالى</button>
+                <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
             </div>
         </div>
     </div>
@@ -47,7 +48,7 @@
         },
         mounted() {
             bus.$on('go-back', (component) => {
-                this.$emit('rechange-component', component);
+                this.$emit('selected-component', component);
             });
             window.packageDetails.destinationsDetails = [];
             let selectedCountries = this.packageMainDetails.selectedCountries;
@@ -64,12 +65,15 @@
                 bus.$emit(`destination-details-${this.cityNumber}`);
                 this.cityNumber++;
             },
-            changeComponent() {
-                this.$emit('change-component', {
+            nextComponent() {
+                this.$emit('next-component', {
                     component: 'FinalNote',
                     step: 'Finalize'
                 });
             },
+            previousComponent() {
+                this.$emit('previous-component', "PackageDetails");
+            }
         }
     }
 </script>

@@ -7,7 +7,7 @@
             <div class="d-flex flex-column justify-content-around" style="height: 50vh;">
                 <div class="d-flex justify-content-around">
                     <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height"
-                         @click.prevent="changeComponent">
+                         @click.prevent="nextComponent">
                         <h5 class="text-center">PACKAGE</h5>
                     </div>
                     <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height">
@@ -24,6 +24,9 @@
                 </div>
             </div>
         </div>
+        <div class="card-footer text-right">
+            <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
+        </div>
     </div>
 </template>
 
@@ -37,15 +40,18 @@
         },
         mounted() {
             bus.$on('go-back', (component) => {
-                this.$emit('rechange-component', component);
+                this.$emit('selected-component', component);
             });
         },
         methods: {
-            changeComponent() {
-                this.$emit('change-component', {
+            nextComponent() {
+                this.$emit('next-component', {
                     component: "PackageDetails",
                     step: "Package Details"
                 });
+            },
+            previousComponent() {
+                this.$emit('previous-component', "NewOrOldClient");
             }
         }
     }

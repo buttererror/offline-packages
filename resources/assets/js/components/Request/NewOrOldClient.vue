@@ -28,7 +28,7 @@
             </div>
 
             <div class="card-footer">
-                <button class="btn btn-primary" @click.prevent="changeComponent(client)">التالي</button>
+                <button class="btn btn-primary" @click.prevent="nextComponent(client)">التالي</button>
             </div>
 
         </div>
@@ -79,9 +79,9 @@
             handleNewClientClicked() {
                 bus.$emit('new-client-clicked');
             },
-            changeComponent(client) {
+            nextComponent(client) {
                 window.packageDetails.clientDetails = client;
-                this.$emit('change-component', {
+                this.$emit('next-component', {
                     component: "SelectService",
                     step: "Service Selection"
                 });

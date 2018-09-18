@@ -13,9 +13,9 @@
 
             </b-form-textarea>
         </div>
-        <div class="card-footer">
-            <button class="btn btn-primary" @click.prevent="changeComponent">حفظ</button>
-
+        <div class="card-footer d-flex justify-content-between">
+            <button class="btn btn-primary" @click.prevent="savePackage">حفظ</button>
+            <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
         </div>
     </div>
 </template>
@@ -29,11 +29,17 @@
         },
         mounted() {
             bus.$on('go-back', (component) => {
-                this.$emit('rechange-component', component);
+                this.$emit('selected-component', component);
             });
         },
-        changeComponent(){
+        methods: {
+            savePackage(){
 
+            },
+            previousComponent() {
+                this.$emit('previous-component', "DestinationBase");
+            }
         }
+
     }
 </script>

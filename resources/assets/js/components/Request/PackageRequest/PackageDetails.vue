@@ -130,8 +130,9 @@
 
                 </div>
             </div>
-            <div class="card-footer">
-                <button class="btn btn-primary" @click.prevent="changeComponent">التالى</button>
+            <div class="card-footer d-flex justify-content-between">
+                <button class="btn btn-primary" @click.prevent="nextComponent">التالى</button>
+                <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
             </div>
         </div>
     </div>
@@ -178,7 +179,7 @@
         ,
         mounted() {
             bus.$on('go-back', (component) => {
-                this.$emit('rechange-component', component);
+                this.$emit('selected-component', component);
             });
             axios.get('/api/countries').then(response => {
                 this.countries = response.data;
@@ -188,9 +189,9 @@
         computed: {}
         ,
         methods: {
-            changeComponent() {
+            nextComponent() {
                 window.packageDetails.packageMainDetails = this.packageMainDetails;
-                this.$emit('change-component', {
+                this.$emit('next-component', {
                     component: 'DestinationBase',
                     step: 'Destination Details'
                 });
@@ -199,8 +200,10 @@
                 // }, 1000);
 
 
-            }
-            ,
+            },
+            previousComponent() {
+                this.$emit('previous-component', "SelectService");
+            },
             updateChildAge() {
                 console.log(this.packageMainDetails.childrenNum);
                 this.packageMainDetails.childrenNum = parseInt(this.packageMainDetails.childrenNum);
