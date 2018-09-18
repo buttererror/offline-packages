@@ -1,20 +1,28 @@
 <template>
     <div class="card">
-        <div class="card-header bg-danger text-white">
+        <div class="card-header bg-primary text-white">
             <h4 class="card-title text-center">Service Selection</h4>
         </div>
-        <div class="card-body" style="height: 500px">
-            <div class="row mt-5 h-50 text-white">
-                <h5 class="offset-2 col-3 h-50 bg-dark text-center">Package</h5>
-                <h5 class="offset-2 col-3 h-50 bg-dark text-center">Accomodation</h5>
+        <div class="card-body text-white">
+            <div class="d-flex flex-column justify-content-around" style="height: 50vh;">
+                <div class="d-flex justify-content-around">
+                    <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height"
+                         @click.prevent="changeComponent">
+                        <h5 class="text-center">PACKAGE</h5>
+                    </div>
+                    <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height">
+                        <h5 class="text-center text-uppercase">Accomodation</h5>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-around">
+                    <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height">
+                        <h5 class="text-center text-uppercase">Transfer</h5>
+                    </div>
+                    <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height">
+                        <h5 class="text-center text-uppercase">Tours</h5>
+                    </div>
+                </div>
             </div>
-            <div class="row h-50 text-white">
-                <h5 class="offset-2 col-3 h-50 bg-dark text-center">Transfer</h5>
-                <h5 class="offset-2 col-3 h-50 bg-dark text-center">Tours</h5>
-            </div>
-        </div>
-        <div class="card-footer">
-            <button class="btn btn-primary" @click.prevent="changeComponent(client)">التالي</button>
         </div>
     </div>
 </template>
@@ -26,6 +34,11 @@
             return {
 
             }
+        },
+        mounted() {
+            bus.$on('go-back', (component) => {
+                this.$emit('rechange-component', component);
+            });
         },
         methods: {
             changeComponent() {
@@ -39,5 +52,11 @@
 </script>
 
 <style scoped>
-
+    .pointer {
+        cursor: pointer;
+    }
+    .box-height {
+        min-height: 100px;
+        max-height: 150px;
+    }
 </style>

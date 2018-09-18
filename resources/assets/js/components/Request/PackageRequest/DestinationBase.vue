@@ -1,7 +1,7 @@
 <template>
     <div id="destination_details">
         <div class="card">
-            <div class="card-header bg-danger text-white">
+            <div class="card-header bg-primary text-white">
                 <h4 class="card-title text-center">Destination Details</h4>
             </div>
             <div class="card-body">
@@ -46,6 +46,9 @@
             }
         },
         mounted() {
+            bus.$on('go-back', (component) => {
+                this.$emit('rechange-component', component);
+            });
             window.packageDetails.destinationsDetails = [];
             let selectedCountries = this.packageMainDetails.selectedCountries;
             let selectedCountriesIds = [];

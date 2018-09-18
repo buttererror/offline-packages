@@ -52,18 +52,25 @@
                 this.breadcrumbs.push(data);
             },
             removeCrumb(crumb) {
-                console.log("before", this.component)
+                // console.log("before", this.component);
                 bus.$emit('go-back', crumb.component);
-                console.log("after", this.component)
+                // console.log("after", this.component);
+                // console.log(this.breadcrumbs.length);
                 for(let i = 0; i < this.breadcrumbs.length; i++){
+                    // console.log("breadcrumb array", this.breadcrumbs[i].component);
+                    // console.log("current component", this.component);
+                    console.log("i", i);
                     if(this.breadcrumbs[i].component === this.component) {
-                        continue;
+                        var startRemovingFrom = i;
                     }
-                    this.breadcrumbs.splice(i);
+                    if(i > startRemovingFrom){
+                        this.breadcrumbs.splice(i);
+                    }
+                    // console.log("length", this.breadcrumbs.length);
                 }
             },
             reChangeComponent(component) {
-                console.log("changing");
+                // console.log("changing");
                 this.component = component;
             }
         }

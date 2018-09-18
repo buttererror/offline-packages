@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="card" v-if="show">
-            <div class="card-header bg-danger text-white">
+            <div class="card-header bg-primary text-white">
                 <h4 class="card-title text-center">Search Clients</h4>
             </div>
 

@@ -1,7 +1,7 @@
 <template>
     <div id="detailsContainer">
         <div class="card">
-            <div class="card-header bg-danger text-white">
+            <div class="card-header bg-primary text-white">
                 <h4 class="card-title text-center">Package Details</h4>
             </div>
             <div class="card-body">
