@@ -14,7 +14,7 @@
             </b-form-textarea>
         </div>
         <div class="card-footer d-flex justify-content-between">
-            <button class="btn btn-primary" @click.prevent="savePackage">حفظ</button>
+            <button class="btn btn-primary" @click.prevent="savePackage">ارسال</button>
             <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
         </div>
     </div>
