@@ -22,6 +22,8 @@ class CreateClientsTable extends Migration
             $table->string('address')->nullable();
             $table->enum('gender',['male','female'])->default('male');
             $table->string('passport_no')->nullable();
+            $table->integer('city_id')->nullable();;
+            $table->integer('nationality_id')->nullable();;
             $table->integer('age')->nullable();
             $table->integer('file_id')->nullable();
             $table->timestamps();
