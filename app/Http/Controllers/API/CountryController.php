@@ -10,7 +10,7 @@ class CountryController extends Controller
 {
     public function index()
     {
-        return Country::select('id','en_short_name')->get();
+        return Country::select('id','en_short_name','nationality')->get();
     }
 
     public function searchCountry(Request $request){

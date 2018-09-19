@@ -166,6 +166,7 @@
             }
         },
         mounted() {
+
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
                 window.packageDetails.destinationsDetails.push(this.destinationDetails);
