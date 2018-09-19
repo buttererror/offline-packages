@@ -34,3 +34,8 @@
         }
     }
 </script>
+<style>
+    .file-upload .input-wrapper .file-upload-label {
+        z-index: 0 !important;
+    }
+</style>

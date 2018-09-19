@@ -70,8 +70,9 @@
 
         <div class="form-group row">
             <div class="col-6 offset-3">
-                <multiselect v-model="clientData.country" :options="countries"
-                             label="en_short_name" tagPosition="bottom" :tabIndex="0"
+                <multiselect v-model="country" :options="countries"
+                             label="en_short_name"
+                             tagPosition="bottom" :tabIndex="0"
                              openDirection="bottom"
                              placeholder=""  @remove="removeCities"
                              @blur.native="validateCountry"
@@ -93,7 +94,7 @@
         <div class="form-group row">
             <div class="col-6 offset-3">
                 <multiselect
-                    v-model="clientData.city" :options="cities" tagPosition="bottom"
+                    v-model="city" :options="cities" tagPosition="bottom"
                     placeholder="" label="name" selectLabel="" :tabIndex="0"
                     @blur.native="validateCity"
                     @input="validateCity"
@@ -113,8 +114,9 @@
         <div class="form-group row">
             <div class="col-6 offset-3">
                 <multiselect
-                    v-model="clientData.nationality" :options="nationalities" tagPosition="bottom"
-                    placeholder="" label="en_short_name" selectLabel="" :tabIndex="0"
+                    v-model="nationality" :options="countries" tagPosition="bottom"
+                    label="nationality"
+                    placeholder="" selectLabel="" :tabIndex="0"
                     @blur.native="validateNationality"
                     @input="validateNationality"
                     :class="{'is-invalid': validation.nationality.state === 'invalid',
@@ -181,9 +183,9 @@
         },
         mounted() {
             axios.get('/api/countries').then(response => {
-                console.log(response);
-                this.countries = response.data;
-                this.nationalities = response.data;
+                response.data.forEach((country) => {
+                    this.countries.push(country);
+                });
             });
             bus.$on('new-client-clicked', () => {
                 this.show = true;
@@ -195,13 +197,6 @@
             bus.$on("client-passport", (file_id) => {
                 this.clientData.file_id = file_id;
 
-            });
-            bus.$on("select-country", () => {
-                axios.post("/api/cities", {country_ids: [this.clientData.country.id]}).then((response) => {
-                    this.cities = response.data.cities;
-                }).catch((err) => {
-                    console.log(err);
-                });
             });
         },
         data() {
@@ -249,17 +244,19 @@
                 ar: ar,
                 show: false,
                 countries: [],
+                country: null,
                 cities: [],
-                nationalities: [],
+                city: null,
+                nationality: null,
                 countryTemplate: CountryTemplate,
                 cityTemplate: CityTemplate,
                 nationalityTemplate: NationalityTemplate,
                 clientData: {
                     name: null,
                     email: null,
-                    country: null,
-                    city: null,
-                    nationality: null,
+                    country_id: null,
+                    city_id: null,
+                    nationality_id: null,
                     mobile: null,
                     gender: null,
                     address: null,
@@ -279,7 +276,6 @@
                 this.validation.nationality.state = "normal";
             },
             removeFormData() {
-                console.log("removing");
                 for (let prop in this.clientData) {
                     this.clientData[prop] = null;
                 }
@@ -311,7 +307,6 @@
                 if (!(validator.isAlpha(trimName, 'ar') || validator.isAlpha(trimName, 'en-US'))) {
                     return this.fieldState("name", "invalid", false, "حروف انجليزية فقط او عربية فقط");
                 }
-                console.log("valid");
                 this.fieldState("name", "valid", true, null);
             },
             validateMobile(e) {
@@ -359,13 +354,18 @@
                 }
                 this.fieldState("gender", "valid", true, null);
             },
-            validateCountry(e) {
-                if (this.clientData.country) {
+            validateCountry() {
+                if (this.country) {
                     this.fieldState("country", "valid", true, null);
-                    bus.$emit("select-country");
+                    this.clientData.country_id = this.country.id;
+                    axios.post("/api/cities", {country_ids: [this.clientData.country_id]}).then((response) => {
+                        this.cities = response.data.cities;
+                    }).catch((err) => {
+                        console.log(err);
+                    });
                     return;
                 }
-                if (!this.clientData.country) {
+                if (!this.country) {
                     return this.fieldState("country", "invalid", false, "ادخل البلد");
                 }
                 // if (!validator.isAlpha(e, "en-US")) {
@@ -374,10 +374,11 @@
                 this.fieldState("country", "normal", false, null);
             },
             validateCity(city) {
-                if (this.clientData.city) {
+                if (this.city) {
+                    this.clientData.city_id = this.city.id;
                     return this.fieldState("city", "valid", true, null);
                 }
-                if (!this.clientData.city) {
+                if (!this.city) {
                     return this.fieldState("city", "invalid", false, "ادخل المدينة");
                 }
                 // if (typeof city === 'string' && !validator.isAlpha(city, "en-US") && city) {
@@ -385,11 +386,13 @@
                 // }
                 this.fieldState("city", "normal", false, null);
             },
-            validateNationality(nationality) {
-                if (this.clientData.nationality) {
+            validateNationality() {
+                if (this.nationality) {
+                    console.log(this.nationality)
+                    this.clientData.nationality_id = this.nationality.id;
                     return this.fieldState("nationality", "valid", true, null);
                 }
-                if (!this.clientData.nationality) {
+                if (!this.nationality) {
                     return this.fieldState("nationality", "invalid", false, "ادخل الجنسية");
                 }
                 // if (typeof nationality === 'string' && !validator.isAlpha(nationality, "en-US") && nationality) {
@@ -424,10 +427,10 @@
                 } // not to send empty query, check email @blur or enter and check email @input ".com"
             },
             saveData() {
-                console.log(this.clientData);
                 if (!this.disableSaveBtn) {
                     axios.post("api/client", this.clientData)
                         .then((response) => {
+                            console.log(response.data);
                             bus.$emit('new-client-saved', response.data.client);
                             this.hidePopUpModal();
                             this.removeValidationStyle();
@@ -454,9 +457,8 @@
                 this.hidePopUpModal();
             },
             removeCities() {
-                console.log("removing");
                 this.cities = [];
-                this.clientData.city = null;
+                this.city = null;
                 this.fieldState("city", "normal", false, null);
             }
         }
