@@ -3,7 +3,7 @@
         <div class="form-group row">
 
             <div class="col-6 offset-3">
-                <input type="number" min="0" placeholder="عدد الغرف"
+                <input type="number" :min="minRooms" :max="adultsNum" placeholder="عدد الغرف"
                        @keypress="onlyNumbers"
                        v-model="hotelDetails.roomsNum" style="text-align: right"
                        class="form-control"
@@ -15,51 +15,61 @@
         </div>
 
         <div v-if="show" role="tablist">
-                <div v-for="(index) in hotelDetails.roomsNum">
-                    <b-card no-body class="mb-1">
-                        <b-card-header header-tag="header" class="p-1" role="tab">
-                            <b-btn href="#" block v-b-toggle="`room_${index}`" variant="info">
-                                الغرفه  {{index}}
-                            </b-btn>
-                        </b-card-header>
+            <div v-for="(index) in hotelDetails.roomsNum">
+                <b-card no-body class="mb-1">
+                    <b-card-header header-tag="header" class="p-1" role="tab">
+                        <b-btn href="#" block v-b-toggle="`room_${index}`" variant="info">
+                            الغرفه {{index}}
+                        </b-btn>
+                    </b-card-header>
 
-                        <b-collapse :id="`room_${index}`" :visible="index === 1" accordion="my-accordion" role="tabpanel">
-                            <b-card-body>
-                                <div class="row form-group">
-                                    <div class="col-12">
-                                        <multiselect
-                                            v-model="hotelDetails.selectedAdultsNum"
-                                            :options="adultsNum"
+                    <b-collapse :id="`room_${index}`" :visible="index === 1" accordion="my-accordion" role="tabpanel">
+                        <b-card-body>
+                            <div class="row form-group">
+                                <div class="col-6 offset-3">
+                                    <multiselect
+                                            v-model="hotelDetails.selectedAdultsNum[index-1]"
+                                            :options="hotelDetails.maxPerRoom"
                                             :multiple="false"
-                                        ></multiselect>
-                                    </div>
-
-                                    <div class="col-form-label col-form-label-lg col-6" style="text-align:right">عدد البالغين</div>
+                                            @input="updateAdultsNum($event,index)"
+                                            :disabled="adultsSelected.includes(index)"
+                                    ></multiselect>
                                 </div>
-                                <div class="row form-group">
 
-                                    <div class="col-12 ">
-                                        <multiselect
-                                            v-model="hotelDetails.selectedChildrenNum"
+                                <div class="col-form-label col-form-label-lg col-3" style="text-align:right">عدد
+                                    البالغين
+                                </div>
+                            </div>
+                            <div class="row form-group">
+
+                                <div class="col-6 offset-3">
+                                    <multiselect
+                                            v-model="hotelDetails.selectedChildrenNum[index-1]"
                                             :options="childrenNum"
                                             :multiple="true"
-                                        ></multiselect>
-                                    </div>
-                                    <div class="col-form-label col-form-label-lg col-6" style="text-align:right">عدد الاطفال</div>
-                                </div>
-                            </b-card-body>
-                        </b-collapse>
+                                            @input="checkChildrenNumber"
+                                            @select="updateChildrenNum"
+                                            :disabled="childrenSelectDisabled"
 
-                    </b-card>
-                </div>
+                                    ></multiselect>
+                                </div>
+                                <div class="col-form-label col-form-label-lg col-3" style="text-align:right">عدد
+                                    الاطفال
+                                </div>
+                            </div>
+                        </b-card-body>
+                    </b-collapse>
+
+                </b-card>
+            </div>
         </div>
         <div class="mt-4">
             <div class="row form-group">
                 <div class="col-6 offset-3">
                     <multiselect
-                        v-model="hotelDetails.selectedRoomType"
-                        :options="roomType"
-                        :multiple="false"
+                            v-model="hotelDetails.selectedRoomType"
+                            :options="roomType"
+                            :multiple="false"
                     ></multiselect>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3">نوع الغرفة</div>
@@ -68,9 +78,9 @@
             <div class="row form-group">
                 <div class="col-6 offset-3">
                     <multiselect
-                        v-model="hotelDetails.selectedRoomView"
-                        :options="roomView"
-                        :multiple="false"
+                            v-model="hotelDetails.selectedRoomView"
+                            :options="roomView"
+                            :multiple="false"
                     ></multiselect>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3">منظر الرؤيه للغرفة</div>
@@ -79,9 +89,9 @@
             <div class="row form-group">
                 <div class="col-6 offset-3">
                     <multiselect
-                        v-model="hotelDetails.selectedStars"
-                        :options="stars"
-                        :multiple="false"
+                            v-model="hotelDetails.selectedStars"
+                            :options="stars"
+                            :multiple="false"
                     ></multiselect>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3">عدد النجوم</div>
@@ -123,22 +133,46 @@
                 roomType: ['Standard', 'Deluxe'],
                 roomView: ['Sea View', 'Garden View'],
                 stars: [1, 2, 3, 4, 5],
-                adultsNum: ['adult 1', 'adult 2', 'adult 3'],
-                childrenNum: ['child 1', 'child 2', 'child 3'],
+                adultsSelected: [],
+                childrenSelectDisabled: false,
+                adultsNum: [], //number of adults
+                childrenNum: [],
                 show: false,
+                remainingRooms: '',
                 hotelDetails: {
+                    maxPerRoom: [1, 2, 3, 4, 5, 6],
+                    maxChildrenPerRoom: [1, 2, 3, 4],
+                    roomsNum: '', //number of rooms
                     selectedRoomType: '',
                     selectedRoomView: '',
                     selectedStars: '',
                     hotelName: '',
                     area: '',
-                    roomsNum: '',
-                    selectedAdultsNum: '',
-                    selectedChildrenNum: ''
+                    selectedAdultsNum: [],
+                    selectedChildrenNum: []
                 }
             }
         },
+        computed: {
+
+            minRooms: function () {
+                console.log(this.adultsNum.length / this.hotelDetails.maxPerRoom.length);
+                return Math.ceil(this.adultsNum.length / this.hotelDetails.maxPerRoom.length)
+            }
+
+        },
         mounted() {
+            let adultsNumber = parseInt(window.packageDetails.packageMainDetails.adultsNum);
+            let childrenNumber = parseInt(window.packageDetails.packageMainDetails.childrenNum);
+            let childrenAges = window.packageDetails.packageMainDetails.childAge;
+
+            for (let n = 0; n < adultsNumber; n++) {
+                this.adultsNum.push(`${n + 1}`)
+            }
+            for (let i = 0; i < childrenNumber; i++) {
+                this.childrenNum.push(`child -${childrenAges[i]} years`)
+            }
+
             bus.$on("next-destination", () => {
                 bus.$emit(`destination-details-${n}`, this.hotelDetails);
             });
@@ -156,13 +190,51 @@
             update() {
                 this.hotelDetails.roomsNum = parseInt(this.hotelDetails.roomsNum)
                 if (this.hotelDetails.roomsNum > 0) {
+                    this.hotelDetails.maxPerRoom = [];
+                    this.remainingRooms = this.hotelDetails.roomsNum;
+                    for (let i = 1; i <= Math.ceil(this.adultsNum.length / this.remainingRooms); i++) {
+                        this.hotelDetails.maxPerRoom.push(i);
+                    }
                     this.show = true
                 }
                 else {
                     this.show = false
-
                 }
+            },
+            updateAdultsNum(value, index) {
+                this.adultsNum.splice(-value);
+                this.adultsSelected.push(index);
+                this.remainingRooms = this.hotelDetails.roomsNum - 1;
+                if (this.adultsNum.length <= this.hotelDetails.maxPerRoom.length) {
+                    this.hotelDetails.maxPerRoom = [];
+                    for (let i = 1; i <= Math.ceil(this.adultsNum.length / this.remainingRooms); i++) {
+                        this.hotelDetails.maxPerRoom.push(i);
+                    }
+                }
+            },
+            checkChildrenNumber(values) {
+                console.log(values.length);
+                console.log(this.hotelDetails.maxChildrenPerRoom.length);
+                if (values.length == this.hotelDetails.maxChildrenPerRoom.length) {
+                    this.childrenSelectDisabled = true
+                }
+            },
+            updateChildrenNum(value){
+                this.childrenNum.splice(this.childrenNum.indexOf(value),1);
+                console.log(this.childrenNum);
+
+
             }
+        },
+        watch: {
+            'hotelDetails.roomsNum' () {
+                console.log(this.minRooms);
+                if(this.hotelDetails.roomsNum<Math.ceil(this.adultsNum.length / this.hotelDetails.maxPerRoom.length)||this.hotelDetails.roomsNum>10){
+                    this.hotelDetails.roomsNum=Math.ceil(this.adultsNum.length / this.hotelDetails.maxPerRoom.length);
+                }
+
+            }
+
         }
 
     }
