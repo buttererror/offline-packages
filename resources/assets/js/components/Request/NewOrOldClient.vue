@@ -1,33 +1,37 @@
 <template>
-    <div class="card" v-if="show">
-        <div class="card-header">Dashboard</div>
+    <div>
+        <div class="card" v-if="show">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title text-center">Search Clients</h4>
+            </div>
 
-        <div class="card-body">
-            <h2 class="text-center">
-                اختار العميل
-            </h2>
-            <div class="row mt-4">
-                <div class="col-6 offset-3">
-                    <autocomplete dir="rtl" :items="clients" v-model="client" :get-label="getLabel"
-                                  :component-item='clientTemplate'
-                                  @update-items="updateItems" :min-len="0">
-                    </autocomplete>
+            <div class="card-body">
+                <h2 class="text-center">
+                    اختار العميل
+                </h2>
+                <div class="row mt-4">
+                    <div class="col-6 offset-3">
+                        <autocomplete dir="rtl" :items="clients" v-model="client" :get-label="getLabel"
+                                      :component-item='clientTemplate'
+                                      @update-items="updateItems" :min-len="0">
+                        </autocomplete>
+                    </div>
+                </div>
+                <div class="row mt-4 text-center">
+                    <div class="col-12">
+                        أو أدخل بيانات عميل جديد من
+                        <a href="#" @click.prevent="handleNewClientClicked">
+                            هنا
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="row mt-4 text-center">
-                <div class="col-12">
-                    أو أدخل بيانات عميل جديد من
-                    <a href="#" @click.prevent="handleNewClientClicked">
-                        هنا
-                    </a>
-                </div>
+
+            <div class="card-footer">
+                <button class="btn btn-primary" @click.prevent="nextComponent(client)">التالي</button>
             </div>
-        </div>
 
-        <div class="card-footer">
-            <button class="btn btn-primary" @click.prevent="changeComponent(client)">التالي</button>
         </div>
-
     </div>
 </template>
 
@@ -49,7 +53,6 @@
                 clients: [],
                 client: null,
                 clientTemplate: ClientAutocompleteItem,
-                nextComponent: "PackageDetails",
                 show: true
             }
         },
@@ -76,9 +79,12 @@
             handleNewClientClicked() {
                 bus.$emit('new-client-clicked');
             },
-            changeComponent(client) {
+            nextComponent(client) {
                 window.packageDetails.clientDetails = client;
-                this.$emit('change-component', {component: this.nextComponent});
+                this.$emit('next-component', {
+                    component: "SelectService",
+                    step: "Service Selection"
+                });
             }
         }
 

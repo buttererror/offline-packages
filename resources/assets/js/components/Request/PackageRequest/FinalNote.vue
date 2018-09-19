@@ -1,6 +1,8 @@
 <template>
     <div class="card">
-        <div class="card-header">Final Note</div>
+        <div class="card-header bg-primary text-white">
+            <h4 class="card-title text-center">Finalize</h4>
+        </div>
 
         <div class="card-body">
             <b-form-textarea id="note"
@@ -11,9 +13,9 @@
 
             </b-form-textarea>
         </div>
-        <div class="card-footer">
-            <button class="btn btn-primary" @click.prevent="changeComponent">حفظ</button>
-
+        <div class="card-footer d-flex justify-content-between">
+            <button class="btn btn-primary" @click.prevent="savePackage">حفظ</button>
+            <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
         </div>
     </div>
 </template>
@@ -26,10 +28,18 @@
             }
         },
         mounted() {
-            console.log(window.packageDetails);
+            bus.$on('go-back', (component) => {
+                this.$emit('selected-component', component);
+            });
         },
-        changeComponent(){
+        methods: {
+            savePackage(){
 
+            },
+            previousComponent() {
+                this.$emit('previous-component', "DestinationBase");
+            }
         }
+
     }
 </script>

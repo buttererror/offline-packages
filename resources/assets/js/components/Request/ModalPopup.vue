@@ -109,7 +109,7 @@
          <div class="col-6 offset-3">
             <multiselect
                   v-model="clientData.city" :options="cities" tagPosition="bottom"
-                  placeholder="" label="name"
+                  placeholder="" label="name" class="is-valid"
                   selectLabel="" @input="doThis"
             >
 
@@ -607,5 +607,9 @@
 </script>
 
 <style scoped>
+
+    .is-valid {
+        border: 1px solid #28a745;
+    }
 
 </style>

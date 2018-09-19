@@ -1,7 +1,9 @@
 <template>
     <div id="detailsContainer">
         <div class="card">
-            <div class="card-header">Package Request</div>
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title text-center">Package Details</h4>
+            </div>
             <div class="card-body">
                 <div class="form-group row">
                     <div class="col-6 offset-3">
@@ -112,7 +114,7 @@
 
                 <div v-if="show">
 
-                    <div v-for="(num,key) in packageMainDetails.childrenNum">
+                    <div v-for="(num, key) in packageMainDetails.childrenNum">
                         <div class="form-group row">
                             <div class="col-6 offset-3">
                             </div>
@@ -128,8 +130,9 @@
 
                 </div>
             </div>
-            <div class="card-footer">
-                <button class="btn btn-primary" @click.prevent="changeComponent">التالى</button>
+            <div class="card-footer d-flex justify-content-between">
+                <button class="btn btn-primary" @click.prevent="nextComponent">التالى</button>
+                <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
             </div>
         </div>
     </div>
@@ -175,26 +178,32 @@
         }
         ,
         mounted() {
+            bus.$on('go-back', (component) => {
+                this.$emit('selected-component', component);
+            });
             axios.get('/api/countries').then(response => {
                 this.countries = response.data;
             });
-
-
         }
         ,
         computed: {}
         ,
         methods: {
-            changeComponent() {
+            nextComponent() {
                 window.packageDetails.packageMainDetails = this.packageMainDetails;
-                this.$emit('change-component', {component: 'DestinationBase'});
+                this.$emit('next-component', {
+                    component: 'DestinationBase',
+                    step: 'Destination Details'
+                });
                 // setTimeout(() => {
                 //     bus.$emit("data-to-destination", this.package);
                 // }, 1000);
 
 
-            }
-            ,
+            },
+            previousComponent() {
+                this.$emit('previous-component', "SelectService");
+            },
             updateChildAge() {
                 console.log(this.packageMainDetails.childrenNum);
                 this.packageMainDetails.childrenNum = parseInt(this.packageMainDetails.childrenNum);
