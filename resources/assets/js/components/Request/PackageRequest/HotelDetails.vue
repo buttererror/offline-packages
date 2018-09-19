@@ -219,18 +219,18 @@
                     this.childrenSelectDisabled = true
                 }
             },
-            updateChildrenNum(value){
-                this.childrenNum.splice(this.childrenNum.indexOf(value),1);
+            updateChildrenNum(value) {
+                this.childrenNum.splice(this.childrenNum.indexOf(value), 1);
                 console.log(this.childrenNum);
 
 
             }
         },
         watch: {
-            'hotelDetails.roomsNum' () {
+            'hotelDetails.roomsNum'() {
                 console.log(this.minRooms);
-                if(this.hotelDetails.roomsNum<Math.ceil(this.adultsNum.length / this.hotelDetails.maxPerRoom.length)||this.hotelDetails.roomsNum>10){
-                    this.hotelDetails.roomsNum=Math.ceil(this.adultsNum.length / this.hotelDetails.maxPerRoom.length);
+                if (this.hotelDetails.roomsNum < Math.ceil(this.adultsNum.length / this.hotelDetails.maxPerRoom.length) || this.hotelDetails.roomsNum > 10) {
+                    this.hotelDetails.roomsNum = Math.ceil(this.adultsNum.length / this.hotelDetails.maxPerRoom.length);
                 }
 
             }
