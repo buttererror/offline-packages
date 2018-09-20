@@ -3,18 +3,20 @@
         <div class="form-group row">
             <div class="col-6 offset-3">
                 <multiselect
-                    v-model="destinationDetails.selectedCity"
-                    placeholder="Type to search"
-                    :options="cities"
-                    label="name"
-                    track-by="id"
-                    group-values="cities"
-                    group-label="target"
-                    :group-select="false"
-                    :multiple="false"
-                    :searchable="true"
+                        v-model="destinationDetails.selectedCity"
+                        placeholder="Type to search"
+                        :options="cities"
+                        label="name"
+                        track-by="id"
+                        group-values="cities"
+                        group-label="target"
+                        :group-select="false"
+                        :multiple="false"
+                        :searchable="true"
 
-                ></multiselect>
+                >
+
+                </multiselect>
             </div>
             <div class="col-form-label col-form-label-lg col-3">المدينة</div>
         </div>
@@ -59,65 +61,92 @@
         </div>
         <div class="form-group row">
             <div class="col-4 offset-3">
-                <div class="checkbox">
-                    <label style="float:right;">
-                        <input type="checkbox" v-model="destinationDetails.rentCar"
-                               @change="viewCarLevel">تاجير
-                        سياره</label>
-                </div>
-            </div>
-            <div class="col-4 offset-3">
-                <div class="checkbox">
-                    <label style="float:right;">
-                        <input type="checkbox"
-                               v-model="destinationDetails.rentCarWithDriver"
+                <toggle-button v-model="destinationDetails.rentCar" :value="false"
+
+                               :sync="true"
+                               :labels="{checked: 'نعم', unchecked: 'لا'}"
+                               :width="80"
+                               :height="35"
+                               switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
                                @change="viewCarLevel"
-                        >تاجير
-                        سياره مع سائق</label>
-                </div>
+                />
+                <label class="col-form-label col-form-label-lg col-3 text-nowrap">تاجير سياره</label>
+
             </div>
             <div class="col-4 offset-3">
-                <div class="checkbox">
-                    <label style="float:right;">
-                        <input type="checkbox"
-                               v-model="destinationDetails.needTours">الحاجة
-                        لجولات</label>
-                </div>
+                <toggle-button v-model="destinationDetails.rentCarWithDriver" :value="false"
+
+                               :sync="true"
+                               :labels="{checked: 'نعم', unchecked: 'لا'}"
+                               :width="80"
+                               :height="35"
+                               switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
+                               @change="viewCarLevel"
+                />
+                <label class="col-form-label col-form-label-lg col-3 text-nowrap">تاجير سياره مع سائق</label>
+
+            </div>
+            <div class="col-4 offset-3">
+                <toggle-button v-model="destinationDetails.needTours" :value="false"
+
+                               :sync="true"
+                               :labels="{checked: 'نعم', unchecked: 'لا'}"
+                               :width="80"
+                               :height="35"
+                               switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
+                               @change="viewCarLevel"
+                />
+                <label class="col-form-label col-form-label-lg col-3 text-nowrap">الحاجة لجولات</label>
+
             </div>
         </div>
 
+
         <div v-if="show">
-            <div class="form-group">
+            <div class="col-6 offset-3">
                 <multiselect
-                    v-model="destinationDetails.selectedCarLevel"
-                    :options="carLevel"
-                    tagPosition="bottom"
-                    :preserveSearch="true" :showNoResults="false" selectLabel=""
+                        v-model="destinationDetails.selectedCarLevel"
+                        :options="carLevel"
+                        tagPosition="bottom"
+                        :preserveSearch="true" :showNoResults="false" selectLabel=""
                 >
 
                 </multiselect>
+                <div class="col-form-label col-form-label-lg col-3"> مستوى السياره</div>
+
             </div>
         </div>
         <div class="form-group row">
             <div class="col-4 offset-3">
-                <div class="checkbox">
-                    <label style="float:right;"><input type="checkbox"
-                                                       v-model="destinationDetails.reserveAccomodation"
-                                                       @change="updateAccomodationType"
+                <toggle-button v-model="destinationDetails.reserveAccomodation" :value="false"
 
-                    >حجز اقامة</label>
-                </div>
+                               :sync="true"
+                               :labels="{checked: 'نعم', unchecked: 'لا'}"
+                               :width="80"
+                               :height="35"
+                               switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
+                               @change="updateAccomodationType"
+                />
+                <label class="col-form-label col-form-label-lg col-3 text-nowrap">حجز اقامة</label>
             </div>
         </div>
         <div v-if="showAccomodationType">
-            <multiselect
-                v-model="destinationDetails.selectedAccomodationType"
-                :options="accomodationType"
-                tagPosition="bottom"
-                :preserveSearch="true" :showNoResults="false" selectLabel=""
-            >
+            <div class="form-group row">
 
-            </multiselect>
+                <div class="col-4 offset-3">
+
+                    <multiselect
+                            v-model="destinationDetails.selectedAccomodationType"
+                            :options="accomodationType"
+                            tagPosition="bottom"
+                            :preserveSearch="true" :showNoResults="false" selectLabel=""
+                    >
+
+                    </multiselect>
+                </div>
+            </div>
+            <div class="col-form-label col-form-label-lg col-3">نوع الاقامة</div>
+
         </div>
 
         <HotelDetail :n="cityNumber"></HotelDetail>

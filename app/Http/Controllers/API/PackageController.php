@@ -15,6 +15,7 @@ class PackageController extends Controller
     }
     public function store(Request $request)
     {
+
 //        $request->validate([
 //            'client_id' => 'required|integer|exists:clients,id',
 //            'title' => 'nullable|string|max:255',

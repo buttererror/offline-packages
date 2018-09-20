@@ -34,7 +34,13 @@
         },
         methods: {
             savePackage(){
+                axios.post('/api/package',{
+                    'package_details':window.packageDetails.packageMainDetails,
+                    'destination_details':window.packageDetails.destinationsDetails
 
+                }).then(response=>{
+
+                })
             },
             previousComponent() {
                 this.$emit('previous-component', "DestinationBase");

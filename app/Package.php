@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
@@ -12,6 +13,7 @@ class Package extends Model
         'user_id',
         'nights',
         'start_date',
+        'end_date',
         'start_place',
         'adults',
         'children_count',
@@ -45,23 +47,29 @@ class Package extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function savePackageDetails($data){
-        $this->client_id=$data['client_id'];
-        $this->title=$data['title'];
-        $this->nights=$data['nights'];
-        $this->start_date=$data['start_date'];
-        $this->start_place=$data['start_place'];
-        $this->adults=$data['adults'];
-        $this->children_count=$data['children_count'];
-        $this->number_of_destinations=$data['number_of_destinations'];
-        $this->countries=$data['countries'];
-        $this->children=$data['children'];
-        $this->transfer=$data['transfer'];
-        $this->children=$data['children'];
-        $this->status=$data['status'];
-        $this->note=$data['note'];
-        $this->save();
 
+    public function country(){
+        return $this->belongsToMany(Country::class,'country_package','country_id','package_id');
+    }
+
+    public function savePackageDetails($data){
+
+        $packageCountries=[];
+//        $this->client_id=$data['client_id'];
+        $this->start_date=Carbon::parse($data['package_details']['startDate']);
+        $this->end_date=Carbon::parse($data['package_details']['endDate']);
+        $this->start_place=$data['package_details']['startPlace'];
+        $this->adults=$data['package_details']['adultsNum'];
+        $this->children_count=$data['package_details']['childrenNum'];
+        $this->number_of_destinations=$data['package_details']['placesNum'];
+        $this->transfer=$data['package_details']['transfer'];
+//        $this->note=$data['note'];
+        $this->save();
+        foreach($data['package_details']['selectedCountries'] as $selectedCountry){
+            array_push($packageCountries,$selectedCountry['id']);
+        }
+
+        $this->country->attach($packageCountries);
         $this->accommodationRequests->insert([
             'accommodation_type'=>$data['accommodation_type'],
             'rooms'=>$data['rooms'],
