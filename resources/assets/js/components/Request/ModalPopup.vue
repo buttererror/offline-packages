@@ -71,14 +71,17 @@
         <div class="form-group row">
             <div class="col-6 offset-3">
                 <multiselect v-model="country" :options="countries"
+                             id="country"
                              label="en_short_name"
                              tagPosition="bottom" :tabIndex="0"
                              openDirection="bottom"
                              placeholder=""  @remove="removeCities"
-                             @blur.native="validateCountry"
+                             @open="validateCountry"
+                             @blur.native.capture="validateCountry('blur')"
                              @input="validateCountry"
                              :class="{'is-invalid': validation.country.state === 'invalid',
-                        'is-valid': validation.country.state === 'valid'}"
+                        'is-valid': validation.country.state === 'valid',
+                        'select' : validation.country.state === 'normal'}"
 
                 >
                     <template slot="noResult">لا يوجد نتائج</template>
@@ -96,10 +99,13 @@
                 <multiselect
                     v-model="city" :options="cities" tagPosition="bottom"
                     placeholder="" label="name" selectLabel="" :tabIndex="0"
-                    @blur.native="validateCity"
+                    openDirection="bottom"
+                    @open="validateCity"
+                    @blur.native.capture="validateCity('blur')"
                     @input="validateCity"
                     :class="{'is-invalid': validation.city.state === 'invalid',
-                        'is-valid': validation.city.state === 'valid'}"
+                        'is-valid': validation.city.state === 'valid',
+                        'select' : validation.city.state === 'normal'}"
                 >
                     <template slot="noResult">لا يوجد نتائج</template>
 
@@ -117,10 +123,13 @@
                     v-model="nationality" :options="countries" tagPosition="bottom"
                     label="nationality"
                     placeholder="" selectLabel="" :tabIndex="0"
-                    @blur.native="validateNationality"
+                    openDirection="bottom"
+                    @blur.native.capture="validateNationality('blur')"
+                    @open="validateNationality"
                     @input="validateNationality"
                     :class="{'is-invalid': validation.nationality.state === 'invalid',
-                        'is-valid': validation.nationality.state === 'valid'}"
+                        'is-valid': validation.nationality.state === 'valid',
+                        'select' : validation.nationality.state === 'normal'}"
                 >
                     <template slot="noResult">لا يوجد نتائج</template>
 
@@ -163,12 +172,12 @@
 </template>
 
 <script>
-    import Autocomplete from 'v-autocomplete';
+    // import Autocomplete from 'v-autocomplete';
     import Datepicker from 'vuejs-datepicker';
     import UploadFile from './FileUpload';
-    import CountryTemplate from './AutocompleteTemplate/CountryAutocompleteItem';
-    import CityTemplate from './AutocompleteTemplate/CityAutocompleteItem';
-    import NationalityTemplate from './AutocompleteTemplate/NationalityAutocompleteItem';
+    // import CountryTemplate from './AutocompleteTemplate/CountryAutocompleteItem';
+    // import CityTemplate from './AutocompleteTemplate/CityAutocompleteItem';
+    // import NationalityTemplate from './AutocompleteTemplate/NationalityAutocompleteItem';
     import {en, ar} from 'vuejs-datepicker/dist/locale'
 
     import validator from 'validator';
@@ -176,7 +185,7 @@
 
     export default {
         components: {
-            Autocomplete,
+            // Autocomplete,
             Datepicker,
             UploadFile,
             Multiselect
@@ -248,9 +257,9 @@
                 cities: [],
                 city: null,
                 nationality: null,
-                countryTemplate: CountryTemplate,
-                cityTemplate: CityTemplate,
-                nationalityTemplate: NationalityTemplate,
+                // countryTemplate: CountryTemplate,
+                // cityTemplate: CityTemplate,
+                // nationalityTemplate: NationalityTemplate,
                 clientData: {
                     name: null,
                     email: null,
@@ -279,6 +288,11 @@
                 for (let prop in this.clientData) {
                     this.clientData[prop] = null;
                 }
+                this.country = null;
+                this.city = null;
+                this.nationality = null;
+                this.cities = [];
+
             },
             deactivateSaveBtn() {
                 for (let item in this.validation.checkList) {
@@ -354,7 +368,7 @@
                 }
                 this.fieldState("gender", "valid", true, null);
             },
-            validateCountry() {
+            validateCountry(type) {
                 if (this.country) {
                     this.fieldState("country", "valid", true, null);
                     this.clientData.country_id = this.country.id;
@@ -365,39 +379,32 @@
                     });
                     return;
                 }
-                if (!this.country) {
+                if(type === "blur" && !this.country) {
                     return this.fieldState("country", "invalid", false, "ادخل البلد");
                 }
-                // if (!validator.isAlpha(e, "en-US")) {
-                //     return this.fieldState("country", "invalid", false, "حروف انجليزية فقط");
-                // }
                 this.fieldState("country", "normal", false, null);
             },
-            validateCity(city) {
+            validateCity(type) {
                 if (this.city) {
                     this.clientData.city_id = this.city.id;
                     return this.fieldState("city", "valid", true, null);
                 }
-                if (!this.city) {
+                if (!this.country) {
+                    this.fieldState("country", "invalid", false, "ادخل البلد");
+                }
+                if (type === "blur" && !this.city) {
                     return this.fieldState("city", "invalid", false, "ادخل المدينة");
                 }
-                // if (typeof city === 'string' && !validator.isAlpha(city, "en-US") && city) {
-                //     return this.fieldState("city", "invalid", false, "حروف انجليزية فقط");
-                // }
                 this.fieldState("city", "normal", false, null);
             },
-            validateNationality() {
+            validateNationality(type) {
                 if (this.nationality) {
-                    console.log(this.nationality)
                     this.clientData.nationality_id = this.nationality.id;
                     return this.fieldState("nationality", "valid", true, null);
                 }
-                if (!this.nationality) {
+                if (type === 'blur' && !this.nationality) {
                     return this.fieldState("nationality", "invalid", false, "ادخل الجنسية");
                 }
-                // if (typeof nationality === 'string' && !validator.isAlpha(nationality, "en-US") && nationality) {
-                //     return this.fieldState("nationality", "is-invalid", false, "حروف انجليزية فقط");
-                // }
                 this.fieldState("nationality", "normal", false, null);
             },
             validateEmail(e) {
@@ -482,10 +489,14 @@
     .is-invalid:focus {
         border: 1px solid #dc3545 !important;
     }
-    .form-control:focus {
-        border-color: #ced4da;
-        box-shadow: none;
+    .select {
+        color: #495057 !important;
+        background-color: #fff !important;
+        border: 1px solid #80bdff !important;
+        border-radius: 5px;
+        outline: 0 !important;
+        -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
     }
-
 
 </style>
