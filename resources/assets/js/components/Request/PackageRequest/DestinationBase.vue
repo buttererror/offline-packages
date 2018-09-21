@@ -2,7 +2,7 @@
     <div id="destination_details">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h4 class="card-title text-center">Destination Details</h4>
+                <h4 class="card-title text-center">Destinations Details</h4>
             </div>
             <div class="card-body">
                 <div v-for="n in 3">

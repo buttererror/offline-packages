@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="searchClients">
         <div class="card" v-if="show">
             <div class="card-header bg-primary text-white">
                 <h4 class="card-title text-center">Search Clients</h4>
@@ -11,10 +11,24 @@
                 </h2>
                 <div class="row mt-4">
                     <div class="col-6 offset-3">
-                        <autocomplete dir="rtl" :items="clients" v-model="client" :get-label="getLabel"
-                                      :component-item='clientTemplate'
-                                      @update-items="updateItems" :min-len="0">
-                        </autocomplete>
+
+                        <multiselect v-model="client" :options="clients" label="name"
+                                     tagPosition="bottom" openDirection="bottom"
+                                     placeholder="" id="select_input"
+                                     @focus.native.capture="validateSearchBox('focus')"
+                                     @blur.native.capture="validateSearchBox"
+                                     @search-change="getClient"
+                                     @input="validateSearchBox"
+                                     @remove="validateSearchBox"
+                                     @keyup.native.capture.enter="nextComponent(client)"
+
+                                     :class="{'select': searchBoxState === 'normal',
+                                     'is-valid': searchBoxState === 'valid'}"
+
+                        >
+
+
+                        </multiselect>
                     </div>
                 </div>
                 <div class="row mt-4 text-center">
@@ -28,7 +42,10 @@
             </div>
 
             <div class="card-footer">
-                <button class="btn btn-primary" @click.prevent="nextComponent(client)">التالي</button>
+                <button class="btn btn-primary" @click.prevent="nextComponent(client)"
+                        :class="{'disabled': disableSaveBtn}"
+                >التالي
+                </button>
             </div>
 
         </div>
@@ -36,14 +53,19 @@
 </template>
 
 <script>
-    import Autocomplete from 'v-autocomplete';
-    import ClientAutocompleteItem from './AutocompleteTemplate/ClientAutocompleteItem';
+    import Multiselect from 'vue-multiselect';
 
     export default {
+        name: 'AutocompleteTrigger',
         components: {
-            Autocomplete,
+            Multiselect,
         },
         mounted() {
+            document.getElementById("select_input").autofocus = true;
+            let $selectBtn = document.getElementsByClassName("multiselect__select")[0];
+            document.getElementsByClassName("multiselect")[0].removeChild($selectBtn);
+            document.getElementsByClassName("multiselect__tags")[0].classList.add("select_tags");
+            document.getElementById("select_input").nextElementSibling.children[0].classList.add("select_single");
             bus.$on('new-client-saved', (client) => {
                 this.client = client;
             });
@@ -52,22 +74,13 @@
             return {
                 clients: [],
                 client: null,
-                clientTemplate: ClientAutocompleteItem,
-                show: true
+                show: true,
+                searchBoxState: null,
+                disableSaveBtn: true,
             }
         },
         methods: {
-            getLabel(client) {
-                if (client) {
-                    return client.name
-                }
-                return ''
-            },
-            updateItems(text) {
-                if (!text) {
-                    this.clients = [];
-                    return;
-                }
+            getClient(text) {
                 axios.get('api/client/search', {
                     params: {
                         searchText: text
@@ -80,11 +93,28 @@
                 bus.$emit('new-client-clicked');
             },
             nextComponent(client) {
-                window.packageDetails.clientDetails = client;
-                this.$emit('next-component', {
-                    component: "SelectService",
-                    step: "Service Selection"
-                });
+                console.log("here");
+                if (!this.disableSaveBtn) {
+                    window.packageDetails.clientDetails = client;
+                    this.$emit('next-component', {
+                        component: "SelectService",
+                        step: "Service Selection"
+                    });
+                }
+            },
+            validateSearchBox(eventType) {
+                console.log(this.client)
+                if (eventType === 'focus') {
+                    this.client = null;
+                    this.disableSaveBtn = true;
+                    return this.searchBoxState = "normal";
+                }
+                if (this.client) {
+                    this.searchBoxState = "valid";
+                    this.disableSaveBtn = false;
+                    return;
+                }
+                this.searchBoxState = null;
             }
         }
 
@@ -92,78 +122,69 @@
 </script>
 
 <style>
-    .v-autocomplete .v-autocomplete-input-group .v-autocomplete-input {
-        font-size: 1.5em;
-        padding: 10px 15px;
-        box-shadow: none;
-        border: 1px solid #157977;
-        width: calc(100% - 32px);
-        outline: none;
-        background-color: #eee;
+    .is-valid {
+        border: 1px solid #28a745;
+        border-radius: 5px;
     }
 
-    .v-autocomplete .v-autocomplete-input-group.v-autocomplete-selected .v-autocomplete-input {
-        color: #008000;
-        background-color: #f2fff2;
+    .is-valid:focus {
+        border: 1px solid #28a745 !important;
+        border-radius: 5px;
     }
 
-    .v-autocomplete .v-autocomplete-list {
-        width: 100%;
-        text-align: left;
-        border: none;
-        border-top: none;
-        max-height: 400px;
-        overflow-y: auto;
-        border-bottom: 1px solid #157977;
-        z-index: 999;
+    .select_tags {
+        min-height: 55px;
+        padding: 8px 8px 0 8px;
     }
 
-    .v-autocomplete-input-group .v-autocomplete-input {
-        display: block;
-        width: 100% !important;
-        margin: 0;
+    #select_input {
+        display: block !important;
+        min-height: 37px;
+        margin-bottom: 0;
+        vertical-align: middle;
+        font-size: 20px;
+        font-weight: 200;
     }
 
-    .v-autocomplete .v-autocomplete-list .v-autocomplete-list-item {
-        cursor: pointer;
-        background-color: #fff;
-        padding: 10px;
-        border-bottom: 1px solid #157977;
-        border-left: 1px solid #157977;
-        border-right: 1px solid #157977;
+    #searchClients .select {
+        color: #495057 !important;
+        background-color: #fff !important;
+        border: 1px solid #80bdff !important;
+        border-radius: 5px;
+        outline: 0 !important;
+        -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
     }
 
-    .v-autocomplete .v-autocomplete-list .v-autocomplete-list-item:last-child {
-        border-bottom: none;
+    .select_single {
+        position: absolute;
+        width: 95%;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 23px;
+        font-weight: 200;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-bottom: 0;
+        min-height: 51px;
+        padding: 0;
+        vertical-align: unset;
     }
 
-    .v-autocomplete .v-autocomplete-list .v-autocomplete-list-item:hover {
-        background-color: #eee;
-    }
-
-    .v-autocomplete .v-autocomplete-list .v-autocomplete-list-item abbr {
-        opacity: 0.8;
-        font-size: 0.8em;
-        display: block;
-        font-family: sans-serif;
-    }
-
-    .v-autocomplete pre {
-        text-align: left;
-        white-space: pre-wrap;
-        background-color: #eee;
-        border: 1px solid #c0c0c0;
-        padding: 20px !important;
-        border-radius: 10px;
-        font-family: monospace !important;
-    }
-
-    .v-autocomplete .left {
-        text-align: left;
-    }
-
-    .v-autocomplete .note {
-        border-left: 5px solid #ccc;
-        padding: 10px;
+    #searchClients .multiselect__single {
+        position: absolute;
+        width: 95%;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 23px;
+        font-weight: 200;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-bottom: 0;
+        min-height: 51px;
+        padding: 0;
+        vertical-align: unset;
     }
 </style>

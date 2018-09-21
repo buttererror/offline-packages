@@ -16,7 +16,7 @@ class ClientController extends Controller
         if (!$request->searchText) {
             return [];
         }
-        return Client::search($request->searchText)->take(7)->get();
+        return Client::search($request->searchText)->take(10)->get();
     }
 
     public function store(ClientRequest $request)

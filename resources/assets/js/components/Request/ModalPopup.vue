@@ -147,6 +147,7 @@
                 <datepicker placeholder="ضع تاريخ ميلادك" class="text-right"
                             v-model="clientData.birthDate"
                             :bootstrap-styling="true"
+                            calendar-class="h5 w-100"
                             :language="ar"
 
                 ></datepicker>
@@ -163,7 +164,7 @@
 
         <div slot="modal-footer" class="w-100">
             <button class="btn btn-primary pull-left" @click="saveData"
-                    v-bind:class="{'disabled': disableSaveBtn}">
+                    :class="{'disabled': disableSaveBtn}">
                 حفظ
             </button>
             <button @click="cancel" class="btn btn-danger pull-left">الغاء</button>
@@ -172,12 +173,8 @@
 </template>
 
 <script>
-    // import Autocomplete from 'v-autocomplete';
     import Datepicker from 'vuejs-datepicker';
     import UploadFile from './FileUpload';
-    // import CountryTemplate from './AutocompleteTemplate/CountryAutocompleteItem';
-    // import CityTemplate from './AutocompleteTemplate/CityAutocompleteItem';
-    // import NationalityTemplate from './AutocompleteTemplate/NationalityAutocompleteItem';
     import {en, ar} from 'vuejs-datepicker/dist/locale'
 
     import validator from 'validator';
@@ -257,9 +254,6 @@
                 cities: [],
                 city: null,
                 nationality: null,
-                // countryTemplate: CountryTemplate,
-                // cityTemplate: CityTemplate,
-                // nationalityTemplate: NationalityTemplate,
                 clientData: {
                     name: null,
                     email: null,
@@ -280,9 +274,9 @@
                 this.validation.mobile.state = "normal";
                 this.validation.gender.state = "normal";
                 this.validation.email.state = "normal";
-                this.validation.country.state = "normal";
-                this.validation.city.state = "normal";
-                this.validation.nationality.state = "normal";
+                this.validation.country.state = null;
+                this.validation.city.state = null;
+                this.validation.nationality.state = null;
             },
             removeFormData() {
                 for (let prop in this.clientData) {
@@ -448,7 +442,8 @@
                             console.log(err);
                         });
                 }
-            }, activateSaveBtn() {
+            },
+            activateSaveBtn() {
                 for (let checkNote in this.validation.checkList) {
                     if (this.validation.checkList.hasOwnProperty(checkNote) && !this.validation.checkList[checkNote]) {
                         this.disableSaveBtn = true;

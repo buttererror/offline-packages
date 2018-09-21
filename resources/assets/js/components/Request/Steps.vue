@@ -9,11 +9,13 @@
                 </li>
             </ol>
         </nav>
+        <keep-alive>
+            <component @next-component="nextComponent" @selected-component="goToSelected"
+                       @previous-component="previousComponent" v-bind:is="component">
 
-        <component @next-component="nextComponent" @selected-component="goToSelected"
-                   @previous-component="previousComponent" v-bind:is="component">
+            </component>
+        </keep-alive>
 
-        </component>
     </div>
 </template>
 

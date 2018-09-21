@@ -11,7 +11,6 @@ window.Vue = require('vue');
 
 import BootstrapVue from 'bootstrap-vue'
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
-// import '@fortawesome/fontawesome-free/css/all.css'
 import FileUpload from 'v-file-upload';
 import ToggleButton from 'vue-js-toggle-button';
 
@@ -37,6 +36,4 @@ const app = new Vue({
 window.packageDetails = {};
 
 
-
-import 'v-autocomplete/dist/v-autocomplete.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css'
