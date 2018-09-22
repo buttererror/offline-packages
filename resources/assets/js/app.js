@@ -9,10 +9,17 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+
 import BootstrapVue from 'bootstrap-vue'
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import FileUpload from 'v-file-upload';
 import ToggleButton from 'vue-js-toggle-button';
+import flatpickr from "flatpickr";
+import flatPickr from  'vue-flatpickr-component';
+
+Vue.use(flatPickr);
+
+
 
 Vue.use(ToggleButton);
 Vue.use(FileUpload);
@@ -32,6 +39,8 @@ const app = new Vue({
     el: '#app',
     components: {BaseComponent}
 });
+
+
 
 window.packageDetails = {};
 
