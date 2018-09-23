@@ -5,7 +5,9 @@
                 <steps></steps>
             </div>
         </div>
+
         <modal-popup></modal-popup>
+
     </div>
 </template>
 
@@ -14,11 +16,23 @@
     import ModalPopup from './ModalPopup';
     export default {
         name: "base-component",
+        props: ['language'],
         components: {
             Steps,
             ModalPopup
+        },
+        data(){
+            return{
+                'lang':'ar'
+            }
+        },
+        mounted() {
+            console.log(this.language)
+            this.$i18n.locale= this.language;
         }
     }
+
+
 </script>
 
 <style scoped>

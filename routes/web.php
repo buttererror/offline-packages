@@ -6,7 +6,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home/{language}', 'HomeController@index')->name('home');
 Route::get('client','ClientController@show')->name('search.client');
 Route::post('client','ClientController@store')->name('store.client');
 Route::get('countries','CountriesController@index')->name('show.countries');

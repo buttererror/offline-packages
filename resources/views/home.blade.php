@@ -1,4 +1,4 @@
 @extends('layouts.app')
 @section('content')
-    <base-component></base-component>
+    <base-component :language="'{{$language}}'"></base-component>
 @endsection

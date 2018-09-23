@@ -81,7 +81,7 @@
         },
         methods: {
             getClient(text) {
-                axios.get('api/client/search', {
+                axios.get('/api/client/search', {
                     params: {
                         searchText: text
                     }

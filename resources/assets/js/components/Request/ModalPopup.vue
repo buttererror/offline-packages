@@ -8,7 +8,7 @@
         size="lg"
         :header-class="'justify-content-center'">
         <h5 slot="modal-title">
-            اضافة عميل جديد
+            {{ $t("client.add") }}
         </h5>
         <div class="form-group row">
 
