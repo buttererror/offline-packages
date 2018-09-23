@@ -114,7 +114,9 @@
             </div>
          </div>
          <div class="card-footer d-flex justify-content-between">
-            <button class="btn btn-primary" @click.prevent="nextComponent">التالى</button>
+            <button class="btn btn-primary" @click.prevent="nextComponent"
+                    :class="{'disabled': packageMainDetails.selectedCountries.length === 0}"
+            >التالى</button>
             <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
          </div>
       </div>
@@ -193,11 +195,13 @@
             console.log("checkOut", checkOut);
          },
          nextComponent() {
-            window.packageDetails.packageMainDetails = this.packageMainDetails;
-            this.$emit('next-component', {
-               component: 'DestinationBase',
-               step: 'Destination Details'
-            });
+            if(this.packageMainDetails.selectedCountries.length) {
+               window.packageDetails.packageMainDetails = this.packageMainDetails;
+               this.$emit('next-component', {
+                  component: 'DestinationBase',
+                  step: 'Destination Details'
+               });
+            }
          },
          previousComponent() {
             this.$emit('previous-component', "SelectService");

@@ -6,7 +6,6 @@
 
         <div class="card-body">
             <b-form-textarea id="note"
-                             state="invalid"
                              v-model.trim="noteText"
                              placeholder="Enter something"
                              :rows="5">

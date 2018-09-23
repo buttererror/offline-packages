@@ -6,19 +6,23 @@
             <h5 class="card-subtitle text-center">Destination #{{cityNumber}}</h5>
          </div>
          <div class="card-body">
-            <div v-for="n in packageMainDetails.selectedCountries.length">
+            <div v-for="n in selectedCountries.length">
                <keep-alive>
-                  <DestinationDetails v-if="n === cityNumber" :cityNumber="n" :cities="cities">
+                  <DestinationDetails v-if="n === cityNumber" :cityNumber="n" :cities="cities"
+                  >
                   </DestinationDetails>
                </keep-alive>
             </div>
          </div>
+
          <div class="text-center" style="user-select: none">
-            <a href="#" ref="nextDestinationBtn" @click.prevent="nextDestination"
-               class="btn btn-link btn-outline-primary m-4"
+            <a href="#" @click.prevent="nextDestination"
+               class="btn btn-link btn-outline-primary m-4" :class="{
+               'disabled': selectedCountries.length === cityNumber || selectedCountries.length === 1}"
             >المدينة القادمة</a>
-            <a href="#" ref="previousDestinationBtn" @click.prevent="previousDestination"
-               class="btn btn-link btn-outline-primary m-4 disabled"
+            <a href="#" @click.prevent="previousDestination"
+               class="btn btn-link btn-outline-primary m-4" :class="{
+               'disabled': cityNumber === 1}"
             >المدينة السابقة</a>
          </div>
          <div class="card-footer d-flex justify-content-between">
@@ -43,8 +47,9 @@
          return {
             cityNumber: 1,
             cities: [],
-            packageMainDetails: window.packageDetails.packageMainDetails,
+            selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
             destinationsDetails: window.packageDetails.destinationsDetails,
+            date: new Date()
          }
       },
       mounted() {
@@ -52,9 +57,8 @@
             this.$emit('selected-component', component);
          });
          window.packageDetails.destinationsDetails = [];
-         let selectedCountries = this.packageMainDetails.selectedCountries;
          let selectedCountriesIds = [];
-         selectedCountries.forEach(function (element) {
+         this.selectedCountries.forEach(function (element) {
             selectedCountriesIds.push(element.id)
          });
          axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
@@ -65,21 +69,10 @@
          nextDestination() {
             bus.$emit(`destination-details-${this.cityNumber}`);
             this.cityNumber++;
-            if (this.packageMainDetails.selectedCountries.length === this.cityNumber) {
-               this.$refs.nextDestinationBtn.classList.add("disabled");
-            }else if(this.cityNumber === 2) {
-               this.$refs.previousDestinationBtn.classList.remove("disabled");
-
-            }
          },
          previousDestination() {
             this.cityNumber--;
             bus.$emit(`destination-details-${this.cityNumber}`);
-            if(this.cityNumber === 1) {
-               this.$refs.previousDestinationBtn.classList.add("disabled");
-            }else if (this.packageMainDetails.selectedCountries.length - 1 === this.cityNumber) {
-               this.$refs.nextDestinationBtn.classList.remove("disabled");
-            }
          },
          nextComponent() {
             this.$emit('next-component', {
