@@ -72,48 +72,50 @@
         <!--<div class="col-form-label col-form-label-lg col-3 text-right">تاريخ النهاية</div>-->
         <!--</div>-->
         <div class="form-group row">
-            <div class="col-6 offset-3 text-right">
+            <div class="col-6 text-right offset-3">
                 <toggle-button v-model="destinationDetails.rentCar" :value="false"
                                :sync="true"
                                :labels="{checked: 'نعم', unchecked: 'لا'}"
                                :width="70"
                                :height="30"
                                switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
-                               @change="viewCarLevel"
+                               @change="setArentedCar"
                 />
 
             </div>
             <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">تاجير سياره</label>
         </div>
-        <div class="form-group row" v-if="show">
-            <div class="col-6 offset-3">
-                <multiselect placeholder=""
-                             v-model="destinationDetails.selectedCarLevel"
-                             :options="carLevel"
-                             tagPosition="bottom" openDirection="bottom"
-                             :preserveSearch="true" :showNoResults="false" selectLabel=""
-                >
+        <div v-if="show">
+            <div class="form-group row">
+                <div class="col-6 text-right offset-3">
+                    <toggle-button v-model="destinationDetails.rentCarWithDriver" :value="false"
 
-                </multiselect>
+                                   :sync="true"
+                                   :labels="{checked: 'نعم', unchecked: 'لا'}"
+                                   :width="65"
+                                   :height="25"
+                                   switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
+                                   @change="setAcarWithAdriver"
+                    />
+
+                </div>
+                <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">مع سائق</label>
             </div>
-            <label class="col-form-label col-form-label-lg text-nowrap col-3 text-right"> مستوى السياره</label>
+
+            <div class="form-group row">
+                <div class="col-6 offset-3">
+                    <multiselect placeholder=""
+                                 v-model="destinationDetails.selectedCarLevel"
+                                 :options="carLevel"
+                                 tagPosition="bottom" openDirection="bottom"
+                                 :preserveSearch="true" :showNoResults="false" selectLabel=""
+                    >
+                    </multiselect>
+                </div>
+                <label class="col-form-label col-form-label-lg text-nowrap col-3 text-right"> مستوى السياره</label>
+            </div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-6 offset-3 text-right">
-                <toggle-button v-model="destinationDetails.rentCarWithDriver" :value="false"
-
-                               :sync="true"
-                               :labels="{checked: 'نعم', unchecked: 'لا'}"
-                               :width="70"
-                               :height="30"
-                               switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
-                               @change="viewCarLevel"
-                />
-
-            </div>
-            <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">تاجير سياره مع سائق</label>
-        </div>
         <div class="form-group row">
             <div class="col-6 offset-3 text-right">
                 <toggle-button v-model="destinationDetails.needTours" :value="false"
@@ -123,7 +125,7 @@
                                :width="70"
                                :height="30"
                                switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
-                               @change="viewCarLevel"
+                               @change="goTours"
                 />
 
             </div>
@@ -229,8 +231,15 @@
                 this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
 
             },
-            viewCarLevel(rentNeed) {
-                this.show = rentNeed.value;
+            setArentedCar(car) {
+                this.destinationDetails.rentCar = car.value;
+                this.show = car.value;
+            },
+            setAcarWithAdriver(driver) {
+                this.destinationDetails.rentCarWithDriver = driver.value;
+            },
+            goTours(tours) {
+                this.needTours = tours.value;
             },
             updateAccomodationType(accommodationNeed) {
                 this.showAccomodationType = accommodationNeed.value;
