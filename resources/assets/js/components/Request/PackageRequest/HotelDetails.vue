@@ -1,11 +1,15 @@
 <template>
    <div>
+      <b-card>
+
+
       <div class="form-group row">
          <div class="col-6 offset-3">
             <input type="number" :min="minRooms" :max="adultsNum" placeholder="عدد الغرف"
                    @keypress="onlyNumbers"
                    v-model="hotelDetails.roomsNum" style="text-align: right"
                    class="form-control"
+                   :disabled="disableRoomNum"
                    @input="update()"
             />
          </div>
@@ -51,6 +55,7 @@
                                         @input="checkChildrenNumber"
                                         @select="updateChildrenNum"
                                         :disabled="childrenSelectDisabled"
+                                        @remove="removeChildrenOption"
 
                            ></multiselect>
                         </div>
@@ -64,6 +69,11 @@
             </b-card>
          </div>
       </div>
+
+         <b-button v-if="show" variant="primary" @click="editRoomsData">تعديل</b-button>
+
+      </b-card>
+
       <div class="mt-4">
          <div class="row form-group">
             <div class="col-6 offset-3">
@@ -138,6 +148,7 @@
             roomView: ['Sea View', 'Garden View'],
             stars: [1, 2, 3, 4, 5],
             adultsSelected: [],
+            disableRoomNum:false,
             childrenSelectDisabled: false,
             adultsNum: [], //number of adults
             childrenNum: [],
@@ -160,7 +171,6 @@
       computed: {
 
          minRooms: function () {
-            console.log(this.adultsNum.length / this.hotelDetails.maxPerRoom.length);
             return Math.ceil(this.adultsNum.length / this.hotelDetails.maxPerRoom.length)
          }
 
@@ -192,6 +202,7 @@
             // return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57
          },
          update() {
+             this.disableRoomNum=true;
             this.hotelDetails.roomsNum = parseInt(this.hotelDetails.roomsNum)
             if (this.hotelDetails.roomsNum > 0) {
                this.hotelDetails.maxPerRoom = [];
@@ -228,7 +239,17 @@
             console.log(this.childrenNum);
 
 
-         }
+         },
+          removeChildrenOption(option){
+            this.childrenNum.push(option)
+             console.log(option);
+          },
+          editRoomsData(){
+             this.disableRoomNum=false;
+             this.show=false;
+              this.adultsSelected=[];
+              this.hotelDetails.roomsNum=0;
+          }
       },
       watch: {
          'hotelDetails.roomsNum'() {
