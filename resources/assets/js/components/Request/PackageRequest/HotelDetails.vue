@@ -62,7 +62,9 @@
                                                      tagPosition="bottom" openDirection="bottom"
                                                      v-model="hotelDetails.selectedChildrenNum[index-1]"
                                                      :options="childrenNum"
+                                                     label="age"
                                                      :multiple="true"
+                                                     trackBy="id"
                                                      @input="checkChildrenNumber"
                                                      @select="updateChildrenNum"
                                                      :disabled="childrenSelectDisabled"
@@ -215,8 +217,9 @@
             // for (let n = 0; n < this.adultsNumber; n++) {
             //     this.adultsNum.push(`${n + 1}`)
             // }
+            // childrenNum = [{age: 12, id: 1}, ....]
             for (let i = 0; i < this.childrenNumber; i++) {
-                this.childrenNum.push(`child -${this.childrenAges[i]} years`)
+                this.childrenNum.push({age: `child -${this.childrenAges[i]} years`, id: i})
             }
             bus.$on("next-destination", () => {
                 bus.$emit(`destination-details-${n}`, this.hotelDetails);
