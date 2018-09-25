@@ -236,6 +236,10 @@
             setArentedCar(car) {
                 this.destinationDetails.rentCar = car.value;
                 this.show = car.value;
+                if(!this.destinationDetails.rentCar){
+                    this.destinationDetails.rentCarWithDriver = false;
+                    this.destinationDetails.selectedCarLevel = '';
+                }
             },
             setAcarWithAdriver(driver) {
                 this.destinationDetails.rentCarWithDriver = driver.value;

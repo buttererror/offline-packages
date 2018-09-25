@@ -351,7 +351,7 @@
                 this.adultsValidation.number = 0;
 
                 this.hotelDetails.selectedChildrenNum = [];
-                this.hotelDetails.roomsNum=0;
+                this.hotelDetails.roomsNum = '';
 
             }
         }
