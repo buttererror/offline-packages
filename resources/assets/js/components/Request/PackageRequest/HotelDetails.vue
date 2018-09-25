@@ -1,97 +1,109 @@
 <template>
     <div v-if="accomType === 'Hotel'">
 
-        <b-card>
-
-
-            <div class="form-group row">
-                <div class="col-6 offset-3">
-                    <!--<input type="number" :min="hotelDetails.minRooms" :max="adultsNum" placeholder="عدد الغرف"-->
-                    <!--@keypress="onlyNumbers"-->
-                    <!--v-model="hotelDetails.roomsNum" style="text-align: right"-->
-                    <!--class="form-control"-->
-                    <!--:disabled="disableRoomNum"-->
-                    <!--@input="update()">-->
-                    <multiselect placeholder="عدد الغرف"
-                                 tagPosition="bottom"
-                                 openDirection="bottom"
-                                 v-model="hotelDetails.roomsNum"
-                                 :options="adultsRange"
-                                 :multiple="false"
-                                 @input="update()"
-                                 :disabled="disableRoomNum"
-                    ></multiselect>
+        <div class="card pb-0">
+            <div class="card-header card-title h5 text-center">
+                عدد الغرف
+            </div>
+            <div class="card-body pb-0">
+                <div class="form-group row">
+                    <div class="col-8 offset-2">
+                        <multiselect placeholder="عدد الغرف"
+                                     tagPosition="bottom"
+                                     openDirection="bottom"
+                                     v-model="hotelDetails.roomsNum"
+                                     :options="adultsRange"
+                                     :multiple="false"
+                                     @input="update()"
+                                     :disabled="disableRoomNum"
+                        ></multiselect>
+                    </div>
                 </div>
-                <div class="col-form-label col-form-label-lg col-3 text-right">عدد الغرف</div>
 
-            </div>
+                <div v-if="show" role="tablist">
+                    <div v-for="(index) in hotelDetails.roomsNum">
+                        <b-card no-body class="mb-1 pb-0">
+                            <b-card-header header-tag="header" class="p-1" role="tab">
+                                <b-btn href="#" block v-b-toggle="`room_${index}`" variant="info">
+                                    الغرفه {{index}}
+                                </b-btn>
+                            </b-card-header>
 
-            <div v-if="show" role="tablist">
-                <div v-for="(index) in hotelDetails.roomsNum">
-                    <b-card no-body class="mb-1">
-                        <b-card-header header-tag="header" class="p-1" role="tab">
-                            <b-btn href="#" block v-b-toggle="`room_${index}`" variant="info">
-                                الغرفه {{index}}
-                            </b-btn>
-                        </b-card-header>
+                            <b-collapse :id="`room_${index}`" :visible="index === 1" accordion="my-accordion"
+                                        role="tabpanel">
+                                <b-card-body>
+                                    <div class="row form-group">
+                                        <div class="col-6 offset-3">
+                                            <multiselect placeholder=""
+                                                         tagPosition="bottom" openDirection="bottom"
+                                                         v-model="hotelDetails.selectedAdultsNum[index-1]"
+                                                         :options="sortAdults[index-1]"
+                                                         :multiple="false"
+                                                         @input="updateAdultsNum(index ,index - 1)"
+                                                         :disabled="adultsSelected.includes(index)">
+                                            </multiselect>
+                                        </div>
 
-                        <b-collapse :id="`room_${index}`" :visible="index === 1" accordion="my-accordion"
-                                    role="tabpanel">
-                            <b-card-body>
-                                <div class="row form-group">
-                                    <div class="col-6 offset-3">
-                                        <multiselect placeholder=""
-                                                     tagPosition="bottom" openDirection="bottom"
-                                                     v-model="hotelDetails.selectedAdultsNum[index-1]"
-                                                     :options="sortAdults[index-1]"
-                                                     :multiple="false"
-                                                     @input="updateAdultsNum(index ,index - 1)"
-                                                     :disabled="adultsSelected.includes(index)">
-                                        </multiselect>
+                                        <div class="col-form-label col-form-label-lg col-3 text-right"
+                                             style="text-align:right">عدد
+                                            البالغين
+                                        </div>
                                     </div>
+                                    <div class="row form-group">
 
-                                    <div class="col-form-label col-form-label-lg col-3 text-right"
-                                         style="text-align:right">عدد
-                                        البالغين
+                                        <div class="col-6 offset-3">
+                                            <multiselect placeholder=""
+                                                         tagPosition="bottom" openDirection="bottom"
+                                                         v-model="hotelDetails.selectedChildrenNum[index-1]"
+                                                         :options="childrenOptions"
+                                                         label="age"
+                                                         :multiple="true"
+                                                         trackBy="id"
+                                                         @input="checkChildrenNumber"
+                                                         @select="updateChildrenNum"
+                                                         :disabled="childrenSelectDisabled"
+                                                         @remove="removeChildrenOption"
+
+                                            ></multiselect>
+                                        </div>
+                                        <div class="col-form-label col-form-label-lg col-3 text-right"
+                                             style="text-align:right">عدد
+                                            الاطفال
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row form-group">
+                                </b-card-body>
+                            </b-collapse>
 
-                                    <div class="col-6 offset-3">
-                                        <multiselect placeholder=""
-                                                     tagPosition="bottom" openDirection="bottom"
-                                                     v-model="hotelDetails.selectedChildrenNum[index-1]"
-                                                     :options="childrenNum"
-                                                     label="age"
-                                                     :multiple="true"
-                                                     trackBy="id"
-                                                     @input="checkChildrenNumber"
-                                                     @select="updateChildrenNum"
-                                                     :disabled="childrenSelectDisabled"
-                                                     @remove="removeChildrenOption"
+                        </b-card>
 
-                                        ></multiselect>
-                                    </div>
-                                    <div class="col-form-label col-form-label-lg col-3 text-right"
-                                         style="text-align:right">عدد
-                                        الاطفال
-                                    </div>
-                                </div>
-                            </b-card-body>
-                        </b-collapse>
-
-                    </b-card>
-
+                    </div>
                 </div>
+                <div v-if="show" class="row">
+                    <div class="col-6">
+                        <b-alert show variant="info d-flex justify-content-around rounded-0"
+                                 style="margin-bottom: 0">
+                            <div class="h6 text-danger d-inline-block">
+                                ({{adultsChosen.number}}) :البالغين<br>
+                                ({{childrenChosen.number}}) :الاطفال
+                            </div>
+                            <div class="h6 text-success d-inline-block">
+                                ({{adultsNumber}}) :البالغين<br>
+                                ({{childrenNumber}}) :الاطفال
+                            </div>
+                        </b-alert>
+                    </div>
+
+                    <b-alert show variant="light"
+                             class="d-flex justify-content-center col-6 align-items-stretch"
+                             style="margin-bottom: 0"
+
+                    >
+                        <button class="btn btn-light btn-block p-0" @click="editRoomsData">تعديل</button>
+                    </b-alert>
+                </div>
+
             </div>
-            <b-button v-if="show" variant="primary" @click="editRoomsData">تعديل</b-button>
-
-            <div v-if="adultsValidation.invalid">
-                AdultsNumber is incorrect, {{adultsValidation.number}} from {{adultsNumber}}
-            </div>
-
-
-        </b-card>
+        </div>
 
         <div class="mt-4">
             <div class="row form-group">
@@ -172,24 +184,26 @@
                 adultsSelected: [],
                 disableRoomNum: false,
                 childrenSelectDisabled: false,
-                // adultsNum: [], //number of adults
-                childrenNum: [],
+                childrenOptions: [],
                 show: false,
                 remainingAdults: '',
                 remainingRooms: '',
                 adultsRange: [],
                 adultsNumber: window.packageDetails.packageMainDetails.adultsNum,
-                childrenNumber: window.packageDetails.packageMainDetails.childrenNum,
-                childrenAges: window.packageDetails.packageMainDetails.childAge,
+                childrenNumber: window.packageDetails.packageMainDetails.childrenNumber,
+                childrenAges: window.packageDetails.packageMainDetails.childrenAges,
                 sortAdults: [],
                 maxNumOfAdultsPerRoom_1: null,
                 maxNumOfAdultsPerRoom_2: null,
                 maxNumOfAdultsPerRoom: null,
-                adultsValidation: {
+                adultsChosen: {
                     number: 0,
                     invalid: false
                 },
-
+                childrenChosen: {
+                    number: 0,
+                    invalid: false
+                },
                 hotelDetails: {
                     maxPerRoom: [1, 2, 3, 4, 5, 6],
                     maxChildrenPerRoom: [1, 2, 3, 4],
@@ -217,9 +231,9 @@
             // for (let n = 0; n < this.adultsNumber; n++) {
             //     this.adultsNum.push(`${n + 1}`)
             // }
-            // childrenNum = [{age: 12, id: 1}, ....]
+            // childrenOptions = [{age: 12, id: 1}, ....]
             for (let i = 0; i < this.childrenNumber; i++) {
-                this.childrenNum.push({age: `child -${this.childrenAges[i]} years`, id: i})
+                this.childrenOptions.push({age: `child -${this.childrenAges[i]} years`, id: i})
             }
             bus.$on("next-destination", () => {
                 bus.$emit(`destination-details-${n}`, this.hotelDetails);
@@ -228,7 +242,13 @@
                 // axios
             });
         },
-
+        watch: {
+            accomType() {
+                if(this.accomType === "Apartment"){
+                    this.editRoomsData();
+                }
+            }
+        },
         methods: {
             onlyNumbers(event) {
                 return null;
@@ -269,47 +289,49 @@
                 }
             },
             fillRoom(index) {
-                console.log("index to fill in", index);
+                // console.log("index to fill in", index);
                 for (let i = 1; i <= this.maxNumOfAdultsPerRoom; i++) {
                     this.sortAdults[index].push(i);
-                    console.log(this.sortAdults[index]);
+                    // console.log(this.sortAdults[index]);
                 }
             },
             updateAdultsNum(pastRooms, index) {
                 this.adultsSelected.push(index + 1); // disable after input
-                console.log("selectedAdultsNum:", this.hotelDetails.selectedAdultsNum)
-                console.log("selectedAdultsNum", this.hotelDetails.selectedAdultsNum);
+                // console.log("selectedAdultsNum:", this.hotelDetails.selectedAdultsNum)
+                // console.log("selectedAdultsNum", this.hotelDetails.selectedAdultsNum);
 
                 this.remainingAdults = Math.ceil(this.remainingAdults - this.hotelDetails.selectedAdultsNum[index]);
-                console.log("remainingAdults", this.remainingAdults);
+                // console.log("remainingAdults", this.remainingAdults);
 
                 this.remainingRooms = this.hotelDetails.roomsNum - pastRooms;
-                console.log("remainingRooms", this.remainingRooms);
+                // console.log("remainingRooms", this.remainingRooms);
 
                 this.maxNumOfAdultsPerRoom_1 = Math.ceil(this.remainingAdults / this.remainingRooms);
                 this.maxNumOfAdultsPerRoom_2 = this.remainingAdults - this.remainingRooms;
-                console.log("num_1", this.maxNumOfAdultsPerRoom_1);
-                console.log("num_2", this.maxNumOfAdultsPerRoom_2);
+                // console.log("num_1", this.maxNumOfAdultsPerRoom_1);
+                // console.log("num_2", this.maxNumOfAdultsPerRoom_2);
                 this.maxNumOfAdultsPerRoom = this.maxNumOfAdultsPerRoom_1 > this.maxNumOfAdultsPerRoom_2 ? this.maxNumOfAdultsPerRoom_1 : this.maxNumOfAdultsPerRoom_2;
-                console.log("maxNumOfAdultsPerRoomFinaleFirst", this.maxNumOfAdultsPerRoom);
+                // console.log("maxNumOfAdultsPerRoomFinaleFirst", this.maxNumOfAdultsPerRoom);
                 this.maxNumOfAdultsPerRoom = this.remainingAdults - (this.remainingRooms - 1);
                 if (this.maxNumOfAdultsPerRoom > 6) this.maxNumOfAdultsPerRoom = 6;
 
-                console.log("maxNumOfAdultsPerRoomFinale", this.maxNumOfAdultsPerRoom);
+                // console.log("maxNumOfAdultsPerRoomFinale", this.maxNumOfAdultsPerRoom);
 
-                console.log("totalRooms", this.hotelDetails.roomsNum, "currentRoom", (index + 1));
+                // console.log("totalRooms", this.hotelDetails.roomsNum, "currentRoom", (index + 1));
+                this.adultsChosen.number += this.hotelDetails.selectedAdultsNum[index];
+                console.log("adultsChosen", this.adultsChosen.number);
                 if (this.hotelDetails.roomsNum === (index + 1)) {
-                    this.hotelDetails.selectedAdultsNum.forEach((adultsSelectedPerRoom) => {
-                        this.adultsValidation.number += adultsSelectedPerRoom;
-                    });
-                    console.log("adultsNumberReally", this.adultsValidation.number);
-                    console.log("adultsNumber", this.adultsNumber);
-                    if (Number(this.adultsNumber) !== this.adultsValidation.number) {
-                        this.adultsValidation.invalid = true;
+                    // this.hotelDetails.selectedAdultsNum.forEach((adultsSelectedPerRoom) => {
+                    //     this.adultsChosen.number += adultsSelectedPerRoom;
+                    // });
+                    // console.log("adultsNumberReally", this.adultsChosen.number);
+                    // console.log("adultsNumber", this.adultsNumber);
+                    if (Number(this.adultsNumber) !== this.adultsChosen.number) {
+                        this.adultsChosen.invalid = true;
                     }
                     return;
                 }
-                console.log("index should fill in", (index + 1));
+                // console.log("index should fill in", (index + 1));
                 this.fillRoom(index + 1);
                 // this.adultsNum.splice(-value);
                 // this.remainingRooms = this.hotelDetails.roomsNum - 1;
@@ -328,27 +350,27 @@
                 }
             },
             updateChildrenNum(value) {
-                this.childrenNum.splice(this.childrenNum.indexOf(value), 1);
-                console.log(this.childrenNum);
+                this.childrenOptions.splice(this.childrenOptions.indexOf(value), 1);
+                this.childrenChosen.number++;
+                console.log("childrenChosen", this.childrenChosen.number);
 
 
             },
             removeChildrenOption(option) {
-                this.childrenNum.push(option)
-                console.log(option);
+                this.childrenOptions.push(option);
+                this.childrenChosen.number--;
+                console.log("childrenChosen", this.childrenChosen.number);
             },
             editRoomsData() {
                 this.disableRoomNum = false;
                 this.adultsSelected = [];
                 this.show = false;
-                // this.hotelDetails.maxPerRoom = [1, 2, 3, 4, 5, 6];
                 this.hotelDetails.selectedAdultsNum = [];
-                this.adultsNumber = window.packageDetails.packageMainDetails.adultsNum;
-                this.childrenNumber = window.packageDetails.packageMainDetails.childrenNum;
                 this.sortAdults = [];
-                this.adultsValidation.invalid = false;
+                this.adultsChosen.invalid = false;
                 this.remainingAdults = this.adultsNumber;
-                this.adultsValidation.number = 0;
+                this.adultsChosen.number = 0;
+                this.childrenChosen.number = 0;
 
                 this.hotelDetails.selectedChildrenNum = [];
                 this.hotelDetails.roomsNum = '';

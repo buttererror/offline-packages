@@ -58,7 +58,7 @@
                                @input="validatePlacesNum"
                         />
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">المدن</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-right">عدد المدن</label>
                 </div>
 
                 <div class="form-group row">
@@ -79,7 +79,7 @@
                 <div class="form-group row">
                         <div class="col-3 d-flex align-items-center justify-content-end text-right
                                     rounded"
-                             style="background-color: rgba(255, 193, 7, .8);"
+                             style="background-color: rgba(91,192,222, .8);"
                          v-if="packageMainDetails.adultsNum">
                         اقصي عدد للاطفال {{maxChildrenNum}}
                     </div>
@@ -93,7 +93,7 @@
                 <div class="form-group row">
                     <div class="col-6 offset-3 d-flex align-items-center">
                         <input type="number" placeholder="عدد الاطفال" style="text-align: right"
-                               v-model="packageMainDetails.childrenNum"
+                               v-model="packageMainDetails.childrenNumber"
                                class="form-control" min="0"
                                @input="updateChildAge"
                         />
@@ -103,11 +103,11 @@
 
                 <div v-if="show">
 
-                    <div v-for="(num, key) in packageMainDetails.childrenNum">
+                    <div v-for="(num, key) in packageMainDetails.childrenNumber">
                         <div class="form-group row">
                             <div class="col-6 offset-3">
                                 <multiselect placeholder="عمر الطفل"
-                                             v-model="packageMainDetails.childAge[key]"
+                                             v-model="packageMainDetails.childrenAges[key]"
                                              :options="staticChildrenAges"
                                              tagPosition="top"
                                              @input="validateChildrenAge"
@@ -115,7 +115,7 @@
 
                                 </multiselect>
                                 <!--<input type="number" placeholder="عمر الطفل" min="1"-->
-                                <!--v-model="packageMainDetails.childAge[key]"-->
+                                <!--v-model="packageMainDetails.childrenAges[key]"-->
                                 <!--style="text-align: right"-->
                                 <!--class="form-control"/>-->
                             </div>
@@ -174,8 +174,8 @@
                     selectedCountries: false,
                     adultsNum: false,
                     placesNum: false,
-                    childrenNum: true,
-                    childAge: true
+                    childrenNumber: true,
+                    childrenAges: true
                 },
                 packageMainDetails: {
                     startPlace: '',
@@ -185,8 +185,8 @@
                     placesNum: null,
                     transfer: false,
                     adultsNum: null,
-                    childrenNum: null,
-                    childAge: [],
+                    childrenNumber: 0,
+                    childrenAges: [],
                 },
 
             }
@@ -241,30 +241,46 @@
                 this.activateSaveBtn();
             },
             validateChildrenAge() {
-                if(this.packageMainDetails.childrenNum === this.packageMainDetails.childAge.length){
-                    for (let i = 0; i < this.packageMainDetails.childAge.length; i++) {
-                        if (!this.packageMainDetails.childAge[i]) {
-                            this.validation.childAge = false;
+                console.log("validating children ages");
+                console.log("childrenNumber", this.packageMainDetails.childrenNumber);
+                console.log("childrenAges", this.packageMainDetails.childrenAges);
+                if(this.packageMainDetails.childrenNumber === this.packageMainDetails.childrenAges.length){
+                    for (let i = 0; i < this.packageMainDetails.childrenAges.length; i++) {
+                        if (!this.packageMainDetails.childrenAges[i]) {
+                            this.validation.childrenAges = false;
                             break;
                         }
-                        this.validation.childAge = true;
+                        this.validation.childrenAges = true;
                     }
-                    this.activateSaveBtn();
-                }
-            },
-            validateChildrenNum() {
-                if(Number(this.packageMainDetails.childrenNum) <= Number(this.maxChildrenNum)){
-                    this.validation.childrenNum = true;
-                }else{
-                    this.validation.childrenNum = false;
-                }
-                if(Number(this.packageMainDetails.childrenNum) === 0){
-                    this.validation.childrenNum = true;
-                    this.validation.childAge = true;
-                }else{
-                    this.validateChildrenAge();
+                }else if(this.packageMainDetails.childrenNumber < this.packageMainDetails.childrenAges.length){
+                   this.removeChildrenAges();
+                }else if(this.packageMainDetails.childrenNumber > this.packageMainDetails.childrenAges.length){
+                    this.validation.childrenAges = false;
                 }
                 this.activateSaveBtn();
+            },
+            validateChildrenNum() {
+                // validate the max children number allowed
+                if(Number(this.packageMainDetails.childrenNumber) <= Number(this.maxChildrenNum)){
+                    this.validation.childrenNumber = true;
+                }else{
+                    this.validation.childrenNumber = false;
+                }
+                //
+                if(Number(this.packageMainDetails.childrenNumber) === 0){
+                    this.removeChildrenAges();
+                    this.validation.childrenNumber = true;
+                    this.validation.childrenAges = true;
+                }else{
+                    this.validateChildrenAge();
+                    return;
+                }
+                this.activateSaveBtn();
+            },
+            removeChildrenAges(){ // remove from childrenAges until it's equal to childrenNumber
+                while(this.packageMainDetails.childrenAges.length !== this.packageMainDetails.childrenNumber){
+                    this.packageMainDetails.childrenAges.pop();
+                }
             },
             setTransferRequest(transfer) {
                 this.packageMainDetails.transfer = transfer.value;
@@ -300,9 +316,9 @@
                 this.$emit('previous-component', "SelectService");
             },
             updateChildAge() {
-                this.packageMainDetails.childrenNum = parseInt(this.packageMainDetails.childrenNum);
+                this.packageMainDetails.childrenNumber = parseInt(this.packageMainDetails.childrenNumber);
                 this.validateChildrenNum();
-                if (this.packageMainDetails.childrenNum > 0) {
+                if (this.packageMainDetails.childrenNumber > 0) {
                     this.show = true
                 } else {
                     this.show = false

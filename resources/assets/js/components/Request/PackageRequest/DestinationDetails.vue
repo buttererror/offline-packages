@@ -200,6 +200,8 @@
                 carLevel: ['standard', 'premium'],
                 accomodationType: ['Hotel', 'Apartment'],
                 tripStartAt: window.packageDetails.packageMainDetails.tripStartAt,
+                adultsNum: window.packageDetails.packageMainDetails.adultsNum,
+                childrenNum: window.packageDetails.packageMainDetails.childrenNum,
                 validation: {
                     city: false,
                     checkInDate: false,
@@ -207,7 +209,7 @@
                     selectedCarLevel: true,
                     hotel: {
                         roomsNum: false,
-                        selectedAdultsNum
+                        selectedAdultsNum: false
                     },
                     apartment: {
 
