@@ -26,7 +26,9 @@
                 >المدينة السابقة</a>
             </div>
             <div class="card-footer d-flex justify-content-between">
-                <button class="btn btn-primary" @click.prevent="nextComponent">التالى</button>
+                <button class="btn btn-primary" @click.prevent="nextComponent"
+                        :class="{'disabled': !activateNextBtn}"
+                >التالى</button>
                 <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
             </div>
         </div>
@@ -50,7 +52,8 @@
                 selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
                 placesNum: Number(window.packageDetails.packageMainDetails.placesNum),
                 destinationsDetails: window.packageDetails.destinationsDetails,
-                date: new Date()
+                date: new Date(),
+                activateNextBtn: false
             }
         },
         mounted() {
@@ -76,10 +79,13 @@
                 bus.$emit(`destination-details-${this.cityNumber}`);
             },
             nextComponent() {
-                this.$emit('next-component', {
-                    component: 'FinalNote',
-                    step: 'Finalize'
-                });
+                if(this.activateNextBtn){
+                    this.$emit('next-component', {
+                        component: 'FinalNote',
+                        step: 'Finalize'
+                    });
+
+                }
             },
             previousComponent() {
                 this.$emit('previous-component', "PackageDetails");

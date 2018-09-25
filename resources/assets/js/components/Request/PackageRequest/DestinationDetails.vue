@@ -14,6 +14,7 @@
                     :group-select="false"
                     :multiple="false"
                     :searchable="true"
+                    @input="validateCity"
 
                 >
 
@@ -107,7 +108,7 @@
                 <div class="col-6 offset-3">
                     <multiselect placeholder=""
                                  v-model="destinationDetails.selectedCarLevel"
-                                 :options="carLevel"
+                                 :options="carLevel" @input="validateCarLevel"
                                  tagPosition="bottom" openDirection="bottom"
                                  :preserveSearch="true" :showNoResults="false" selectLabel=""
                     >
@@ -199,6 +200,19 @@
                 carLevel: ['standard', 'premium'],
                 accomodationType: ['Hotel', 'Apartment'],
                 tripStartAt: window.packageDetails.packageMainDetails.tripStartAt,
+                validation: {
+                    city: false,
+                    checkInDate: false,
+                    checkOutDate: false,
+                    selectedCarLevel: true,
+                    hotel: {
+                        roomsNum: false,
+                        selectedAdultsNum
+                    },
+                    apartment: {
+
+                    }
+                },
                 destinationDetails: {
                     checkInDate: null,
                     checkOutDate: null,
@@ -226,9 +240,15 @@
                 return new Date(checkOut).getDate() - new Date(checkIn).getDate();
             },
             getCheckInDate(checkIn) {
+                if (checkIn) this.validation.checkInDate = true;
+                else this.validation.checkInDate = false;
+                this.updateValidationData();
                 this.destinationDetails.checkInDate = checkIn;
             },
             getCheckOutDate(checkOut) {
+                if (checkOut) this.validation.checkOutDate = true;
+                else this.validation.checkOutDate = false;
+                this.updateValidationData();
                 this.destinationDetails.checkOutDate = checkOut;
                 this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
 
@@ -236,10 +256,11 @@
             setArentedCar(car) {
                 this.destinationDetails.rentCar = car.value;
                 this.show = car.value;
-                if(!this.destinationDetails.rentCar){
+                if (!this.destinationDetails.rentCar) {
                     this.destinationDetails.rentCarWithDriver = false;
                     this.destinationDetails.selectedCarLevel = '';
                 }
+                this.validateCarLevel();
             },
             setAcarWithAdriver(driver) {
                 this.destinationDetails.rentCarWithDriver = driver.value;
@@ -249,6 +270,25 @@
             },
             updateAccomodationType(accommodationNeed) {
                 this.showAccomodationType = accommodationNeed.value;
+            },
+            updateValidationData() {
+                // send data to destination base
+            },
+            validateCity() {
+                console.log("validating city")
+                if (this.destinationDetails.selectedCity) {
+                    this.validation.city = true;
+                } else {
+                    this.validation.city = false;
+                }
+                this.updateValidationData()
+            },
+            validateCarLevel() {
+                if (this.destinationDetails.selectedCarLevel || !this.destinationDetails.rentCar) {
+                    this.validation.selectedCarLevel = true;
+                } else {
+                    this.validation.selectedCarLevel = false;
+                }
             }
         },
         watch: {
