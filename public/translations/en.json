@@ -1,6 +1,10 @@
 
 {
   "client": {
-    "add": "Add new Client"
+    "add": "Add new Client",
+    "choose":"choose Client",
+    "newData":"Add new Client Data",
+    "search":"Search Clients",
+    "here":"here"
   }
 }

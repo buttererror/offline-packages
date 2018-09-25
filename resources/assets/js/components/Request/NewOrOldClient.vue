@@ -2,12 +2,15 @@
     <div id="searchClients">
         <div class="card" v-if="show">
             <div class="card-header bg-primary text-white">
-                <h4 class="card-title text-center">Search Clients</h4>
+                <h4 class="card-title text-center">
+                    {{ $t("client.search") }}
+                </h4>
             </div>
 
             <div class="card-body">
                 <h2 class="text-center">
-                    اختار العميل
+                    {{ $t("client.choose") }}
+
                 </h2>
                 <div class="row mt-4">
                     <div class="col-6 offset-3">
@@ -33,9 +36,10 @@
                 </div>
                 <div class="row mt-4 text-center">
                     <div class="col-12">
-                        أو أدخل بيانات عميل جديد من
+                        {{ $t("client.newData") }}
                         <a href="#" @click.prevent="handleNewClientClicked">
-                            هنا
+                            {{ $t("client.here") }}
+
                         </a>
                     </div>
                 </div>
