@@ -77,18 +77,21 @@
 
 
                 <div class="form-group row">
-                    <div class="col-6 offset-3">
+                        <div class="col-3 d-flex align-items-center justify-content-end text-right
+                                    rounded"
+                             style="background-color: rgba(255, 193, 7, .8);"
+                         v-if="packageMainDetails.adultsNum">
+                        اقصي عدد للاطفال {{maxChildrenNum}}
                     </div>
-                    <div class="col-6 offset-3">
+                    <div v-else class="col-3"></div>
+                    <div class="col-6 d-flex align-items-center">
                         <input type="number" placeholder="عدد البالغين" style="text-align: right" class="form-control"
                                v-model="packageMainDetails.adultsNum" min="1" @input="validateAdultsNum"/>
                     </div>
                     <label class="col-form-label col-form-label-lg col-3 text-right">عدد البالغين</label>
                 </div>
                 <div class="form-group row">
-                    <div class="col-6 offset-3">
-                    </div>
-                    <div class="col-6 offset-3">
+                    <div class="col-6 offset-3 d-flex align-items-center">
                         <input type="number" placeholder="عدد الاطفال" style="text-align: right"
                                v-model="packageMainDetails.childrenNum"
                                class="form-control" min="0"
@@ -102,8 +105,6 @@
 
                     <div v-for="(num, key) in packageMainDetails.childrenNum">
                         <div class="form-group row">
-                            <div class="col-6 offset-3">
-                            </div>
                             <div class="col-6 offset-3">
                                 <multiselect placeholder="عمر الطفل"
                                              v-model="packageMainDetails.childAge[key]"
@@ -164,6 +165,8 @@
                 ],
                 staticChildrenAges: ["< 1", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 activateNextBtn: false,
+                maxChildrenNum: null,
+                maxChildrenPerRoom: 4,
                 validation: {
                     startPlace: false,
                     tripStartAt: false,
@@ -171,7 +174,7 @@
                     selectedCountries: false,
                     adultsNum: false,
                     placesNum: false,
-                    // childrenNum: false,
+                    childrenNum: true,
                     childAge: true
                 },
                 packageMainDetails: {
@@ -222,6 +225,8 @@
                 this.activateSaveBtn();
             },
             validateAdultsNum() {
+                this.maxChildrenNum = this.packageMainDetails.adultsNum * this.maxChildrenPerRoom;
+                this.validateChildrenNum();
                 if (this.packageMainDetails.adultsNum) {
                     this.validation.adultsNum = true;
                 } else this.validation.adultsNum = false;
@@ -248,10 +253,16 @@
                 }
             },
             validateChildrenNum() {
+                if(Number(this.packageMainDetails.childrenNum) <= Number(this.maxChildrenNum)){
+                    this.validation.childrenNum = true;
+                }else{
+                    this.validation.childrenNum = false;
+                }
                 if(Number(this.packageMainDetails.childrenNum) === 0){
+                    this.validation.childrenNum = true;
                     this.validation.childAge = true;
                 }else{
-                    this.validation.childAge = false;
+                    this.validateChildrenAge();
                 }
                 this.activateSaveBtn();
             },
