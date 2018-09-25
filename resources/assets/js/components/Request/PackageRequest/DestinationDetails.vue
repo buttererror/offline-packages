@@ -27,10 +27,11 @@
 
                 <HotelDatePicker @checkInChanged="getCheckInDate"
                                  @checkOutChanged="getCheckOutDate"
-                                 :startDate="dateBegin"
+                                 :startDate="tripStartAt"
                                  :minNights="1"
                                  format="DD/MM/YYYY"
                                  :hoveringTooltip="getNights"
+                                 :startingDateValue="new Date(tripStartAt)"
                 >
 
 
@@ -181,7 +182,7 @@
 
     export default {
         name: "DestinationDetails",
-        props: ["cities", "cityNumber", "dateBegin"],
+        props: ["cities", "cityNumber"],
         components: {
             Datepicker,
             Multiselect,
@@ -197,6 +198,7 @@
                 showAccomodationType: false,
                 carLevel: ['standard', 'premium'],
                 accomodationType: ['Hotel', 'Apartment'],
+                tripStartAt: window.packageDetails.packageMainDetails.tripStartAt,
                 destinationDetails: {
                     checkInDate: null,
                     checkOutDate: null,
