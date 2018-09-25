@@ -1,24 +1,25 @@
 <template>
-    <div>
+    <div v-if="accomType === 'Hotel'">
+
         <b-card>
 
 
             <div class="form-group row">
                 <div class="col-6 offset-3">
                     <!--<input type="number" :min="hotelDetails.minRooms" :max="adultsNum" placeholder="عدد الغرف"-->
-                           <!--@keypress="onlyNumbers"-->
-                           <!--v-model="hotelDetails.roomsNum" style="text-align: right"-->
-                           <!--class="form-control"-->
-                           <!--:disabled="disableRoomNum"-->
-                           <!--@input="update()">-->
+                    <!--@keypress="onlyNumbers"-->
+                    <!--v-model="hotelDetails.roomsNum" style="text-align: right"-->
+                    <!--class="form-control"-->
+                    <!--:disabled="disableRoomNum"-->
+                    <!--@input="update()">-->
                     <multiselect placeholder="عدد الغرف"
-                    tagPosition="bottom"
-                    openDirection="bottom"
-                    v-model="hotelDetails.roomsNum"
-                    :options="adultsRange"
-                    :multiple="false"
-                    @input="update()"
-                    :disabled="disableRoomNum"
+                                 tagPosition="bottom"
+                                 openDirection="bottom"
+                                 v-model="hotelDetails.roomsNum"
+                                 :options="adultsRange"
+                                 :multiple="false"
+                                 @input="update()"
+                                 :disabled="disableRoomNum"
                     ></multiselect>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3 text-right">عدد الغرف</div>
@@ -135,18 +136,21 @@
                 </div>
                 <div class="col-form-label col-form-label-lg col-3 text-right"> اسم الفندق</div>
             </div>
-
-            <div class="form-group row">
-                <div class="col-6 offset-3">
-                    <input type="text" placeholder="المنطقة"
-                           v-model="hotelDetails.area" style="text-align: right"
-                           class="form-control"/>
-                </div>
-                <div class="col-form-label col-form-label-lg col-3 text-right">المنطقة</div>
-            </div>
         </div>
-
     </div>
+    <div v-else>
+
+
+        <div class="form-group row">
+            <div class="col-6 offset-3">
+                <input type="text" placeholder="المنطقة"
+                       v-model="hotelDetails.area" style="text-align: right"
+                       class="form-control"/>
+            </div>
+            <div class="col-form-label col-form-label-lg col-3 text-right">المنطقة</div>
+        </div>
+    </div>
+
 </template>
 
 <script>
@@ -154,7 +158,7 @@
 
     export default {
         name: "HotelDetails",
-        props: ["n"],
+        props: ["n", "accomType"],
         components: {
             Multiselect
         },
@@ -204,7 +208,7 @@
             this.remainingAdults = this.adultsNumber;
             this.hotelDetails.minRooms = Math.ceil(this.adultsNumber / this.hotelDetails.maxPerRoom.length);
             this.hotelDetails.maxRooms = this.adultsNumber <= 10 ? this.adultsNumber : 10
-            for(let i = this.hotelDetails.minRooms; i <= this.hotelDetails.maxRooms; i++){
+            for (let i = this.hotelDetails.minRooms; i <= this.hotelDetails.maxRooms; i++) {
                 this.adultsRange.push(this.hotelDetails.minRooms);
                 this.hotelDetails.minRooms++;
             }
@@ -214,7 +218,6 @@
             for (let i = 0; i < this.childrenNumber; i++) {
                 this.childrenNum.push(`child -${this.childrenAges[i]} years`)
             }
-
             bus.$on("next-destination", () => {
                 bus.$emit(`destination-details-${n}`, this.hotelDetails);
             });
@@ -230,7 +233,7 @@
                 // return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57
             },
             update() {
-                for(let i = 0; i < this.hotelDetails.roomsNum; i++){
+                for (let i = 0; i < this.hotelDetails.roomsNum; i++) {
                     this.sortAdults.push([]);
                 }
                 console.log("adultsNumber", this.adultsNumber);
@@ -241,9 +244,9 @@
                 console.log("num_2", this.maxNumOfAdultsPerRoom_2);
                 this.maxNumOfAdultsPerRoom = this.maxNumOfAdultsPerRoom_1 > this.maxNumOfAdultsPerRoom_2 ? this.maxNumOfAdultsPerRoom_1 : this.maxNumOfAdultsPerRoom_2;
                 console.log("maxNumOfAdultsPerRoomFinaleFirst", this.maxNumOfAdultsPerRoom);
-                if(this.maxNumOfAdultsPerRoom > 6) this.maxNumOfAdultsPerRoom = 6;
+                if (this.maxNumOfAdultsPerRoom > 6) this.maxNumOfAdultsPerRoom = 6;
 
-                console.log("maxNumOfAdultsPerRoomFinaleFinale" ,this.maxNumOfAdultsPerRoom);
+                console.log("maxNumOfAdultsPerRoomFinaleFinale", this.maxNumOfAdultsPerRoom);
 
                 // this.maxNumOfAdultsPerRoom = Math.ceil(this.adultsNumber / this.hotelDetails.roomsNum);
                 this.fillRoom(0);
@@ -264,7 +267,7 @@
             },
             fillRoom(index) {
                 console.log("index to fill in", index);
-                for(let i = 1; i <= this.maxNumOfAdultsPerRoom; i++){
+                for (let i = 1; i <= this.maxNumOfAdultsPerRoom; i++) {
                     this.sortAdults[index].push(i);
                     console.log(this.sortAdults[index]);
                 }
@@ -287,18 +290,18 @@
                 this.maxNumOfAdultsPerRoom = this.maxNumOfAdultsPerRoom_1 > this.maxNumOfAdultsPerRoom_2 ? this.maxNumOfAdultsPerRoom_1 : this.maxNumOfAdultsPerRoom_2;
                 console.log("maxNumOfAdultsPerRoomFinaleFirst", this.maxNumOfAdultsPerRoom);
                 this.maxNumOfAdultsPerRoom = this.remainingAdults - (this.remainingRooms - 1);
-                if(this.maxNumOfAdultsPerRoom > 6) this.maxNumOfAdultsPerRoom = 6;
+                if (this.maxNumOfAdultsPerRoom > 6) this.maxNumOfAdultsPerRoom = 6;
 
                 console.log("maxNumOfAdultsPerRoomFinale", this.maxNumOfAdultsPerRoom);
 
                 console.log("totalRooms", this.hotelDetails.roomsNum, "currentRoom", (index + 1));
-                if(this.hotelDetails.roomsNum === (index + 1)){
+                if (this.hotelDetails.roomsNum === (index + 1)) {
                     this.hotelDetails.selectedAdultsNum.forEach((adultsSelectedPerRoom) => {
                         this.adultsValidation.number += adultsSelectedPerRoom;
                     });
                     console.log("adultsNumberReally", this.adultsValidation.number);
                     console.log("adultsNumber", this.adultsNumber);
-                    if(Number(this.adultsNumber) !== this.adultsValidation.number){
+                    if (Number(this.adultsNumber) !== this.adultsValidation.number) {
                         this.adultsValidation.invalid = true;
                     }
                     return;
@@ -337,14 +340,14 @@
                 this.show = false;
                 // this.hotelDetails.maxPerRoom = [1, 2, 3, 4, 5, 6];
                 this.hotelDetails.selectedAdultsNum = [];
-                this.adultsNumber= window.packageDetails.packageMainDetails.adultsNum;
-                this.childrenNumber= window.packageDetails.packageMainDetails.childrenNum;
+                this.adultsNumber = window.packageDetails.packageMainDetails.adultsNum;
+                this.childrenNumber = window.packageDetails.packageMainDetails.childrenNum;
                 this.sortAdults = [];
                 this.adultsValidation.invalid = false;
                 this.remainingAdults = this.adultsNumber;
-                this.adultsValidation.number= 0;
+                this.adultsValidation.number = 0;
 
-                this.hotelDetails.selectedChildrenNum=[];
+                this.hotelDetails.selectedChildrenNum = [];
 
             }
         }
