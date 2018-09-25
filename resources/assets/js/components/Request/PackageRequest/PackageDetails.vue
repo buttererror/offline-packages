@@ -46,7 +46,7 @@
 
                         ></multiselect>
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">المدن</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-right">البلاد</label>
                 </div>
 
                 <div class="form-group row">
@@ -58,7 +58,7 @@
                                @input="validatePlacesNum"
                         />
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">الاماكن</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-right">المدن</label>
                 </div>
 
                 <div class="form-group row">
@@ -229,6 +229,7 @@
 
             },
             validatePlacesNum() {
+                console.log(this.packageMainDetails.placesNum);
                 if (Number(this.packageMainDetails.placesNum)) {
                     this.validation.placesNum = true;
                 } else this.validation.placesNum = false;

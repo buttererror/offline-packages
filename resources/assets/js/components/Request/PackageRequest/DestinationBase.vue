@@ -1,90 +1,91 @@
 <template>
-   <div id="destination_details">
-      <div class="card">
-         <div class="card-header bg-primary text-white">
-            <h4 class="card-title text-center">Destinations Details</h4>
-            <h5 class="card-subtitle text-center">Destination #{{cityNumber}}</h5>
-         </div>
-         <div class="card-body">
-            <div v-for="n in selectedCountries.length">
-               <keep-alive>
-                  <DestinationDetails v-if="n === cityNumber" :cityNumber="n" :cities="cities"
-                  >
-                  </DestinationDetails>
-               </keep-alive>
+    <div id="destination_details">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title text-center">Destinations Details</h4>
+                <h5 class="card-subtitle text-center">Destination #{{cityNumber}}</h5>
             </div>
-         </div>
+            <div class="card-body">
+                <div v-for="n in placesNum">
+                    <keep-alive>
+                        <DestinationDetails v-if="n === cityNumber" :cityNumber="n" :cities="cities"
+                        >
+                        </DestinationDetails>
+                    </keep-alive>
+                </div>
+            </div>
 
-         <div class="text-center" style="user-select: none">
-            <a href="#" @click.prevent="nextDestination"
-               class="btn btn-link btn-outline-primary m-4" :class="{
-               'disabled': selectedCountries.length === cityNumber || selectedCountries.length === 1}"
-            >المدينة القادمة</a>
-            <a href="#" @click.prevent="previousDestination"
-               class="btn btn-link btn-outline-primary m-4" :class="{
+            <div class="text-center" style="user-select: none">
+                <a href="#" @click.prevent="nextDestination"
+                   class="btn btn-link btn-outline-primary m-4" :class="{
+               'disabled': placesNum === cityNumber || placesNum === 1}"
+                >المدينة القادمة</a>
+                <a href="#" @click.prevent="previousDestination"
+                   class="btn btn-link btn-outline-primary m-4" :class="{
                'disabled': cityNumber === 1}"
-            >المدينة السابقة</a>
-         </div>
-         <div class="card-footer d-flex justify-content-between">
-            <button class="btn btn-primary" @click.prevent="nextComponent">التالى</button>
-            <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
-         </div>
-      </div>
-   </div>
+                >المدينة السابقة</a>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <button class="btn btn-primary" @click.prevent="nextComponent">التالى</button>
+                <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
-   import DestinationDetails from "./DestinationDetails";
+    import DestinationDetails from "./DestinationDetails";
 
 
-   export default {
-      name: "DestinationBase",
-      props: ["data"],
-      components: {
-         DestinationDetails,
-      },
-      data() {
-         return {
-            cityNumber: 1,
-            cities: [],
-            selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
-            destinationsDetails: window.packageDetails.destinationsDetails,
-            date: new Date()
-         }
-      },
-      mounted() {
-         bus.$on('go-back', (component) => {
-            this.$emit('selected-component', component);
-         });
-         window.packageDetails.destinationsDetails = [];
-         let selectedCountriesIds = [];
-         this.selectedCountries.forEach(function (element) {
-            selectedCountriesIds.push(element.id)
-         });
-         axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
-            this.cities = response.data.cities;
-         });
-      },
-      methods: {
-         nextDestination() {
-            bus.$emit(`destination-details-${this.cityNumber}`);
-            this.cityNumber++;
-         },
-         previousDestination() {
-            this.cityNumber--;
-            bus.$emit(`destination-details-${this.cityNumber}`);
-         },
-         nextComponent() {
-            this.$emit('next-component', {
-               component: 'FinalNote',
-               step: 'Finalize'
+    export default {
+        name: "DestinationBase",
+        props: ["data"],
+        components: {
+            DestinationDetails,
+        },
+        data() {
+            return {
+                cityNumber: 1,
+                cities: [],
+                selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
+                placesNum: Number(window.packageDetails.packageMainDetails.placesNum),
+                destinationsDetails: window.packageDetails.destinationsDetails,
+                date: new Date()
+            }
+        },
+        mounted() {
+            bus.$on('go-back', (component) => {
+                this.$emit('selected-component', component);
             });
-         },
-         previousComponent() {
-            this.$emit('previous-component', "PackageDetails");
-         }
-      }
-   }
+            window.packageDetails.destinationsDetails = [];
+            let selectedCountriesIds = [];
+            this.selectedCountries.forEach(function (element) {
+                selectedCountriesIds.push(element.id)
+            });
+            axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
+                this.cities = response.data.cities;
+            });
+        },
+        methods: {
+            nextDestination() {
+                bus.$emit(`destination-details-${this.cityNumber}`);
+                this.cityNumber++;
+            },
+            previousDestination() {
+                this.cityNumber--;
+                bus.$emit(`destination-details-${this.cityNumber}`);
+            },
+            nextComponent() {
+                this.$emit('next-component', {
+                    component: 'FinalNote',
+                    step: 'Finalize'
+                });
+            },
+            previousComponent() {
+                this.$emit('previous-component', "PackageDetails");
+            }
+        }
+    }
 </script>
 
 <style scoped>
