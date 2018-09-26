@@ -11,7 +11,17 @@
     "childrenNum":"عدد الاطفال",
     "adultsNum":"عدد البالغين",
     "childrenMaxNum":"اقصى عدد للاطفال",
-    "childAge":"عمر الطفل"
+    "childAge":"عمر الطفل",
+    "roomsNum":"عدد الغرف",
+    "room":"الغرفة",
+    "children":"الاطفال",
+    "adults":"البالغين",
+    "roomType":"نوع الغرفة",
+    "roomView":"منظر الرؤية للغرفة",
+    "starsNum":"عدد النجوم",
+    "hotelName":"اسم الفندق",
+    "area":"المنطقة"
+
 
     },
     "validations":{
@@ -27,7 +37,9 @@
     "addBirthDate":"ضع تاريخ ميلادك",
     "hotelPickerLang":"ar",
     "yes":"نعم",
-    "no":"لا"
+    "no":"لا",
+    "edit":"تعديل"
+
     },
 
     "en": {
@@ -40,7 +52,17 @@
     "childrenNum":"children Number",
     "adultsNum":"Adults Number",
     "childrenMaxNum":"children maximum number",
-    "childAge":"Child Age"
+    "childAge":"Child Age",
+    "roomsNum":"Room Number",
+    "room":"Room",
+    "children":"Children",
+    "adults":"Adults",
+    "roomType":"Room Type",
+    "roomView":"Room View",
+    "starsNum":"Stars Number",
+    "hotelName":"Hotel Name",
+    "area":"Area"
+
     },
     "validations":{
 
@@ -55,7 +77,8 @@
     "addBirthDate":"Add your BirthDate",
     "hotelPickerLang":"en",
     "yes":"yes",
-    "no":"no"
+    "no":"no",
+    "edit":"edit"
     }
     }
 </i18n>
@@ -66,12 +89,12 @@
 
         <div class="card pb-0">
             <div class="card-header card-title h5 text-center">
-                عدد الغرف
+                {{$t('packageDetails.roomsNum')}}
             </div>
             <div class="card-body pb-0">
                 <div class="form-group row">
                     <div class="col-8 offset-2">
-                        <multiselect placeholder="عدد الغرف"
+                        <multiselect :placeholder="$t('packageDetails.roomsNum')"
                                      tagPosition="bottom"
                                      openDirection="bottom"
                                      v-model="hotelDetails.roomsNum"
@@ -88,7 +111,7 @@
                         <b-card no-body class="mb-1 pb-0">
                             <b-card-header header-tag="header" class="p-1" role="tab">
                                 <b-btn href="#" block v-b-toggle="`room_${index}`" variant="info">
-                                    الغرفه {{index}}
+                                    {{$t('room')}} {{index}}
                                 </b-btn>
                             </b-card-header>
 
@@ -108,8 +131,7 @@
                                         </div>
 
                                         <div class="col-form-label col-form-label-lg col-3 text-right"
-                                             style="text-align:right">عدد
-                                            البالغين
+                                             style="text-align:right">{{$t('packageDetails.adultsNum')}}
                                         </div>
                                     </div>
                                     <div class="row form-group">
@@ -131,8 +153,7 @@
                                             ></multiselect>
                                         </div>
                                         <div class="col-form-label col-form-label-lg col-3 text-right"
-                                             style="text-align:right">عدد
-                                            الاطفال
+                                             style="text-align:right">{{$t('packageDetails.childrenNum')}}
                                         </div>
                                     </div>
                                 </b-card-body>
@@ -147,12 +168,12 @@
                         <b-alert show variant="info d-flex justify-content-around rounded-0"
                                  style="margin-bottom: 0">
                             <div class="h6 text-danger d-inline-block">
-                                ({{adultsNumberChosen}}) :البالغين<br>
-                                ({{childrenNumberChosen}}) :الاطفال
+                                ({{adultsNumberChosen}}) :{{$t('adults')}}<br>
+                                ({{childrenNumberChosen}}) :{{$t('children')}}
                             </div>
                             <div class="h6 text-success d-inline-block">
-                                ({{adultsNumber}}) :البالغين<br>
-                                ({{childrenNumber}}) :الاطفال
+                                ({{adultsNumber}}) :{{$t('adults')}}<br>
+                                ({{childrenNumber}}) :{{$t('children')}}
                             </div>
                         </b-alert>
                     </div>
@@ -162,7 +183,7 @@
                              style="margin-bottom: 0"
 
                     >
-                        <button class="btn btn-light btn-block p-0" @click="editRoomsData">تعديل</button>
+                        <button class="btn btn-light btn-block p-0" @click="editRoomsData">{{$t('edit')}}</button>
                     </b-alert>
                 </div>
 
@@ -180,7 +201,7 @@
                                  @input="validateSelectedRoomType"
                     ></multiselect>
                 </div>
-                <div class="col-form-label col-form-label-lg col-3 text-right">نوع الغرفة</div>
+                <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.roomType')}}</div>
             </div>
 
             <div class="row form-group">
@@ -193,7 +214,7 @@
                                  @input="validateSelectedRoomView"
                     ></multiselect>
                 </div>
-                <div class="col-form-label col-form-label-lg col-3 text-right">منظر الرؤيه للغرفة</div>
+                <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.roomView')}}</div>
             </div>
 
             <div class="row form-group">
@@ -206,27 +227,27 @@
                                  @input="validateSelectedStars"
                     ></multiselect>
                 </div>
-                <div class="col-form-label col-form-label-lg col-3 text-right">عدد النجوم</div>
+                <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.starsNum')}}</div>
             </div>
 
             <div class="form-group row">
                 <div class="col-6 offset-3">
-                    <input type="text" placeholder="اسم الفندق"
+                    <input type="text" :placeholder="$t('packageDetails.hotelName')"
                            v-model="hotelDetails.hotelName" style="text-align: right"
                            @input="validateHotelName"
                            class="form-control"/>
                 </div>
-                <div class="col-form-label col-form-label-lg col-3 text-right"> اسم الفندق</div>
+                <div class="col-form-label col-form-label-lg col-3 text-right"> {{$t('packageDetails.hotelName')}}</div>
             </div>
 
             <div class="form-group row">
                 <div class="col-6 offset-3">
-                    <input type="text" placeholder="المنطقة"
+                    <input type="text" :placeholder="$t('packageDetails.area')"
                            v-model="hotelDetails.area" style="text-align: right"
                            @input="validateHotelArea"
                            class="form-control"/>
                 </div>
-                <div class="col-form-label col-form-label-lg col-3 text-right">المنطقة</div>
+                <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.area')}}</div>
             </div>
         </div>
     </div>
@@ -235,12 +256,12 @@
 
         <div class="form-group row">
             <div class="col-6 offset-3">
-                <input type="text" placeholder="المنطقة"
+                <input type="text" :placeholder="$t('packageDetails.area')"
                        v-model="hotelDetails.area" style="text-align: right"
                        @input="validateApartmentArea"
                        class="form-control"/>
             </div>
-            <div class="col-form-label col-form-label-lg col-3 text-right">المنطقة</div>
+            <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.area')}}</div>
         </div>
     </div>
 

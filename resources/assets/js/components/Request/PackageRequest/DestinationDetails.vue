@@ -132,19 +132,6 @@
             <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.nightsNum')}}</div>
         </div>
 
-
-        <!--<div class="form-group row">-->
-        <!--<div class="col-6 offset-3">-->
-        <!--<datepicker placeholder="ضع تاريخ النهاية" class="text-right"-->
-        <!--:bootstrap-styling="true"-->
-        <!--:value="destinationDetails.endDate"-->
-        <!--:language="ar"-->
-        <!--v-model="destinationDetails.endDate"-->
-
-        <!--&gt;</datepicker>-->
-        <!--</div>-->
-        <!--<div class="col-form-label col-form-label-lg col-3 text-right">تاريخ النهاية</div>-->
-        <!--</div>-->
         <div class="form-group row">
             <div class="col-6 text-right offset-3">
                 <toggle-button v-model="destinationDetails.rentCar" :value="false"
