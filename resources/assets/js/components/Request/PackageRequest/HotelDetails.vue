@@ -62,7 +62,7 @@
                                                          trackBy="id"
                                                          @select="updateChildrenNum"
                                                          :disabled="childrenSelectDisabled"
-                                                         :max="4"
+                                                         :max="maxChildrenPerRoom"
                                                          @remove="removeChildrenOption"
 
                                             ></multiselect>
@@ -84,8 +84,8 @@
                         <b-alert show variant="info d-flex justify-content-around rounded-0"
                                  style="margin-bottom: 0">
                             <div class="h6 text-danger d-inline-block">
-                                ({{adultsChosen.number}}) :البالغين<br>
-                                ({{childrenChosen.number}}) :الاطفال
+                                ({{adultsNumberChosen}}) :البالغين<br>
+                                ({{childrenNumberChosen}}) :الاطفال
                             </div>
                             <div class="h6 text-success d-inline-block">
                                 ({{adultsNumber}}) :البالغين<br>
@@ -114,6 +114,7 @@
                                  v-model="hotelDetails.selectedRoomType"
                                  :options="roomType"
                                  :multiple="false"
+                                 @input="validateSelectedRoomType"
                     ></multiselect>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3 text-right">نوع الغرفة</div>
@@ -126,6 +127,7 @@
                                  v-model="hotelDetails.selectedRoomView"
                                  :options="roomView"
                                  :multiple="false"
+                                 @input="validateSelectedRoomView"
                     ></multiselect>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3 text-right">منظر الرؤيه للغرفة</div>
@@ -138,6 +140,7 @@
                                  v-model="hotelDetails.selectedStars"
                                  :options="stars"
                                  :multiple="false"
+                                 @input="validateSelectedStars"
                     ></multiselect>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3 text-right">عدد النجوم</div>
@@ -147,6 +150,7 @@
                 <div class="col-6 offset-3">
                     <input type="text" placeholder="اسم الفندق"
                            v-model="hotelDetails.hotelName" style="text-align: right"
+                           @input="validateHotelName"
                            class="form-control"/>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3 text-right"> اسم الفندق</div>
@@ -156,6 +160,7 @@
                 <div class="col-6 offset-3">
                     <input type="text" placeholder="المنطقة"
                            v-model="hotelDetails.area" style="text-align: right"
+                           @input="validateHotelArea"
                            class="form-control"/>
                 </div>
                 <div class="col-form-label col-form-label-lg col-3 text-right">المنطقة</div>
@@ -169,6 +174,7 @@
             <div class="col-6 offset-3">
                 <input type="text" placeholder="المنطقة"
                        v-model="hotelDetails.area" style="text-align: right"
+                       @input="validateApartmentArea"
                        class="form-control"/>
             </div>
             <div class="col-form-label col-form-label-lg col-3 text-right">المنطقة</div>
@@ -206,17 +212,28 @@
                 maxNumOfAdultsPerRoom_1: null,
                 maxNumOfAdultsPerRoom_2: null,
                 maxNumOfAdultsPerRoom: null,
-                adultsChosen: {
-                    number: 0,
-                    valid: false
+                adultsNumberChosen: 0,
+                childrenNumberChosen: 0,
+                minRooms: 0,
+                maxRooms: 0,
+                maxPerRoom: 6,
+                maxChildrenPerRoom: 4,
+                validation: {
+                    hotel: {
+                        selectedAdultsNum: false,
+                        selectedChildrenNum: false,
+                        selectedRoomType: false,
+                        selectedRoomView: false,
+                        selectedStars: false,
+                        hotelName: false,
+                        area: false
+                    },
+                    apartment: {
+                        area: false,
+                    }
                 },
-                childrenChosen: {
-                    number: 0,
-                    invalid: false
-                },
+                accommodationDetailsValidation: false,
                 hotelDetails: {
-                    maxPerRoom: [1, 2, 3, 4, 5, 6],
-                    maxChildrenPerRoom: [1, 2, 3, 4],
                     roomsNum: '', //number of rooms
                     selectedRoomType: '',
                     selectedRoomView: '',
@@ -225,21 +242,19 @@
                     area: '',
                     selectedAdultsNum: [],
                     selectedChildrenNum: [],
-                    minRooms: 0,
-                    maxRooms: 0
                 }
             }
         },
         mounted() {
-            bus.$on('empty-accommodation-fields', () => {
+            bus.$on(`empty-accommodation-fields-${this.destinationNumber}`, () => {
                 this.emptyOnAccommodationType();
             });
             this.remainingAdults = this.adultsNumber;
-            this.hotelDetails.minRooms = Math.ceil(this.adultsNumber / this.hotelDetails.maxPerRoom.length);
-            this.hotelDetails.maxRooms = this.adultsNumber <= 10 ? this.adultsNumber : 10
-            for (let i = this.hotelDetails.minRooms; i <= this.hotelDetails.maxRooms; i++) {
-                this.adultsRange.push(this.hotelDetails.minRooms);
-                this.hotelDetails.minRooms++;
+            this.minRooms = Math.ceil(this.adultsNumber / this.maxPerRoom);
+            this.hotelDetails.maxRooms = this.adultsNumber <= 10 ? this.adultsNumber : 10;
+            for (let i = this.minRooms; i <= this.maxRooms; i++) {
+                this.adultsRange.push(this.minRooms);
+                this.minRooms++;
             }
             // childrenOptions = [{age: 12, id: 1}, ....]
             for (let i = 0; i < this.childrenNumber; i++) {
@@ -261,6 +276,7 @@
         },
         methods: {
             update() {
+                console.log("updating rooms number");
                 for (let i = 0; i < this.hotelDetails.roomsNum; i++) {
                     this.sortAdults.push([]);
                 }
@@ -280,13 +296,14 @@
                 this.sendValidationToDestination();
             },
             fillRoom(index) {
-                if(this.sortAdults[index]){
+                if (this.sortAdults[index]) {
                     for (let i = 1; i <= this.maxNumOfAdultsPerRoom; i++) {
                         this.sortAdults[index].push(i);
                     }
                 }
             },
             updateAdultsNum(pastRooms, index) {
+                console.log("updating adults Number");
                 this.adultsSelected.push(index + 1); // disable after input
                 this.remainingAdults = Math.ceil(this.remainingAdults - this.hotelDetails.selectedAdultsNum[index]);
                 this.remainingRooms = this.hotelDetails.roomsNum - pastRooms;
@@ -295,47 +312,128 @@
                 this.maxNumOfAdultsPerRoom = this.maxNumOfAdultsPerRoom_1 > this.maxNumOfAdultsPerRoom_2 ? this.maxNumOfAdultsPerRoom_1 : this.maxNumOfAdultsPerRoom_2;
                 this.maxNumOfAdultsPerRoom = this.remainingAdults - (this.remainingRooms - 1);
                 if (this.maxNumOfAdultsPerRoom > 6) this.maxNumOfAdultsPerRoom = 6;
-                this.adultsChosen.number += this.hotelDetails.selectedAdultsNum[index];
+                this.adultsNumberChosen += this.hotelDetails.selectedAdultsNum[index];
                 this.fillRoom(index + 1);
                 this.validateAdultsNum();
                 this.sendValidationToDestination();
             },
-            validateAdultsNum(){
-                if (Number(this.adultsNumber) !== this.adultsChosen.number) {
-                    this.adultsChosen.valid = false;
-                }else{
-                    this.adultsChosen.valid = true;
+            validateAdultsNum() {
+                if (Number(this.adultsNumber) !== this.adultsNumberChosen) {
+                    this.validation.hotel.selectedAdultsNum = false;
+                } else {
+                    this.validation.hotel.selectedAdultsNum = true;
                 }
             },
             validateChildrenNum() {
-                if(Number(this.childrenNumber) !== this.childrenChosen.number){
-                    this.childrenChosen.valid = false;
-                }else {
-                    this.childrenChosen.valid = true;
+                if (Number(this.childrenNumber) !== this.childrenNumberChosen) {
+                    this.validation.hotel.selectedChildrenNum = false;
+                } else {
+                    this.validation.hotel.selectedChildrenNum = true;
+                }
+            },
+            validateSelectedRoomType() {
+                if (this.hotelDetails.selectedRoomType) {
+                    this.validation.hotel.selectedRoomType = true;
+                } else {
+                    this.validation.hotel.selectedRoomType = false;
+                }
+                this.processValidationBeforeSend();
+                this.sendValidationToDestination();
+            },
+            validateSelectedRoomView() {
+                if (this.hotelDetails.selectedRoomView) {
+                    this.validation.hotel.selectedRoomView = true;
+                } else {
+                    this.validation.hotel.selectedRoomView = false;
+                }
+                this.processValidationBeforeSend();
+                this.sendValidationToDestination();
+
+            },
+            validateSelectedStars() {
+                if (this.hotelDetails.selectedStars) {
+                    this.validation.hotel.selectedStars = true;
+                } else {
+                    this.validation.hotel.selectedStars = false;
+                }
+                this.processValidationBeforeSend();
+                this.sendValidationToDestination();
+            },
+            validateHotelName() {
+                if (this.hotelDetails.hotelName) {
+                    this.validation.hotel.hotelName = true;
+                } else {
+                    this.validation.hotel.hotelName = false;
+                }
+                this.processValidationBeforeSend();
+                this.sendValidationToDestination();
+
+            },
+            validateHotelArea() {
+                if (this.hotelDetails.area) {
+                    this.validation.hotel.area = true;
+                } else {
+                    this.validation.hotel.area = false;
+                }
+                this.processValidationBeforeSend();
+                this.sendValidationToDestination();
+
+            },
+            validateApartmentArea() {
+                console.log("validating apartment area");
+                console.log("apartmentArea", this.hotelDetails.area);
+                if (this.hotelDetails.area) {
+                    this.validation.apartment.area = true;
+                } else {
+                    this.validation.apartment.area = false;
+                }
+                console.log("apartmentArea validation", this.validation.apartment.area);
+                this.processValidationBeforeSend();
+                this.sendValidationToDestination();
+
+            },
+            processValidationBeforeSend() {
+                if (this.accomType === 'Hotel') {
+                    // loop and the result either true or false
+                    for (let checkHotel in this.validation.hotel) {
+                        if (!this.validation.hotel[checkHotel]) {
+                            this.accommodationDetailsValidation = false;
+                            return;
+                        }
+                        this.accommodationDetailsValidation = true;
+                    }
+                } else if (this.accomType === 'Apartment') {
+                    // loop and the result either true or false
+                    if (!this.validation.apartment.area) {
+                        this.accommodationDetailsValidation = false;
+                    }else{
+                        this.accommodationDetailsValidation = true;
+                    }
                 }
             },
             sendValidationToDestination() {
-
-                bus.$emit(`hotel-validation-dest-${this.destinationNumber}`, {
-                    selectedAdultsNum: this.adultsChosen.valid,
-                    selectedChildrenNum: this.childrenChosen.valid
-                });
+                bus.$emit(`hotel-validation-dest-${this.destinationNumber}`,
+                    this.accommodationDetailsValidation);
+                this.sendValidationToBaseOnInput(); // this, that duplicate the destinations validation
+            },
+            sendValidationToBaseOnInput() {
+                bus.$emit(`send-validation-destination-from-nested-inputs-${this.destinationNumber}`);
             },
             updateChildrenNum(value) {
                 this.childrenOptions.splice(this.childrenOptions.indexOf(value), 1);
-                this.childrenChosen.number++;
+                this.childrenNumberChosen++;
                 this.validateChildrenNum();
                 this.sendValidationToDestination();
-                console.log("childrenChosen", this.childrenChosen.number);
+                // console.log("childrenChosen", this.childrenNumberChosen);
 
 
             },
             removeChildrenOption(option) {
                 this.childrenOptions.push(option);
-                this.childrenChosen.number--;
+                this.childrenNumberChosen--;
                 this.validateChildrenNum();
                 this.sendValidationToDestination();
-                console.log("childrenChosen", this.childrenChosen.number);
+                // console.log("childrenChosen", this.childrenNumberChosen);
             },
             editRoomsData() {
                 this.disableRoomNum = false;
@@ -343,21 +441,21 @@
                 this.show = false;
                 this.hotelDetails.selectedAdultsNum = [];
                 this.sortAdults = [];
-                this.adultsChosen.valid = false;
                 this.remainingAdults = this.adultsNumber;
-                this.adultsChosen.number = 0;
-                this.childrenChosen.number = 0;
+                this.adultsNumberChosen = 0;
+                this.childrenNumberChosen = 0;
 
                 this.hotelDetails.selectedChildrenNum = [];
                 this.hotelDetails.roomsNum = '';
 
             },
             emptyOnAccommodationType() {
+                console.log("empty inside hotelDetails component");
                 this.hotelDetails.selectedRoomType = '';
                 this.hotelDetails.selectedRoomView = '';
                 this.hotelDetails.selectedStars = '';
                 this.hotelDetails.hotelName = '';
-                if(this.accomType === 'Apartment' || this.accomType === 'Hotel'){
+                if (this.accomType === 'Apartment' || this.accomType === 'Hotel') {
                     this.hotelDetails.area = '';
                 }
             }

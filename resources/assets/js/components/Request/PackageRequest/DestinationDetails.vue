@@ -209,17 +209,9 @@
                     checkInDate: false,
                     checkOutDate: false,
                     selectedCarLevel: true,
-                    hotelRoomsNum: false,
-                    hotelSelectedAdultsNum: false,
-                    hotelSelectedChildrenNum: false,
-                    hotelSelectedRoomType: false,
-                    hotelSelectedRoomView: false,
-                    hotelSelectedStars: false,
-                    hotelName: false,
-                    hotelArea: false,
-
-                    apartmentArea: false,
+                    accommodationDetailsValidation: false,
                 },
+                destinationDetailsValidation: false,
                 destinationDetails: {
                     checkInDate: null,
                     checkOutDate: null,
@@ -236,31 +228,38 @@
             }
         },
         mounted() {
+            console.log("mounting");
+            this.setCheckInDate();
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
                 window.packageDetails.destinationsDetails.push(this.destinationDetails);
             });
             bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
-                this.validation.hotelSelectedAdultsNum = validation.selectedAdultsNum;
-                this.validation.hotelSelectedChildrenNum = validation.selectedChildrenNum;
+                console.log("hotelComponent validation", validation);
+                this.validation.accommodationDetailsValidation = validation;
+                this.validateWholeAccommodationDetails();
+            });
+            // trigger this event from inside hotel component to send data on input
+            bus.$on(`send-validation-destination-from-nested-inputs-${this.cityNumber}`, () => {
+                this.sendValidationToBase();
             });
         },
 
         methods: {
+            setCheckInDate() {
+                this.destinationDetails.checkInDate = this.tripStartAt;
+                this.validateCheckInDate();
+            },
             getNights(checkIn, checkOut) {
                 return new Date(checkOut).getDate() - new Date(checkIn).getDate();
             },
             getCheckInDate(checkIn) {
-                if (checkIn) this.validation.checkInDate = true;
-                else this.validation.checkInDate = false;
-                this.updateValidationData();
                 this.destinationDetails.checkInDate = checkIn;
+                this.validateCheckInDate();
             },
             getCheckOutDate(checkOut) {
-                if (checkOut) this.validation.checkOutDate = true;
-                else this.validation.checkOutDate = false;
-                this.updateValidationData();
                 this.destinationDetails.checkOutDate = checkOut;
+                this.validateCheckOutDate();
                 this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
 
             },
@@ -282,9 +281,6 @@
             updateAccomodationType(accommodationNeed) {
                 this.showAccomodationType = accommodationNeed.value;
             },
-            updateValidationData() {
-                // send data to destination base
-            },
             validateCity() {
                 console.log("validating city")
                 if (this.destinationDetails.selectedCity) {
@@ -292,17 +288,62 @@
                 } else {
                     this.validation.city = false;
                 }
-                this.updateValidationData()
+                this.processValidationData();
+                this.sendValidationToBase();
+
             },
+            validateCheckInDate() {
+                console.log("checking in");
+                if (this.destinationDetails.checkInDate) this.validation.checkInDate = true;
+                else this.validation.checkInDate = false;
+                this.processValidationData();
+                this.sendValidationToBase();
+
+            },
+            validateCheckOutDate() {
+                if (this.destinationDetails.checkOutDate) this.validation.checkOutDate = true;
+                else this.validation.checkOutDate = false;
+                this.processValidationData();
+                this.sendValidationToBase();
+
+            },
+
             validateCarLevel() {
                 if (this.destinationDetails.selectedCarLevel || !this.destinationDetails.rentCar) {
                     this.validation.selectedCarLevel = true;
                 } else {
                     this.validation.selectedCarLevel = false;
                 }
+                this.processValidationData();
+                this.sendValidationToBase();
+
+            },
+            validateWholeAccommodationDetails() {
+                // the false or the true that comes from the hotel component
+                this.processValidationData();
+                this.sendValidationToBase();
+            },
+            processValidationData() {
+                // process the data and get one property .. true or false for the whole destination
+                for (let check in this.validation) {
+                    if (!this.validation[check]) {
+                        console.log("check", check);
+                        this.destinationDetailsValidation = false;
+                        return;
+                    }
+                    this.destinationDetailsValidation = true;
+                }
+            },
+            sendValidationToBase() {
+                // send data to destination base
+                console.log("inDestinationDetails cityNumber", this.cityNumber);
+                bus.$emit(`per-destination-validation`,
+                    this.destinationDetailsValidation);
+                bus.$emit("any-input");
             },
             emptyOnAccommodationType() {
-                bus.$emit('empty-accommodation-fields');
+                console.log("empty");
+                bus.$emit(`empty-accommodation-fields-${this.cityNumber}`);
             }
         },
         watch: {

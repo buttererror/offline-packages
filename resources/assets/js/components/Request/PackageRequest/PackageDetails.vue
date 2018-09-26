@@ -201,7 +201,7 @@
             });
         },
         methods: {
-            activateSaveBtn() {
+            activateNxtBtn() {
                 for (let check in this.validation) {
                     if (!this.validation[check]) {
                         this.activateNextBtn = false;
@@ -215,14 +215,14 @@
                     this.validation.startPlace = true;
                 } else this.validation.startPlace = false;
                 console.log(this.validation.startPlace);
-                this.activateSaveBtn();
+                this.activateNxtBtn();
 
             },
             validateCountries() {
                 if (this.packageMainDetails.selectedCountries.length) {
                     this.validation.selectedCountries = true;
                 } else this.validation.selectedCountries = false;
-                this.activateSaveBtn();
+                this.activateNxtBtn();
             },
             validateAdultsNum() {
                 this.maxChildrenNum = this.packageMainDetails.adultsNum * this.maxChildrenPerRoom;
@@ -230,7 +230,7 @@
                 if (this.packageMainDetails.adultsNum) {
                     this.validation.adultsNum = true;
                 } else this.validation.adultsNum = false;
-                this.activateSaveBtn();
+                this.activateNxtBtn();
 
             },
             validatePlacesNum() {
@@ -238,7 +238,7 @@
                 if (Number(this.packageMainDetails.placesNum)) {
                     this.validation.placesNum = true;
                 } else this.validation.placesNum = false;
-                this.activateSaveBtn();
+                this.activateNxtBtn();
             },
             validateChildrenAge() {
                 console.log("validating children ages");
@@ -257,7 +257,7 @@
                 }else if(this.packageMainDetails.childrenNumber > this.packageMainDetails.childrenAges.length){
                     this.validation.childrenAges = false;
                 }
-                this.activateSaveBtn();
+                this.activateNxtBtn();
             },
             validateChildrenNum() {
                 // validate the max children number allowed
@@ -275,7 +275,7 @@
                     this.validateChildrenAge();
                     return;
                 }
-                this.activateSaveBtn();
+                this.activateNxtBtn();
             },
             removeChildrenAges(){ // remove from childrenAges until it's equal to childrenNumber
                 while(this.packageMainDetails.childrenAges.length !== this.packageMainDetails.childrenNumber){
@@ -292,7 +292,7 @@
                 } else {
                     this.validation.tripStartAt = false;
                 }
-                this.activateSaveBtn();
+                this.activateNxtBtn();
             },
             getCheckOutDate(checkOut) {
                 this.packageMainDetails.tripEndAt = checkOut;
@@ -301,7 +301,7 @@
                 } else {
                     this.validation.tripEndAt = false;
                 }
-                this.activateSaveBtn();
+                this.activateNxtBtn();
             },
             nextComponent() {
                 if (this.activateNextBtn) {

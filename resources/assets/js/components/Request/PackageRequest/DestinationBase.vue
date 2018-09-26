@@ -6,9 +6,10 @@
                 <h5 class="card-subtitle text-center">Destination #{{cityNumber}}</h5>
             </div>
             <div class="card-body">
-                <div v-for="n in placesNum">
+                <div v-for="destinationNumber in placesNum">
                     <keep-alive>
-                        <DestinationDetails v-if="n === cityNumber" :cityNumber="n" :cities="cities"
+                        <DestinationDetails v-if="destinationNumber === cityNumber"
+                                            :cityNumber="destinationNumber" :cities="cities"
                         >
                         </DestinationDetails>
                     </keep-alive>
@@ -53,12 +54,23 @@
                 placesNum: Number(window.packageDetails.packageMainDetails.placesNum),
                 destinationsDetails: window.packageDetails.destinationsDetails,
                 date: new Date(),
-                activateNextBtn: false
+                destinationsValidation: [],
+                activateNextBtn: false,
+                updateListening: null
             }
         },
         mounted() {
+            bus.$on(`per-destination-validation`, (destinationValidation) => {
+                console.log("per destination validation", destinationValidation);
+                console.log("index", this.cityNumber -1);
+                this.destinationsValidation[this.cityNumber - 1] = destinationValidation;
+            });
             bus.$on('go-back', (component) => {
                 this.$emit('selected-component', component);
+            });
+            bus.$on("any-input", () => {
+                this.activateNxtBtn();
+                console.log("destinations Validation", this.destinationsValidation);
             });
             window.packageDetails.destinationsDetails = [];
             let selectedCountriesIds = [];
@@ -89,6 +101,15 @@
             },
             previousComponent() {
                 this.$emit('previous-component', "PackageDetails");
+            },
+            activateNxtBtn() {
+                for(let i = 0; i < this.destinationsValidation.length; i++){
+                    if(!this.destinationsValidation[i]){
+                        this.activateNextBtn = false;
+                        break;
+                    }
+                    this.activateNextBtn = true;
+                }
             }
         }
     }
