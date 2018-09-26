@@ -165,7 +165,8 @@
 
         </div>
         <div v-if="destinationDetails.reserveAccomodation">
-            <HotelDetail :n="cityNumber" :accomType="destinationDetails.selectedAccomodationType">
+            <HotelDetail :destinationNumber="cityNumber"
+                         :accomType="destinationDetails.selectedAccomodationType">
             </HotelDetail>
         </div>
     </div>
@@ -209,7 +210,8 @@
                     selectedCarLevel: true,
                     hotel: {
                         roomsNum: false,
-                        selectedAdultsNum: false
+                        selectedAdultsNum: false,
+                        selectedChildrenNum: false,
                     },
                     apartment: {
 
