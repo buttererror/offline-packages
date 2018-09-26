@@ -339,7 +339,7 @@
                 this.validateCheckInDate();
             },
             getNights(checkIn, checkOut) {
-                return new Date(checkOut).getDate() - new Date(checkIn).getDate();
+                return (new Date(checkOut) - new Date(checkIn)) / (1000 * 3600 * 24);
             },
             getCheckInDate(checkIn) {
                 this.destinationDetails.checkInDate = checkIn;
