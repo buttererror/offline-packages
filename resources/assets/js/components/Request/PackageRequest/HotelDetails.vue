@@ -251,7 +251,7 @@
             });
             this.remainingAdults = this.adultsNumber;
             this.minRooms = Math.ceil(this.adultsNumber / this.maxPerRoom);
-            this.hotelDetails.maxRooms = this.adultsNumber <= 10 ? this.adultsNumber : 10;
+            this.maxRooms = this.adultsNumber <= 10 ? this.adultsNumber : 10;
             for (let i = this.minRooms; i <= this.maxRooms; i++) {
                 this.adultsRange.push(this.minRooms);
                 this.minRooms++;
