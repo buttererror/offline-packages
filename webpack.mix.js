@@ -11,5 +11,17 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
+mix.extend( 'i18n', function( webpackConfig) {
+    webpackConfig.module.rules.forEach( ( module ) => {
+        // Search for the "vue-loader" component, which handles .vue files.
+        if( module.loader !== 'vue-loader' ) {
+            return;
+        }
+
+        // Within this module, add the vue-i18n-loader for the i18n tag.
+        module.options.loaders.i18n = '@kazupon/vue-i18n-loader';
+    } );
+} );
+
+mix.i18n().js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');
