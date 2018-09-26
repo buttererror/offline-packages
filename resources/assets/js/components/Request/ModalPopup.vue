@@ -560,21 +560,17 @@
         border: 1px solid #28a745;
         border-radius: 5px;
     }
-
     .is-valid:focus {
         border: 1px solid #28a745 !important;
         border-radius: 5px;
     }
-
     .is-invalid {
         border: 1px solid #dc3545;
         border-radius: 5px;
     }
-
     .is-invalid:focus {
         border: 1px solid #dc3545 !important;
     }
-
     .select {
         color: #495057 !important;
         background-color: #fff !important;
