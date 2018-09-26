@@ -297,7 +297,7 @@
                     nights: 'Nights',
                     'day-names': ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
                     'check-in': 'Check-in',
-                    'check-out': 'Check-Out',
+                    'check-out': 'Check-out',
                     'month-names': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 }
             }
@@ -307,8 +307,8 @@
             this.setCheckInDate();
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
-                window.packageDetails.destinationsDetails.push(this.destinationDetails);
             });
+            bus.$on("")
             bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
                 // console.log("hotelComponent validation", validation);
                 this.validation.accommodationDetailsValidation = validation;

@@ -348,9 +348,8 @@
                 this.minRooms++;
             }
             // childrenOptions = [{age: 12, id: 1}, ....]
-            for (let i = 0; i < this.childrenNumber; i++) {
-                this.childrenOptions.push({age: `child -${this.childrenAges[i]} years`, id: i})
-            }
+            this.fillChildrenOptions();
+
             bus.$on("next-destination", () => {
                 bus.$emit(`destination-details-${this.destinationNumber}`, this.hotelDetails);
             });
@@ -366,6 +365,11 @@
             }
         },
         methods: {
+            fillChildrenOptions() {
+                for (let i = 0; i < this.childrenNumber; i++) {
+                    this.childrenOptions.push({age: `child -${this.childrenAges[i]} years`, id: i})
+                }
+            },
             update() {
                 // console.log("updating rooms number");
                 for (let i = 0; i < this.hotelDetails.roomsNum; i++) {
@@ -553,6 +557,7 @@
 
                 this.hotelDetails.selectedChildrenNum = [];
                 this.hotelDetails.roomsNum = '';
+                this.fillChildrenOptions();
                 this.validateOnHotelDetails();
 
             },
