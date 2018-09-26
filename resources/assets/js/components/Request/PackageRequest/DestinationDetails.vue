@@ -1,3 +1,83 @@
+<i18n>
+    {
+
+    "ar":{
+    "packageDetails":{
+    "startPlace":"مكان البداية",
+    "startEndJourney":"بداية ونهاية الرحلة",
+    "countries":"البلاد",
+    "placesNum":"عدد الاماكن",
+    "transfer":"الانتقالات",
+    "childrenNum":"عدد الاطفال",
+    "adultsNum":"عدد البالغين",
+    "childrenMaxNum":"اقصى عدد للاطفال",
+    "childAge":"عمر الطفل",
+    "city":"المدينة",
+    "nightsNum":"عدد الليالى",
+    "rentCar":"تاجير سيارة",
+    "withDriver":"مع سائق",
+    "carLevel":"مستوى السيارة",
+    "toursNeed":" الحاجة لجولات" ,
+    "reserveAccomodation":"حجز اقامة",
+    "accomodationType":"نوع الاقامة"
+
+
+    },
+    "validations":{
+
+    },
+    "next":"التالى",
+    "back":"السابق",
+    "male":"ذكر",
+    "female":"مؤنث",
+    "noResults":"لايوجد نتائج",
+    "save":"حفظ",
+    "cancel":"الغاء",
+    "addBirthDate":"ضع تاريخ ميلادك",
+    "hotelPickerLang":"ar",
+    "yes":"نعم",
+    "no":"لا"
+    },
+
+    "en": {
+    "packageDetails":{
+    "startPlace":"Start Place",
+    "startEndJourney":"Start and End of Journey",
+    "countries":"countries",
+    "placesNum":"Number of Places",
+    "transfer":"transfer",
+    "childrenNum":"children Number",
+    "adultsNum":"Adults Number",
+    "childrenMaxNum":"children maximum number",
+    "childAge":"Child Age",
+    "city":"city",
+    "nightsNum":"number of nights",
+    "rentCar":"rent a car",
+    "withDriver":"With Driver",
+    "carLevel":"Car Level",
+    "toursNeed":" tours Need" ,
+    "reserveAccomodation":"reserve Accomodation",
+    "accomodationType":" Accomodation Type"
+    },
+    "validations":{
+
+    },
+    "next":"Next",
+    "back":"Back",
+    "male":"male",
+    "female":"female",
+    "noResults":"No Results",
+    "save":"save",
+    "cancel":"cancel",
+    "addBirthDate":"Add your BirthDate",
+    "hotelPickerLang":"en",
+    "yes":"yes",
+    "no":"no"
+    }
+    }
+</i18n>
+
+
 <template>
     <div>
         <div class="form-group row">
@@ -5,7 +85,7 @@
                 <multiselect
                     v-model="destinationDetails.selectedCity"
                     tagPosition="bottom" openDirection="bottom"
-                    placeholder="يمكنك البحث"
+                    :placeholder="$t('packageDetails.city')"
                     :options="cities"
                     label="name"
                     track-by="id"
@@ -15,12 +95,11 @@
                     :multiple="false"
                     :searchable="true"
                     @input="validateCity"
-
                 >
 
                 </multiselect>
             </div>
-            <div class="col-form-label col-form-label-lg col-3 text-right">المدينة</div>
+            <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.city')}}</div>
         </div>
 
         <div class="form-group row">
@@ -33,20 +112,13 @@
                                  format="DD/MM/YYYY"
                                  :hoveringTooltip="getNights"
                                  :startingDateValue="new Date(tripStartAt)"
+                                 :i18n="hotelPickerLang"
                 >
 
 
                 </HotelDatePicker>
-
-                <!--<datepicker placeholder=" تاريخ البداية" class="text-right"-->
-                <!--:bootstrap-styling="true"-->
-                <!--:value="destinationDetails.startDate"-->
-                <!--v-model="destinationDetails.startDate"-->
-                <!--:language="ar"-->
-
-                <!--&gt;</datepicker>-->
             </div>
-            <div class="col-form-label col-form-label-lg col-3 text-right">فترة الرحلة</div>
+            <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.startEndJourney')}}</div>
         </div>
 
 
@@ -57,7 +129,7 @@
                        v-model="destinationDetails.nightsNum"
                 />
             </div>
-            <div class="col-form-label col-form-label-lg col-3 text-right">عدد الليالى</div>
+            <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.nightsNum')}}</div>
         </div>
 
 
@@ -77,7 +149,7 @@
             <div class="col-6 text-right offset-3">
                 <toggle-button v-model="destinationDetails.rentCar" :value="false"
                                :sync="true"
-                               :labels="{checked: 'نعم', unchecked: 'لا'}"
+                               :labels="{checked: $t('yes'), unchecked: $t('no')}"
                                :width="70"
                                :height="30"
                                switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
@@ -85,7 +157,7 @@
                 />
 
             </div>
-            <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">تاجير سياره</label>
+            <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">{{$t('packageDetails.rentCar')}}</label>
         </div>
         <div v-if="show">
             <div class="form-group row">
@@ -93,7 +165,7 @@
                     <toggle-button v-model="destinationDetails.rentCarWithDriver" :value="false"
 
                                    :sync="true"
-                                   :labels="{checked: 'نعم', unchecked: 'لا'}"
+                                   :labels="{checked: $t('yes'), unchecked: $t('no')}"
                                    :width="65"
                                    :height="25"
                                    switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
@@ -101,7 +173,7 @@
                     />
 
                 </div>
-                <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">مع سائق</label>
+                <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">{{$t('packageDetails.withDriver')}}</label>
             </div>
 
             <div class="form-group row">
@@ -114,7 +186,7 @@
                     >
                     </multiselect>
                 </div>
-                <label class="col-form-label col-form-label-lg text-nowrap col-3 text-right"> مستوى السياره</label>
+                <label class="col-form-label col-form-label-lg text-nowrap col-3 text-right"> {{$t('packageDetails.carLevel')}}</label>
             </div>
         </div>
 
@@ -123,7 +195,7 @@
                 <toggle-button v-model="destinationDetails.needTours" :value="false"
 
                                :sync="true"
-                               :labels="{checked: 'نعم', unchecked: 'لا'}"
+                               :labels="{checked: $t('yes'), unchecked: $t('no')}"
                                :width="70"
                                :height="30"
                                switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
@@ -131,7 +203,7 @@
                 />
 
             </div>
-            <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">الحاجة لجولات</label>
+            <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">{{$t('packageDetails.toursNeed')}}</label>
         </div>
 
 
@@ -139,14 +211,14 @@
             <div class="col-6 offset-3 text-right">
                 <toggle-button v-model="destinationDetails.reserveAccomodation" :value="false"
                                :sync="true"
-                               :labels="{checked: 'نعم', unchecked: 'لا'}"
+                               :labels="{checked:$t('yes'), unchecked:$t('no')}"
                                :width="70"
                                :height="30"
                                switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
                                @change="updateAccomodationType"
                 />
             </div>
-            <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">حجز اقامة</label>
+            <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">{{$t('packageDetails.reserveAccomodation')}}</label>
         </div>
         <div class="form-group row" v-if="showAccomodationType">
 
@@ -161,7 +233,7 @@
 
                 </multiselect>
             </div>
-            <div class="col-form-label col-form-label-lg col-3 text-right">نوع الاقامة</div>
+            <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.accomodationType')}}</div>
 
         </div>
         <div v-if="destinationDetails.reserveAccomodation">
@@ -225,6 +297,22 @@
                     nightsNum: 0, // readonly
                     hotelDetails: {} // collected in one value
                 },
+                i18n_ar: {
+                    night: 'الليله',
+                    nights: 'الليالى',
+                    'day-names': ['الاحد', 'الاثنين', 'الثلاثاء', 'الاربعاء', 'الخميس', 'الجمعة', 'السبت'],
+                    'check-in': 'بداية الرحلة',
+                    'check-out': 'نهاية الرحلة',
+                    'month-names': ['يناير', 'فبراير', 'مارس', 'ابريل', 'مايو', 'يونيو', 'يوليو', 'اغسطس', 'سبتمبر', 'اكتوبر', 'نوفمبر', 'ديسمبر'],
+                },
+                i18n_en: {
+                    night: 'Night',
+                    nights: 'Nights',
+                    'day-names': ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+                    'check-in': 'Check-in',
+                    'check-out': 'Check-Out',
+                    'month-names': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                }
             }
         },
         mounted() {
@@ -363,6 +451,16 @@
                 result.setDate(result.getDate() + parseInt(Math.abs(this.updateCheckOutDate)));
                 // destinationDetails.nightsNum = this.updateCheckOutDate;
                 this.destinationDetails.endDate = result;
+            }
+        },
+        computed:{
+            hotelPickerLang: function () {
+                if (this.$t("hotelPickerLang") === "ar") {
+                    return this.i18n_ar
+                }
+                else {
+                    return this.i18n_en
+                }
             }
         }
 
