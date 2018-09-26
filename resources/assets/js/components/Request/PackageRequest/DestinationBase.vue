@@ -103,12 +103,14 @@
                 this.$emit('previous-component', "PackageDetails");
             },
             activateNxtBtn() {
-                for(let i = 0; i < this.destinationsValidation.length; i++){
-                    if(!this.destinationsValidation[i]){
-                        this.activateNextBtn = false;
-                        break;
+                if(this.placesNum === this.destinationsValidation.length){
+                    for(let i = 0; i < this.destinationsValidation.length; i++){
+                        if(!this.destinationsValidation[i]){
+                            this.activateNextBtn = false;
+                            break;
+                        }
+                        this.activateNextBtn = true;
                     }
-                    this.activateNextBtn = true;
                 }
             }
         }

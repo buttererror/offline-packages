@@ -1,80 +1,76 @@
 <i18n>
     {
+        "ar":{
+            "client": {
+                "add": "اضافة عميل جديد",
+                "name": "الاسم",
+                "telephone":"رقم الجوال",
+                "email":"البريد الاليكترونى",
+                "gender":"النوع",
+                "country":"بلد الاقامة",
+                "city":"المدينة",
+                "nationality":"الجنسية",
+                "birthDate":"تاريخ الميلاد"
+            },
+            "validations":{
+                "addName":"من فضلك ادخل الاسم",
+                "nameChar":"مسموح فقط بالحروف العربية والانجليزية",
+                "mobileExists":"الرقم موجود مسبقا بالفعل",
+                "mobileCount":"عدد الارقام يجب ان يكون من 3 ل 20 رقم",
+                "mobileNumbers":"مسموح بالارقام فقط",
+                "mobileEmpty":"من فضلك ضع رقم التليفون",
+                "chooseGender":"ن فضلك اختار النوع",
+                "addCountry":"من فضلك اختار المدينة",
+                "addCity":"من فضلك اختار المدينة",
+                "nationality":"من فضلك اختار الجنسية",
+                "email":"من فضلك ادخل ايميل صالح",
+                "emailExists":"الايميل موجود بالفعل"
+            },
+            "next":"التالى",
+            "male":"ذكر",
+            "female":"مؤنث",
+            "noResults":"لايوجد نتائج",
+            "save":"حفظ",
+            "cancel":"الغاء",
+            "addBirthDate":"ضع تاريخ ميلادك",
+            "datePickerLang":"ar"
+        },
 
-    "ar":{
-    "client": {
-    "add": "اضافة عميل جديد",
-    "name": "الاسم",
-    "telephone":"رقم الجوال",
-    "email":"البريد الاليكترونى",
-    "gender":"النوع",
-    "country":"بلد الاقامة",
-    "city":"المدينة",
-    "nationality":"الجنسية",
-    "birthDate":"تاريخ الميلاد"
-    },
-    "validations":{
-    "addName":"من فضلك ادخل الاسم",
-    "nameChar":"مسموح فقط بالحروف العربية والانجليزية",
-    "mobileExists":"الرقم موجود مسبقا بالفعل",
-    "mobileCount":"عدد الارقام يجب ان يكون من 3 ل 20 رقم",
-    "mobileNumbers":"مسموح بالارقام فقط",
-    "mobileEmpty":"من فضلك ضع رقم التليفون",
-    "chooseGender":"ن فضلك اختار النوع",
-    "addCountry":"من فضلك اختار المدينة",
-    "addCity":"من فضلك اختار المدينة",
-    "nationality":"من فضلك اختار الجنسية",
-    "email":"من فضلك ادخل ايميل صالح",
-    "emailExists":"الايميل موجود بالفعل"
-
-
-    },
-    "next":"التالى",
-    "male":"ذكر",
-    "female":"مؤنث",
-    "noResults":"لايوجد نتائج",
-    "save":"حفظ",
-    "cancel":"الغاء",
-    "addBirthDate":"ضع تاريخ ميلادك",
-    "datePickerLang":"ar"
-    },
-
-
-    "en": {
-    "client": {
-    "add": "Add New Client",
-    "name": "name",
-    "telephone":"telephone",
-    "email":"email",
-    "gender":"gender",
-    "country":"Accomodation Country",
-    "city":"city",
-    "nationality":"Nationality",
-    "birthDate":"birthDate"
-    },
-    "validations":{
-    "addName":"Please Add Name",
-    "nameChar":"Only English and Arabic characters valid",
-    "mobileExists":"Mobile Number already exists",
-    "mobileCount":"Mobile Number must be from 3 to 20 number",
-    "mobileNumbers":"Must be numbers only",
-    "mobileEmpty":"Mobile Number must not be empty",
-    "chooseGender":"Please choose gender",
-    "addCountry":"please choose country",
-    "addCity":"please choose city",
-    "nationality":"please choose nationality",
-    "email":"please enter valid email",
-    "emailExists":"Email already exists"
-    },
-    "next":"next",
-    "male":"male",
-    "female":"female",
-    "noResults":"No Results",
-    "save":"save",
-    "cancel":"cancel",
-    "addBirthDate":"Add your BirthDate",
-    "datePickerLang":"en"
-    }
+        "en": {
+            "client": {
+                "add": "Add New Client",
+                "name": "name",
+                "telephone":"telephone",
+                "email":"email",
+                "gender":"gender",
+                "country":"Accomodation Country",
+                "city":"city",
+                "nationality":"Nationality",
+                "birthDate":"birthDate"
+            },
+            "validations":{
+                "addName":"Please Add Name",
+                "nameChar":"Only English and Arabic characters valid",
+                "mobileExists":"Mobile Number already exists",
+                "mobileCount":"Mobile Number must be from 3 to 20 number",
+                "mobileNumbers":"Must be numbers only",
+                "mobileEmpty":"Mobile Number must not be empty",
+                "chooseGender":"Please choose gender",
+                "addCountry":"please choose country",
+                "addCity":"please choose city",
+                "nationality":"please choose nationality",
+                "email":"please enter valid email",
+                "emailExists":"Email already exists"
+            },
+            "next":"next",
+            "male":"male",
+            "female":"female",
+            "noResults":"No Results",
+            "save":"save",
+            "cancel":"cancel",
+            "addBirthDate":"Add your BirthDate",
+            "datePickerLang":"en"
+        }
     }
 </i18n>
 
@@ -155,7 +151,7 @@
                              label="en_short_name"
                              tagPosition="bottom" :tabIndex="0"
                              openDirection="bottom"
-                             placeholder=""  @remove="removeCities"
+                             placeholder="" @remove="removeCities"
                              @open="validateCountry"
                              @blur.native.capture="validateCountry('blur')"
                              @input="validateCountry"
@@ -453,7 +449,7 @@
                     });
                     return;
                 }
-                if(type === "blur" && !this.country) {
+                if (type === "blur" && !this.country) {
                     return this.fieldState("country", "invalid", false, this.$t('validations.addCountry'));
                 }
                 this.fieldState("country", "normal", false, null);
@@ -477,7 +473,7 @@
                     return this.fieldState("nationality", "valid", true, null);
                 }
                 if (type === 'blur' && !this.nationality) {
-                    return this.fieldState("nationality", "invalid", false,this.$t('validations.nationality'));
+                    return this.fieldState("nationality", "invalid", false, this.$t('validations.nationality'));
                 }
                 this.fieldState("nationality", "normal", false, null);
             },
@@ -544,12 +540,12 @@
                 this.fieldState("city", "normal", false, null);
             }
         },
-        computed:{
-            ar:function () {
-                if(this.$t("datePickerLang")==="ar"){
+        computed: {
+            ar: function () {
+                if (this.$t("datePickerLang") === "ar") {
                     return ar
                 }
-                else{
+                else {
                     return en
                 }
             }
@@ -564,17 +560,21 @@
         border: 1px solid #28a745;
         border-radius: 5px;
     }
+
     .is-valid:focus {
         border: 1px solid #28a745 !important;
         border-radius: 5px;
     }
+
     .is-invalid {
         border: 1px solid #dc3545;
         border-radius: 5px;
     }
+
     .is-invalid:focus {
         border: 1px solid #dc3545 !important;
     }
+
     .select {
         color: #495057 !important;
         background-color: #fff !important;

@@ -209,33 +209,33 @@
                     checkInDate: false,
                     checkOutDate: false,
                     selectedCarLevel: true,
-                    accommodationDetailsValidation: false,
+                    accommodationDetailsValidation: true,
                 },
                 destinationDetailsValidation: false,
                 destinationDetails: {
                     checkInDate: null,
                     checkOutDate: null,
                     selectedCity: '',
-                    rentCar: false,
-                    rentCarWithDriver: false,
-                    reserveAccomodation: false,
-                    selectedCarLevel: '',
+                    rentCar: false, // optional
+                    rentCarWithDriver: false, // optional
+                    reserveAccomodation: false, // optional but has mandatory
+                    selectedCarLevel: '', // mandatory if optional selected
                     selectedAccomodationType: 'Hotel',
-                    needTours: false,
-                    nightsNum: 0,
-                    hotelDetails: {}
+                    needTours: false, // optional
+                    nightsNum: 0, // readonly
+                    hotelDetails: {} // collected in one value
                 },
             }
         },
         mounted() {
-            console.log("mounting");
+            // console.log("mounting");
             this.setCheckInDate();
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
                 window.packageDetails.destinationsDetails.push(this.destinationDetails);
             });
             bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
-                console.log("hotelComponent validation", validation);
+                // console.log("hotelComponent validation", validation);
                 this.validation.accommodationDetailsValidation = validation;
                 this.validateWholeAccommodationDetails();
             });
@@ -280,6 +280,8 @@
             },
             updateAccomodationType(accommodationNeed) {
                 this.showAccomodationType = accommodationNeed.value;
+                this.destinationDetails.reserveAccomodation = accommodationNeed.value;
+                this.validateReserveAccommodation();
             },
             validateCity() {
                 console.log("validating city")
@@ -318,6 +320,15 @@
                 this.sendValidationToBase();
 
             },
+            validateReserveAccommodation() {
+                if(this.destinationDetails.reserveAccomodation){
+                    this.validation.accommodationDetailsValidation = false;
+                }else{
+                    this.validation.accommodationDetailsValidation = true;
+                }
+                this.processValidationData();
+                this.sendValidationToBase();
+            },
             validateWholeAccommodationDetails() {
                 // the false or the true that comes from the hotel component
                 this.processValidationData();
@@ -327,7 +338,7 @@
                 // process the data and get one property .. true or false for the whole destination
                 for (let check in this.validation) {
                     if (!this.validation[check]) {
-                        console.log("check", check);
+                        // console.log("check", check);
                         this.destinationDetailsValidation = false;
                         return;
                     }
@@ -336,13 +347,13 @@
             },
             sendValidationToBase() {
                 // send data to destination base
-                console.log("inDestinationDetails cityNumber", this.cityNumber);
+                // console.log("inDestinationDetails cityNumber", this.cityNumber);
                 bus.$emit(`per-destination-validation`,
                     this.destinationDetailsValidation);
                 bus.$emit("any-input");
             },
             emptyOnAccommodationType() {
-                console.log("empty");
+                // console.log("empty");
                 bus.$emit(`empty-accommodation-fields-${this.cityNumber}`);
             }
         },

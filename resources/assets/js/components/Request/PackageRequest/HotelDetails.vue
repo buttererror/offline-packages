@@ -246,6 +246,13 @@
             }
         },
         mounted() {
+            // console.log("childrenNumber", this.childrenNumber);
+            if(!Number(this.childrenNumber)){
+                this.validation.hotel.selectedChildrenNum = true;
+                this.processValidationBeforeSend();
+                this.sendValidationToDestination();
+                console.log("children 0", this.validation.hotel.selectedChildrenNum);
+            }
             bus.$on(`empty-accommodation-fields-${this.destinationNumber}`, () => {
                 this.emptyOnAccommodationType();
             });
@@ -276,7 +283,7 @@
         },
         methods: {
             update() {
-                console.log("updating rooms number");
+                // console.log("updating rooms number");
                 for (let i = 0; i < this.hotelDetails.roomsNum; i++) {
                     this.sortAdults.push([]);
                 }
@@ -303,7 +310,7 @@
                 }
             },
             updateAdultsNum(pastRooms, index) {
-                console.log("updating adults Number");
+                // console.log("updating adults Number");
                 this.adultsSelected.push(index + 1); // disable after input
                 this.remainingAdults = Math.ceil(this.remainingAdults - this.hotelDetails.selectedAdultsNum[index]);
                 this.remainingRooms = this.hotelDetails.roomsNum - pastRooms;
@@ -318,76 +325,90 @@
                 this.sendValidationToDestination();
             },
             validateAdultsNum() {
+                console.log("validating adultsNum");
                 if (Number(this.adultsNumber) !== this.adultsNumberChosen) {
                     this.validation.hotel.selectedAdultsNum = false;
                 } else {
                     this.validation.hotel.selectedAdultsNum = true;
                 }
+                console.log(this.validation.hotel.selectedAdultsNum);
             },
             validateChildrenNum() {
+                console.log("validating childrenNum");
                 if (Number(this.childrenNumber) !== this.childrenNumberChosen) {
                     this.validation.hotel.selectedChildrenNum = false;
                 } else {
                     this.validation.hotel.selectedChildrenNum = true;
                 }
+                console.log(this.validation.hotel.selectedChildrenNum);
             },
             validateSelectedRoomType() {
+                console.log("validating selectedRoomType");
                 if (this.hotelDetails.selectedRoomType) {
                     this.validation.hotel.selectedRoomType = true;
                 } else {
                     this.validation.hotel.selectedRoomType = false;
                 }
+                console.log(this.validation.hotel.selectedRoomType);
                 this.processValidationBeforeSend();
                 this.sendValidationToDestination();
             },
             validateSelectedRoomView() {
+                console.log("validating selectedRoomView");
                 if (this.hotelDetails.selectedRoomView) {
                     this.validation.hotel.selectedRoomView = true;
                 } else {
                     this.validation.hotel.selectedRoomView = false;
                 }
+                console.log(this.validation.hotel.selectedRoomView);
                 this.processValidationBeforeSend();
                 this.sendValidationToDestination();
 
             },
             validateSelectedStars() {
+                console.log("validating selectedStars");
                 if (this.hotelDetails.selectedStars) {
                     this.validation.hotel.selectedStars = true;
                 } else {
                     this.validation.hotel.selectedStars = false;
                 }
+                console.log(this.validation.hotel.selectedStars);
                 this.processValidationBeforeSend();
                 this.sendValidationToDestination();
             },
             validateHotelName() {
+                console.log("validating hotelName");
                 if (this.hotelDetails.hotelName) {
                     this.validation.hotel.hotelName = true;
                 } else {
                     this.validation.hotel.hotelName = false;
                 }
+                console.log(this.validation.hotel.hotelName);
                 this.processValidationBeforeSend();
                 this.sendValidationToDestination();
 
             },
             validateHotelArea() {
+                console.log("validating hotelArea");
                 if (this.hotelDetails.area) {
                     this.validation.hotel.area = true;
                 } else {
                     this.validation.hotel.area = false;
                 }
+                console.log(this.validation.hotel.area);
                 this.processValidationBeforeSend();
                 this.sendValidationToDestination();
 
             },
             validateApartmentArea() {
-                console.log("validating apartment area");
-                console.log("apartmentArea", this.hotelDetails.area);
+                // console.log("validating apartment area");
+                // console.log("apartmentArea", this.hotelDetails.area);
                 if (this.hotelDetails.area) {
                     this.validation.apartment.area = true;
                 } else {
                     this.validation.apartment.area = false;
                 }
-                console.log("apartmentArea validation", this.validation.apartment.area);
+                // console.log("apartmentArea validation", this.validation.apartment.area);
                 this.processValidationBeforeSend();
                 this.sendValidationToDestination();
 
@@ -402,6 +423,7 @@
                         }
                         this.accommodationDetailsValidation = true;
                     }
+                    console.log("the return value", this.accommodationDetailsValidation);
                 } else if (this.accomType === 'Apartment') {
                     // loop and the result either true or false
                     if (!this.validation.apartment.area) {
@@ -447,10 +469,23 @@
 
                 this.hotelDetails.selectedChildrenNum = [];
                 this.hotelDetails.roomsNum = '';
+                this.validateOnHotelDetails();
 
             },
+            validateOnHotelDetails() {
+                this.validateAdultsNum();
+                this.validateChildrenNum();
+                this.validateSelectedRoomType();
+                this.validateSelectedRoomView();
+                this.validateSelectedStars();
+                this.validateHotelName();
+                this.validateHotelArea();
+                this.validateApartmentArea();
+                this.processValidationBeforeSend();
+                this.sendValidationToDestination();
+            },
             emptyOnAccommodationType() {
-                console.log("empty inside hotelDetails component");
+                // console.log("empty inside hotelDetails component");
                 this.hotelDetails.selectedRoomType = '';
                 this.hotelDetails.selectedRoomView = '';
                 this.hotelDetails.selectedStars = '';
