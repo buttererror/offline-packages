@@ -366,6 +366,7 @@
         },
         methods: {
             fillChildrenOptions() {
+                this.childrenOptions = [];
                 for (let i = 0; i < this.childrenNumber; i++) {
                     this.childrenOptions.push({age: `child -${this.childrenAges[i]} years`, id: i})
                 }
