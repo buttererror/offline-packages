@@ -7,8 +7,18 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-const ar = require('json-loader/translations/ar.json');
-const en = require('json-loader/translations/en.json');
+
+// let en = '';
+// let ar = '';
+// $.ajax({
+//     type: 'get',
+//     async: false,
+//     url: '/show/translations',
+//     success: (response) => {
+//         ar = response.ar;
+//         en = response.en;
+//     }
+// });
 
 import BootstrapVue from 'bootstrap-vue'
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
@@ -32,15 +42,8 @@ Vue.use(BootstrapVue);
 import BaseComponent from './components/Request/BaseComponent';
 
 
-const messages = {
-    en: en,
-    ar: ar
-};
-
-
 const i18n = new VueI18n({
-    locale: 'en',
-    messages,
+    locale: 'en'
 });
 
 window.bus = new Vue();

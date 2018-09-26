@@ -12,3 +12,4 @@ Route::post('client','ClientController@store')->name('store.client');
 Route::get('countries','CountriesController@index')->name('show.countries');
 Route::post('package','PackageController@store')->name('store.package');
 Route::get('cities','PackageController@showCities')->name('showcities.package');
+Route::get('show/translations','HomeController@getTranslations');

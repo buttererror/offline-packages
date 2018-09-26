@@ -11,6 +11,7 @@
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^5.3.1",
+        "@kazupon/vue-i18n-loader": "^0.3.0",
         "axios": "^0.18",
         "bootstrap": "^4.0.0",
         "cross-env": "^5.1",

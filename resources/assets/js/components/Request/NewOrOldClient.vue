@@ -1,3 +1,32 @@
+
+<i18n>
+    {
+    "ar":{
+    "client": {
+    "add": "اضافة عميل جديد",
+    "choose":"اختار العميل",
+    "newData":"اضافة بيانات عميل جديد",
+    "search":"بحث العملاء",
+    "here":"هنا"
+
+    },
+    "next":"التالى"
+
+    },
+
+    "en": {
+    "client": {
+    "add": "Add new Client",
+    "choose":"Choose Client",
+    "newData":"Add new Client Data",
+    "search":"Search Clients",
+    "here":"here"
+    },
+    "next":"next"
+    }
+    }
+</i18n>
+
 <template>
     <div id="searchClients">
         <div class="card" v-if="show">
@@ -46,9 +75,9 @@
             </div>
 
             <div class="card-footer">
-                <button class="btn btn-primary" @click.prevent="nextComponent(client)"
+                <button class="btn btn-primary " style="float:right" @click.prevent="nextComponent(client)"
                         :class="{'disabled': disableSaveBtn}"
-                >التالي
+                >{{$t("next")}}
                 </button>
             </div>
 
@@ -58,11 +87,10 @@
 
 <script>
     import Multiselect from 'vue-multiselect';
-
     export default {
         name: 'AutocompleteTrigger',
         components: {
-            Multiselect,
+            Multiselect
         },
         mounted() {
             document.getElementById("select_input").autofocus = true;

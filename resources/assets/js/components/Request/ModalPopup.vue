@@ -1,3 +1,49 @@
+<i18n>
+    {
+    "ar":{
+    "client": {
+    "add": "اضافة عميل جديد",
+    "name": "الاسم",
+    "telephone":"رقم الجوال",
+    "email":"البريد الاليكترونى",
+    "gender":"النوع",
+    "country":"بلد الاقامة",
+    "city":"المدينة",
+    "nationality":"الجنسية",
+    "birthDate":"تاريخ الميلاد"
+    },
+    "next":"التالى",
+    "male":"ذكر",
+    "female":"مؤنث",
+    "noResults":"لايوجد نتائج",
+    "save":"حفظ",
+    "cancel":"الغاء"
+
+    },
+
+    "en": {
+    "client": {
+    "add": "Add New Client",
+    "name": "name",
+    "telephone":"telephone",
+    "email":"email",
+    "gender":"gender",
+    "country":"Accomodation Country",
+    "city":"city",
+    "nationality":"Nationality",
+    "birthDate":"birthDate",
+    "save":"save",
+    "cancel":"cancel"
+    },
+    "next":"next",
+    "male":"male",
+    "female":"female",
+    "noResults":"No Results"
+
+    }
+    }
+</i18n>
+
 <template>
     <b-modal
         v-model="show"
@@ -23,7 +69,7 @@
                 </div>
             </div>
 
-            <label class="col-form-label col-3 text-right">* الإسم</label>
+            <label class="col-form-label col-3 text-right">{{$t('client.name')}} *</label>
         </div>
 
         <div class="form-group row">
@@ -36,7 +82,7 @@
                     {{validation.mobile.errorMessage}}
                 </div>
             </div>
-            <div class="col-form-label col-3 text-right">* رقم الجوال</div>
+            <div class="col-form-label col-3 text-right">{{$t('client.telephone')}}</div>
         </div>
 
         <div class="form-group row">
@@ -49,7 +95,7 @@
                     {{validation.email.errorMessage}}
                 </div>
             </div>
-            <div class="col-form-label col-3 text-right text-nowrap">البريد الإلكتروني</div>
+            <div class="col-form-label col-3 text-right text-nowrap">{{$t('client.email')}}</div>
         </div>
 
         <div class="form-group row">
@@ -58,14 +104,14 @@
                         @blur="validateGender" @change="validateGender"
                         v-bind:class="{'is-invalid': validation.gender.state === 'invalid',
                         'is-valid': validation.gender.state === 'valid'}">
-                    <option value="male">ذكر</option>
-                    <option value="female">أنثى</option>
+                    <option value="male">{{$t('male')}}</option>
+                    <option value="female">{{$t('female')}}</option>
                 </select>
                 <div class="invalid-feedback" v-if="validation.gender.state === 'invalid'">
                     {{validation.gender.errorMessage}}
                 </div>
             </div>
-            <div class="col-form-label col-3 text-right">* النوع</div>
+            <div class="col-form-label col-3 text-right">{{$t('client.gender')}} *</div>
         </div>
 
         <div class="form-group row">
@@ -84,14 +130,14 @@
                         'select' : validation.country.state === 'normal'}"
 
                 >
-                    <template slot="noResult">لا يوجد نتائج</template>
+                    <template slot="noResult">{{$t("noResults")}}</template>
                 </multiselect>
                 <div class="invalid-feedback d-block" v-if="validation.country.state === 'invalid'">
                     {{this.validation.country.errorMessage}}
                 </div>
 
             </div>
-            <div class="col-form-label col-3 text-right">* بلد الاقامة</div>
+            <div class="col-form-label col-3 text-right">{{$t('client.country')}}</div>
         </div>
 
         <div class="form-group row">
@@ -107,7 +153,7 @@
                         'is-valid': validation.city.state === 'valid',
                         'select' : validation.city.state === 'normal'}"
                 >
-                    <template slot="noResult">لا يوجد نتائج</template>
+                    <template slot="noResult">{{$t("noResults")}}</template>
 
                 </multiselect>
                 <div class="invalid-feedback d-block" v-if="validation.city.state === 'invalid'">
@@ -115,7 +161,7 @@
                 </div>
 
             </div>
-            <div class="col-form-label col-3 text-right">* المدينة</div>
+            <div class="col-form-label col-3 text-right">{{$t('client.city')}}</div>
         </div>
         <div class="form-group row">
             <div class="col-6 offset-3">
@@ -131,7 +177,7 @@
                         'is-valid': validation.nationality.state === 'valid',
                         'select' : validation.nationality.state === 'normal'}"
                 >
-                    <template slot="noResult">لا يوجد نتائج</template>
+                    <template slot="noResult">{{$t("noResults")}}</template>
 
                 </multiselect>
                 <div class="invalid-feedback d-block" v-if="validation.nationality.state === 'invalid'">
@@ -139,7 +185,7 @@
                 </div>
 
             </div>
-            <div class="col-form-label col-3 text-right">* الجنسية</div>
+            <div class="col-form-label col-3 text-right">* {{$t('client.nationality')}}</div>
         </div>
 
         <div class="form-group row">
@@ -152,7 +198,7 @@
 
                 ></datepicker>
             </div>
-            <div class="col-form-label col-3 text-right">تاريخ الميلاد</div>
+            <div class="col-form-label col-3 text-right">{{$t('client.birthDate')}}</div>
         </div>
 
         <div class="form-group row">
@@ -165,9 +211,9 @@
         <div slot="modal-footer" class="w-100">
             <button class="btn btn-primary pull-left" @click="saveData"
                     :class="{'disabled': disableSaveBtn}">
-                حفظ
+                {{$t('save')}}
             </button>
-            <button @click="cancel" class="btn btn-danger pull-left">الغاء</button>
+            <button @click="cancel" class="btn btn-danger pull-left">{{$t('cancel')}}</button>
         </div>
     </b-modal>
 </template>
