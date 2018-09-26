@@ -151,6 +151,15 @@
                 </div>
                 <div class="col-form-label col-form-label-lg col-3 text-right"> اسم الفندق</div>
             </div>
+
+            <div class="form-group row">
+                <div class="col-6 offset-3">
+                    <input type="text" placeholder="المنطقة"
+                           v-model="hotelDetails.area" style="text-align: right"
+                           class="form-control"/>
+                </div>
+                <div class="col-form-label col-form-label-lg col-3 text-right">المنطقة</div>
+            </div>
         </div>
     </div>
     <div v-else>
@@ -173,7 +182,7 @@
 
     export default {
         name: "HotelDetails",
-        props: ["destinationNumber", "accomType"],
+        props: ["destinationNumber", "accomType", "emptyOnSelected"],
         components: {
             Multiselect
         },
@@ -222,6 +231,9 @@
             }
         },
         mounted() {
+            bus.$on('empty-accommodation-fields', () => {
+                this.emptyOnAccommodationType();
+            });
             this.remainingAdults = this.adultsNumber;
             this.hotelDetails.minRooms = Math.ceil(this.adultsNumber / this.hotelDetails.maxPerRoom.length);
             this.hotelDetails.maxRooms = this.adultsNumber <= 10 ? this.adultsNumber : 10
@@ -264,6 +276,7 @@
                 else {
                     this.show = false
                 }
+                this.validateAdultsNum();
                 this.sendValidationToDestination();
             },
             fillRoom(index) {
@@ -284,14 +297,25 @@
                 if (this.maxNumOfAdultsPerRoom > 6) this.maxNumOfAdultsPerRoom = 6;
                 this.adultsChosen.number += this.hotelDetails.selectedAdultsNum[index];
                 this.fillRoom(index + 1);
+                this.validateAdultsNum();
                 this.sendValidationToDestination();
             },
-            sendValidationToDestination() {
+            validateAdultsNum(){
                 if (Number(this.adultsNumber) !== this.adultsChosen.number) {
                     this.adultsChosen.valid = false;
                 }else{
                     this.adultsChosen.valid = true;
                 }
+            },
+            validateChildrenNum() {
+                if(Number(this.childrenNumber) !== this.childrenChosen.number){
+                    this.childrenChosen.valid = false;
+                }else {
+                    this.childrenChosen.valid = true;
+                }
+            },
+            sendValidationToDestination() {
+
                 bus.$emit(`hotel-validation-dest-${this.destinationNumber}`, {
                     selectedAdultsNum: this.adultsChosen.valid,
                     selectedChildrenNum: this.childrenChosen.valid
@@ -300,6 +324,8 @@
             updateChildrenNum(value) {
                 this.childrenOptions.splice(this.childrenOptions.indexOf(value), 1);
                 this.childrenChosen.number++;
+                this.validateChildrenNum();
+                this.sendValidationToDestination();
                 console.log("childrenChosen", this.childrenChosen.number);
 
 
@@ -307,6 +333,8 @@
             removeChildrenOption(option) {
                 this.childrenOptions.push(option);
                 this.childrenChosen.number--;
+                this.validateChildrenNum();
+                this.sendValidationToDestination();
                 console.log("childrenChosen", this.childrenChosen.number);
             },
             editRoomsData() {
@@ -323,6 +351,15 @@
                 this.hotelDetails.selectedChildrenNum = [];
                 this.hotelDetails.roomsNum = '';
 
+            },
+            emptyOnAccommodationType() {
+                this.hotelDetails.selectedRoomType = '';
+                this.hotelDetails.selectedRoomView = '';
+                this.hotelDetails.selectedStars = '';
+                this.hotelDetails.hotelName = '';
+                if(this.accomType === 'Apartment' || this.accomType === 'Hotel'){
+                    this.hotelDetails.area = '';
+                }
             }
         }
 

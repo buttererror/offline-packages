@@ -154,7 +154,7 @@
 
                 <multiselect placeholder=""
                              v-model="destinationDetails.selectedAccomodationType"
-                             :options="accomodationType"
+                             :options="accomodationType" @input="emptyOnAccommodationType"
                              tagPosition="bottom" openDirection="bottom"
                              :preserveSearch="true" :showNoResults="false" selectLabel=""
                 >
@@ -166,7 +166,8 @@
         </div>
         <div v-if="destinationDetails.reserveAccomodation">
             <HotelDetail :destinationNumber="cityNumber"
-                         :accomType="destinationDetails.selectedAccomodationType">
+                         :accomType="destinationDetails.selectedAccomodationType"
+            >
             </HotelDetail>
         </div>
     </div>
@@ -208,14 +209,16 @@
                     checkInDate: false,
                     checkOutDate: false,
                     selectedCarLevel: true,
-                    hotel: {
-                        roomsNum: false,
-                        selectedAdultsNum: false,
-                        selectedChildrenNum: false,
-                    },
-                    apartment: {
+                    hotelRoomsNum: false,
+                    hotelSelectedAdultsNum: false,
+                    hotelSelectedChildrenNum: false,
+                    hotelSelectedRoomType: false,
+                    hotelSelectedRoomView: false,
+                    hotelSelectedStars: false,
+                    hotelName: false,
+                    hotelArea: false,
 
-                    }
+                    apartmentArea: false,
                 },
                 destinationDetails: {
                     checkInDate: null,
@@ -236,6 +239,10 @@
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
                 window.packageDetails.destinationsDetails.push(this.destinationDetails);
+            });
+            bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
+                this.validation.hotelSelectedAdultsNum = validation.selectedAdultsNum;
+                this.validation.hotelSelectedChildrenNum = validation.selectedChildrenNum;
             });
         },
 
@@ -293,6 +300,9 @@
                 } else {
                     this.validation.selectedCarLevel = false;
                 }
+            },
+            emptyOnAccommodationType() {
+                bus.$emit('empty-accommodation-fields');
             }
         },
         watch: {
