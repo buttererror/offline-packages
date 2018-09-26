@@ -1,5 +1,6 @@
 <i18n>
     {
+
     "ar":{
     "client": {
     "add": "اضافة عميل جديد",
@@ -12,14 +13,32 @@
     "nationality":"الجنسية",
     "birthDate":"تاريخ الميلاد"
     },
+    "validations":{
+    "addName":"من فضلك ادخل الاسم",
+    "nameChar":"مسموح فقط بالحروف العربية والانجليزية",
+    "mobileExists":"الرقم موجود مسبقا بالفعل",
+    "mobileCount":"عدد الارقام يجب ان يكون من 3 ل 20 رقم",
+    "mobileNumbers":"مسموح بالارقام فقط",
+    "mobileEmpty":"من فضلك ضع رقم التليفون",
+    "chooseGender":"ن فضلك اختار النوع",
+    "addCountry":"من فضلك اختار المدينة",
+    "addCity":"من فضلك اختار المدينة",
+    "nationality":"من فضلك اختار الجنسية",
+    "email":"من فضلك ادخل ايميل صالح",
+    "emailExists":"الايميل موجود بالفعل"
+
+
+    },
     "next":"التالى",
     "male":"ذكر",
     "female":"مؤنث",
     "noResults":"لايوجد نتائج",
     "save":"حفظ",
-    "cancel":"الغاء"
-
+    "cancel":"الغاء",
+    "addBirthDate":"ضع تاريخ ميلادك",
+    "datePickerLang":"ar"
     },
+
 
     "en": {
     "client": {
@@ -31,15 +50,30 @@
     "country":"Accomodation Country",
     "city":"city",
     "nationality":"Nationality",
-    "birthDate":"birthDate",
-    "save":"save",
-    "cancel":"cancel"
+    "birthDate":"birthDate"
+    },
+    "validations":{
+    "addName":"Please Add Name",
+    "nameChar":"Only English and Arabic characters valid",
+    "mobileExists":"Mobile Number already exists",
+    "mobileCount":"Mobile Number must be from 3 to 20 number",
+    "mobileNumbers":"Must be numbers only",
+    "mobileEmpty":"Mobile Number must not be empty",
+    "chooseGender":"Please choose gender",
+    "addCountry":"please choose country",
+    "addCity":"please choose city",
+    "nationality":"please choose nationality",
+    "email":"please enter valid email",
+    "emailExists":"Email already exists"
     },
     "next":"next",
     "male":"male",
     "female":"female",
-    "noResults":"No Results"
-
+    "noResults":"No Results",
+    "save":"save",
+    "cancel":"cancel",
+    "addBirthDate":"Add your BirthDate",
+    "datePickerLang":"en"
     }
     }
 </i18n>
@@ -190,7 +224,7 @@
 
         <div class="form-group row">
             <div class="col-6 offset-3">
-                <datepicker placeholder="ضع تاريخ ميلادك" class="text-right"
+                <datepicker :placeholder="$t('addBirthDate')" class="text-right"
                             v-model="clientData.birthDate"
                             :bootstrap-styling="true"
                             calendar-class="h5 w-100"
@@ -234,6 +268,7 @@
             Multiselect
         },
         mounted() {
+            console.log(this.$t('datePickerLang'));
             axios.get('/api/countries').then(response => {
                 response.data.forEach((country) => {
                     this.countries.push(country);
@@ -293,7 +328,6 @@
                     }
                 },
                 disableSaveBtn: true,
-                ar: ar,
                 show: false,
                 countries: [],
                 country: null,
@@ -355,11 +389,11 @@
                     return this.fieldState("name", "normal", false, null);
                 }
                 if (!this.clientData.name && e.type === 'blur') {
-                    return this.fieldState("name", "invalid", false, "ادخل الاسم");
+                    return this.fieldState("name", "invalid", false, this.$t('validations.addName'));
                 }
                 let trimName = this.clientData.name.split(' ').join("");
                 if (!(validator.isAlpha(trimName, 'ar') || validator.isAlpha(trimName, 'en-US'))) {
-                    return this.fieldState("name", "invalid", false, "حروف انجليزية فقط او عربية فقط");
+                    return this.fieldState("name", "invalid", false, this.$t('validations.nameChar'));
                 }
                 this.fieldState("name", "valid", true, null);
             },
@@ -368,15 +402,15 @@
                 let mobileNumber = this.clientData.mobile[0] === '+' ? this.clientData.mobile.slice(1)
                     : this.clientData.mobile;
                 if (!this.clientData.mobile && e.type === "blur") { // is empty validation
-                    return this.fieldState("mobile", "invalid", false, "ادخل رقم الموبايل");
+                    return this.fieldState("mobile", "invalid", false, this.$t('validations.mobileEmpty'));
                 }
                 if (!Number.isInteger(Number(mobileNumber))) // is number validation
-                    return this.fieldState("mobile", "invalid", false, "ارقام فقط");
+                    return this.fieldState("mobile", "invalid", false, this.$t('validations.mobileNumbers'));
                 else if (mobileNumber.length < 3 && e.type === "input") { // blue style
                     return this.fieldState("mobile", "normal", false, null);
                 }
                 if (!validator.isMobilePhone(mobileNumber, 'any')) { // numbers count validation
-                    return this.fieldState("mobile", "invalid", false, "(20 ~ 3)");
+                    return this.fieldState("mobile", "invalid", false, this.$t('validations.mobileCount'));
                 }
                 if (this.clientData.mobile && mobileNumber.length > 2) { // not to send empty query
                     axios.get(`/api/client/mobile/is_unique?mobile=${this.clientData.mobile}`)
@@ -395,7 +429,7 @@
                         })
                         .catch((err) => {
                             if (err.message === "mobile-taken") {
-                                this.fieldState("mobile", "invalid", false, "الموبايل موجود");
+                                this.fieldState("mobile", "invalid", false, this.$t('validations.mobileExists'));
                             } else {
                                 console.log(err);
                             }
@@ -404,7 +438,7 @@
             },
             validateGender() {
                 if (!this.clientData.gender) {
-                    return this.fieldState("gender", "invalid", false, "اختر النوع");
+                    return this.fieldState("gender", "invalid", false, this.$t('validations.chooseGender'));
                 }
                 this.fieldState("gender", "valid", true, null);
             },
@@ -420,7 +454,7 @@
                     return;
                 }
                 if(type === "blur" && !this.country) {
-                    return this.fieldState("country", "invalid", false, "ادخل البلد");
+                    return this.fieldState("country", "invalid", false, this.$t('validations.addCountry'));
                 }
                 this.fieldState("country", "normal", false, null);
             },
@@ -430,10 +464,10 @@
                     return this.fieldState("city", "valid", true, null);
                 }
                 if (!this.country) {
-                    this.fieldState("country", "invalid", false, "ادخل البلد");
+                    this.fieldState("country", "invalid", false, this.$t('validations.addCountry'));
                 }
                 if (type === "blur" && !this.city) {
-                    return this.fieldState("city", "invalid", false, "ادخل المدينة");
+                    return this.fieldState("city", "invalid", false, this.$t('validations.addCity'));
                 }
                 this.fieldState("city", "normal", false, null);
             },
@@ -443,7 +477,7 @@
                     return this.fieldState("nationality", "valid", true, null);
                 }
                 if (type === 'blur' && !this.nationality) {
-                    return this.fieldState("nationality", "invalid", false, "ادخل الجنسية");
+                    return this.fieldState("nationality", "invalid", false,this.$t('validations.nationality'));
                 }
                 this.fieldState("nationality", "normal", false, null);
             },
@@ -453,7 +487,7 @@
                 if (!this.clientData.email) return this.fieldState("email", "normal", true, null);
                 if (!validator.isEmail(this.clientData.email) &&
                     (e.key === "Enter" || e.type === "blur")) { // is email validation~2
-                    return this.fieldState("email", "invalid", false, "الايميل غير صالح");
+                    return this.fieldState("email", "invalid", false, this.$t('validations.email'));
                 }
                 if (this.clientData.email && (e.key === "Enter" || e.type === "blur")) {
                     axios.get(`/api/client/email/is_unique?email=${this.clientData.email}`)
@@ -466,7 +500,7 @@
                         })
                         .catch((err) => {
                             if (err.message === "email-taken") { // is unique validation
-                                this.fieldState("email", "invalid", false, "الايميل موجود");
+                                this.fieldState("email", "invalid", false, this.$t('validations.emailExists'));
                             } else {
                                 console.log(err);
                             }
@@ -509,7 +543,18 @@
                 this.city = null;
                 this.fieldState("city", "normal", false, null);
             }
+        },
+        computed:{
+            ar:function () {
+                if(this.$t("datePickerLang")==="ar"){
+                    return ar
+                }
+                else{
+                    return en
+                }
+            }
         }
+
     }
 </script>
 
