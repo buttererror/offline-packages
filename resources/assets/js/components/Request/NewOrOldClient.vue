@@ -75,7 +75,7 @@
             </div>
 
             <div class="card-footer">
-                <button class="btn btn-primary " style="float:right" @click.prevent="nextComponent(client)"
+                <button class="btn btn-primary " @click.prevent="nextComponent(client)"
                         :class="{'disabled': disableSaveBtn}"
                 >{{$t("next")}}
                 </button>

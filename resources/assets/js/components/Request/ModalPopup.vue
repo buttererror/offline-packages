@@ -1,257 +1,251 @@
 <i18n>
     {
+        "ar":{
+            "client": {
+                "add": "اضافة عميل جديد",
+                "name": "الاسم",
+                "telephone":"رقم الجوال",
+                "email":"البريد الاليكترونى",
+                "gender":"النوع",
+                "country":"بلد الاقامة",
+                "city":"المدينة",
+                "nationality":"الجنسية",
+                "birthDate":"تاريخ الميلاد"
+            },
+            "validations":{
+                "addName":"من فضلك ادخل الاسم",
+                "nameChar":"مسموح فقط بالحروف العربية والانجليزية",
+                "mobileExists":"الرقم موجود مسبقا بالفعل",
+                "mobileCount":"عدد الارقام يجب ان يكون من 3 ل 20 رقم",
+                "mobileNumbers":"مسموح بالارقام فقط",
+                "mobileEmpty":"من فضلك ضع رقم التليفون",
+                "chooseGender":"ن فضلك اختار النوع",
+                "addCountry":"من فضلك اختار المدينة",
+                "addCity":"من فضلك اختار المدينة",
+                "nationality":"من فضلك اختار الجنسية",
+                "email":"من فضلك ادخل ايميل صالح",
+                "emailExists":"الايميل موجود بالفعل"
+            },
+            "next":"التالى",
+            "male":"ذكر",
+            "female":"مؤنث",
+            "noResults":"لايوجد نتائج",
+            "save":"حفظ",
+            "cancel":"الغاء",
+            "addBirthDate":"ضع تاريخ ميلادك",
+            "datePickerLang":"ar"
+        },
 
-    "ar":{
-    "client": {
-    "add": "اضافة عميل جديد",
-    "name": "الاسم",
-    "telephone":"رقم الجوال",
-    "email":"البريد الاليكترونى",
-    "gender":"النوع",
-    "country":"بلد الاقامة",
-    "city":"المدينة",
-    "nationality":"الجنسية",
-    "birthDate":"تاريخ الميلاد"
-    },
-    "validations":{
-    "addName":"من فضلك ادخل الاسم",
-    "nameChar":"مسموح فقط بالحروف العربية والانجليزية",
-    "mobileExists":"الرقم موجود مسبقا بالفعل",
-    "mobileCount":"عدد الارقام يجب ان يكون من 3 ل 20 رقم",
-    "mobileNumbers":"مسموح بالارقام فقط",
-    "mobileEmpty":"من فضلك ضع رقم التليفون",
-    "chooseGender":"ن فضلك اختار النوع",
-    "addCountry":"من فضلك اختار المدينة",
-    "addCity":"من فضلك اختار المدينة",
-    "nationality":"من فضلك اختار الجنسية",
-    "email":"من فضلك ادخل ايميل صالح",
-    "emailExists":"الايميل موجود بالفعل"
-
-
-    },
-    "next":"التالى",
-    "male":"ذكر",
-    "female":"مؤنث",
-    "noResults":"لايوجد نتائج",
-    "save":"حفظ",
-    "cancel":"الغاء",
-    "addBirthDate":"ضع تاريخ ميلادك",
-    "datePickerLang":"ar"
-    },
-
-
-    "en": {
-    "client": {
-    "add": "Add New Client",
-    "name": "name",
-    "telephone":"telephone",
-    "email":"email",
-    "gender":"gender",
-    "country":"Accomodation Country",
-    "city":"city",
-    "nationality":"Nationality",
-    "birthDate":"birthDate"
-    },
-    "validations":{
-    "addName":"Please Add Name",
-    "nameChar":"Only English and Arabic characters valid",
-    "mobileExists":"Mobile Number already exists",
-    "mobileCount":"Mobile Number must be from 3 to 20 number",
-    "mobileNumbers":"Must be numbers only",
-    "mobileEmpty":"Mobile Number must not be empty",
-    "chooseGender":"Please choose gender",
-    "addCountry":"please choose country",
-    "addCity":"please choose city",
-    "nationality":"please choose nationality",
-    "email":"please enter valid email",
-    "emailExists":"Email already exists"
-    },
-    "next":"next",
-    "male":"male",
-    "female":"female",
-    "noResults":"No Results",
-    "save":"save",
-    "cancel":"cancel",
-    "addBirthDate":"Add your BirthDate",
-    "datePickerLang":"en"
-    }
+        "en": {
+            "client": {
+                "add": "Add New Client",
+                "name": "name",
+                "telephone":"telephone",
+                "email":"email",
+                "gender":"gender",
+                "country":"Accomodation Country",
+                "city":"city",
+                "nationality":"Nationality",
+                "birthDate":"birthDate"
+            },
+            "validations":{
+                "addName":"Please Add Name",
+                "nameChar":"Only English and Arabic characters valid",
+                "mobileExists":"Mobile Number already exists",
+                "mobileCount":"Mobile Number must be from 3 to 20 number",
+                "mobileNumbers":"Must be numbers only",
+                "mobileEmpty":"Mobile Number must not be empty",
+                "chooseGender":"Please choose gender",
+                "addCountry":"please choose country",
+                "addCity":"please choose city",
+                "nationality":"please choose nationality",
+                "email":"please enter valid email",
+                "emailExists":"Email already exists"
+            },
+            "next":"next",
+            "male":"male",
+            "female":"female",
+            "noResults":"No Results",
+            "save":"save",
+            "cancel":"cancel",
+            "addBirthDate":"Add your BirthDate",
+            "datePickerLang":"en"
+        }
     }
 </i18n>
 
 <template>
-        <b-modal
-                v-model="show"
-                centered
-                :no-close-on-esc="true"
-                :no-close-on-backdrop="true"
-                :hide-header-close="true"
-                size="lg"
-                :header-class="'justify-content-center'"
+    <b-modal
+        v-model="show"
+        centered
+        :no-close-on-esc="true"
+        :no-close-on-backdrop="true"
+        :hide-header-close="true"
+        size="lg"
+        :header-class="'justify-content-center'">
+        <h5 slot="modal-title">
+            {{ $t("client.add") }}
+        </h5>
+        <div class="form-group row">
 
-        >
-            <h5 slot="modal-title">
-                {{ $t("client.add") }}
-            </h5>
-            <div class="form-group row">
-
-                <div class="col-6 offset-3">
-                    <input type="text"
-                           dir="rtl" v-model.trim="clientData.name" class="form-control"
-                           @input="validateName" @blur="validateName"
-                           v-bind:class="{'is-invalid': validation.name.state === 'invalid',
+            <div class="col-6 offset-3">
+                <input type="text"
+                       dir="rtl" v-model.trim="clientData.name" class="form-control"
+                       @input="validateName" @blur="validateName"
+                       v-bind:class="{'is-invalid': validation.name.state === 'invalid',
                        'is-valid': validation.name.state === 'valid'}">
-                    <div class="invalid-feedback" v-if="validation.name.state === 'invalid'">
-                        {{validation.name.errorMessage}}
-                    </div>
+                <div class="invalid-feedback" v-if="validation.name.state === 'invalid'">
+                    {{validation.name.errorMessage}}
                 </div>
-
-                <label class="col-form-label col-3 text-right">{{$t('client.name')}} *</label>
             </div>
 
-            <div class="form-group row">
-                <div class="col-6 offset-3">
-                    <input class="form-control" @input="validateMobile" @blur="validateMobile"
-                           v-model.trim="clientData.mobile"
-                           v-bind:class="{'is-invalid': validation.mobile.state === 'invalid',
+            <label class="col-form-label col-3 text-right">{{$t('client.name')}} *</label>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6 offset-3">
+                <input class="form-control" @input="validateMobile" @blur="validateMobile"
+                       v-model.trim="clientData.mobile"
+                       v-bind:class="{'is-invalid': validation.mobile.state === 'invalid',
                         'is-valid': validation.mobile.state === 'valid'}">
-                    <div class="invalid-feedback" v-if="validation.mobile.state === 'invalid'">
-                        {{validation.mobile.errorMessage}}
-                    </div>
+                <div class="invalid-feedback" v-if="validation.mobile.state === 'invalid'">
+                    {{validation.mobile.errorMessage}}
                 </div>
-                <div class="col-form-label col-3 text-right">{{$t('client.telephone')}}</div>
             </div>
+            <div class="col-form-label col-3 text-right">{{$t('client.telephone')}}</div>
+        </div>
 
-            <div class="form-group row">
-                <div class="col-6 offset-3">
-                    <input class="form-control" v-model="clientData.email"
-                           @keyup.enter="validateEmail" @input="validateEmail" @blur="validateEmail"
-                           v-bind:class="{'is-invalid': validation.email.state === 'invalid',
+        <div class="form-group row">
+            <div class="col-6 offset-3">
+                <input class="form-control" v-model="clientData.email"
+                       @keyup.enter="validateEmail" @input="validateEmail" @blur="validateEmail"
+                       v-bind:class="{'is-invalid': validation.email.state === 'invalid',
                         'is-valid': validation.email.state === 'valid'}">
-                    <div class="invalid-feedback" v-if="validation.email.state === 'invalid'">
-                        {{validation.email.errorMessage}}
-                    </div>
+                <div class="invalid-feedback" v-if="validation.email.state === 'invalid'">
+                    {{validation.email.errorMessage}}
                 </div>
-                <div class="col-form-label col-3 text-right text-nowrap">{{$t('client.email')}}</div>
             </div>
+            <div class="col-form-label col-3 text-right text-nowrap">{{$t('client.email')}}</div>
+        </div>
 
-            <div class="form-group row">
-                <div class="col-6 offset-3">
-                    <select class="form-control" dir="rtl" v-model="clientData.gender"
-                            @blur="validateGender" @change="validateGender"
-                            v-bind:class="{'is-invalid': validation.gender.state === 'invalid',
+        <div class="form-group row">
+            <div class="col-6 offset-3">
+                <select class="form-control" dir="rtl" v-model="clientData.gender"
+                        @blur="validateGender" @change="validateGender"
+                        v-bind:class="{'is-invalid': validation.gender.state === 'invalid',
                         'is-valid': validation.gender.state === 'valid'}">
-                        <option value="male">{{$t('male')}}</option>
-                        <option value="female">{{$t('female')}}</option>
-                    </select>
-                    <div class="invalid-feedback" v-if="validation.gender.state === 'invalid'">
-                        {{validation.gender.errorMessage}}
-                    </div>
+                    <option value="male">{{$t('male')}}</option>
+                    <option value="female">{{$t('female')}}</option>
+                </select>
+                <div class="invalid-feedback" v-if="validation.gender.state === 'invalid'">
+                    {{validation.gender.errorMessage}}
                 </div>
-                <div class="col-form-label col-3 text-right">{{$t('client.gender')}} *</div>
             </div>
+            <div class="col-form-label col-3 text-right">{{$t('client.gender')}} *</div>
+        </div>
 
-            <div class="form-group row">
-                <div class="col-6 offset-3">
-                    <multiselect v-model="country" :options="countries"
-                                 id="country"
-                                 label="en_short_name"
-                                 tagPosition="bottom" :tabIndex="0"
-                                 openDirection="bottom"
-                                 placeholder="" @remove="removeCities"
-                                 @open="validateCountry"
-                                 @blur.native.capture="validateCountry('blur')"
-                                 @input="validateCountry"
-                                 :class="{'is-invalid': validation.country.state === 'invalid',
+        <div class="form-group row">
+            <div class="col-6 offset-3">
+                <multiselect v-model="country" :options="countries"
+                             id="country"
+                             label="en_short_name"
+                             tagPosition="bottom" :tabIndex="0"
+                             openDirection="bottom"
+                             placeholder="" @remove="removeCities"
+                             @open="validateCountry"
+                             @blur.native.capture="validateCountry('blur')"
+                             @input="validateCountry"
+                             :class="{'is-invalid': validation.country.state === 'invalid',
                         'is-valid': validation.country.state === 'valid',
                         'select' : validation.country.state === 'normal'}"
 
-                    >
-                        <template slot="noResult">{{$t("noResults")}}</template>
-                    </multiselect>
-                    <div class="invalid-feedback d-block" v-if="validation.country.state === 'invalid'">
-                        {{this.validation.country.errorMessage}}
-                    </div>
-
+                >
+                    <template slot="noResult">{{$t("noResults")}}</template>
+                </multiselect>
+                <div class="invalid-feedback d-block" v-if="validation.country.state === 'invalid'">
+                    {{this.validation.country.errorMessage}}
                 </div>
-                <div class="col-form-label col-3 text-right">{{$t('client.country')}}</div>
-            </div>
 
-            <div class="form-group row">
-                <div class="col-6 offset-3">
-                    <multiselect
-                            v-model="city" :options="cities" tagPosition="bottom"
-                            placeholder="" label="name" selectLabel="" :tabIndex="0"
-                            openDirection="bottom"
-                            @open="validateCity"
-                            @blur.native.capture="validateCity('blur')"
-                            @input="validateCity"
-                            :class="{'is-invalid': validation.city.state === 'invalid',
+            </div>
+            <div class="col-form-label col-3 text-right">{{$t('client.country')}}</div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6 offset-3">
+                <multiselect
+                    v-model="city" :options="cities" tagPosition="bottom"
+                    placeholder="" label="name" selectLabel="" :tabIndex="0"
+                    openDirection="bottom"
+                    @open="validateCity"
+                    @blur.native.capture="validateCity('blur')"
+                    @input="validateCity"
+                    :class="{'is-invalid': validation.city.state === 'invalid',
                         'is-valid': validation.city.state === 'valid',
                         'select' : validation.city.state === 'normal'}"
-                    >
-                        <template slot="noResult">{{$t("noResults")}}</template>
+                >
+                    <template slot="noResult">{{$t("noResults")}}</template>
 
-                    </multiselect>
-                    <div class="invalid-feedback d-block" v-if="validation.city.state === 'invalid'">
-                        {{this.validation.city.errorMessage}}
-                    </div>
-
+                </multiselect>
+                <div class="invalid-feedback d-block" v-if="validation.city.state === 'invalid'">
+                    {{this.validation.city.errorMessage}}
                 </div>
-                <div class="col-form-label col-3 text-right">{{$t('client.city')}}</div>
+
             </div>
-            <div class="form-group row">
-                <div class="col-6 offset-3">
-                    <multiselect
-                            v-model="nationality" :options="countries" tagPosition="bottom"
-                            label="nationality"
-                            placeholder="" selectLabel="" :tabIndex="0"
-                            openDirection="bottom"
-                            @blur.native.capture="validateNationality('blur')"
-                            @open="validateNationality"
-                            @input="validateNationality"
-                            :class="{'is-invalid': validation.nationality.state === 'invalid',
+            <div class="col-form-label col-3 text-right">{{$t('client.city')}}</div>
+        </div>
+        <div class="form-group row">
+            <div class="col-6 offset-3">
+                <multiselect
+                    v-model="nationality" :options="countries" tagPosition="bottom"
+                    label="nationality"
+                    placeholder="" selectLabel="" :tabIndex="0"
+                    openDirection="bottom"
+                    @blur.native.capture="validateNationality('blur')"
+                    @open="validateNationality"
+                    @input="validateNationality"
+                    :class="{'is-invalid': validation.nationality.state === 'invalid',
                         'is-valid': validation.nationality.state === 'valid',
                         'select' : validation.nationality.state === 'normal'}"
-                    >
-                        <template slot="noResult">{{$t("noResults")}}</template>
+                >
+                    <template slot="noResult">{{$t("noResults")}}</template>
 
-                    </multiselect>
-                    <div class="invalid-feedback d-block" v-if="validation.nationality.state === 'invalid'">
-                        {{this.validation.nationality.errorMessage}}
-                    </div>
-
+                </multiselect>
+                <div class="invalid-feedback d-block" v-if="validation.nationality.state === 'invalid'">
+                    {{this.validation.nationality.errorMessage}}
                 </div>
-                <div class="col-form-label col-3 text-right">* {{$t('client.nationality')}}</div>
+
             </div>
+            <div class="col-form-label col-3 text-right">* {{$t('client.nationality')}}</div>
+        </div>
 
-            <div class="form-group row">
-                <div class="col-6 offset-3">
-                    <datepicker :placeholder="$t('addBirthDate')" class="text-right"
-                                v-model="clientData.birthDate"
-                                :bootstrap-styling="true"
-                                calendar-class="h5 w-100"
-                                :language="ar"
+        <div class="form-group row">
+            <div class="col-6 offset-3">
+                <datepicker :placeholder="$t('addBirthDate')" class="text-right"
+                            v-model="clientData.birthDate"
+                            :bootstrap-styling="true"
+                            calendar-class="h5 w-100"
+                            :language="ar"
 
-                    ></datepicker>
-                </div>
-                <div class="col-form-label col-3 text-right">{{$t('client.birthDate')}}</div>
+                ></datepicker>
             </div>
+            <div class="col-form-label col-3 text-right">{{$t('client.birthDate')}}</div>
+        </div>
 
-            <div class="form-group row">
-                <div class="col-6 offset-3">
-                    <UploadFile></UploadFile>
-                </div>
+        <div class="form-group row">
+            <div class="col-6 offset-3">
+                <UploadFile></UploadFile>
             </div>
+        </div>
 
 
-            <div slot="modal-footer" class="w-100">
-                <button class="btn btn-primary pull-left" @click="saveData"
-                        :class="{'disabled': disableSaveBtn}">
-                    {{$t('save')}}
-                </button>
-                <button @click="cancel" class="btn btn-danger pull-left">{{$t('cancel')}}</button>
-            </div>
-        </b-modal>
+        <div slot="modal-footer" class="w-100">
+            <button class="btn btn-primary pull-left" @click="saveData"
+                    :class="{'disabled': disableSaveBtn}">
+                {{$t('save')}}
+            </button>
+            <button @click="cancel" class="btn btn-danger pull-left">{{$t('cancel')}}</button>
+        </div>
+    </b-modal>
 </template>
 
 <script>
@@ -566,21 +560,17 @@
         border: 1px solid #28a745;
         border-radius: 5px;
     }
-
     .is-valid:focus {
         border: 1px solid #28a745 !important;
         border-radius: 5px;
     }
-
     .is-invalid {
         border: 1px solid #dc3545;
         border-radius: 5px;
     }
-
     .is-invalid:focus {
         border: 1px solid #dc3545 !important;
     }
-
     .select {
         color: #495057 !important;
         background-color: #fff !important;
