@@ -1,3 +1,66 @@
+
+<i18n>
+    {
+    "ar":{
+    "packageDetails":{
+    "startPlace":"مكان البداية",
+    "startEndJourney":"بداية ونهاية الرحلة",
+    "countries":"البلاد",
+    "placesNum":"عدد الاماكن",
+    "transfer":"الانتقالات",
+    "childrenNum":"عدد الاطفال",
+    "adultsNum":"عدد البالغين",
+    "childrenMaxNum":"اقصى عدد للاطفال",
+    "childAge":"عمر الطفل"
+
+    },
+    "validations":{
+
+    },
+    "next":"التالى",
+    "back":"السابق",
+    "male":"ذكر",
+    "female":"مؤنث",
+    "noResults":"لايوجد نتائج",
+    "save":"حفظ",
+    "cancel":"الغاء",
+    "addBirthDate":"ضع تاريخ ميلادك",
+    "hotelPickerLang":"ar",
+    "yes":"نعم",
+    "no":"لا"
+    },
+
+    "en": {
+    "packageDetails":{
+    "startPlace":"Start Place",
+    "startEndJourney":"Start and End of Journey",
+    "countries":"countries",
+    "placesNum":"Number of Places",
+    "transfer":"transfer",
+    "childrenNum":"children Number",
+    "adultsNum":"Adults Number",
+    "childrenMaxNum":"children maximum number",
+    "childAge":"Child Age"
+    },
+    "validations":{
+
+    },
+    "next":"Next",
+    "back":"Back",
+    "male":"male",
+    "female":"female",
+    "noResults":"No Results",
+    "save":"save",
+    "cancel":"cancel",
+    "addBirthDate":"Add your BirthDate",
+    "hotelPickerLang":"en",
+    "yes":"yes",
+    "no":"no"
+    }
+    }
+</i18n>
+
+
 <template>
     <div v-if="accomType === 'Hotel'">
 
