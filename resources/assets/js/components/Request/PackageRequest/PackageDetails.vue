@@ -6,7 +6,7 @@
     "startPlace":"مكان البداية",
     "startEndJourney":"بداية ونهاية الرحلة",
     "countries":"البلاد",
-    "placesNum":"عدد الاماكن",
+    "placesNum":"عدد المدن",
     "transfer":"الانتقالات",
     "childrenNum":"عدد الاطفال",
     "adultsNum":"عدد البالغين",
@@ -34,12 +34,12 @@
     "packageDetails":{
     "startPlace":"Start Place",
     "startEndJourney":"Start and End of Journey",
-    "countries":"countries",
-    "placesNum":"Number of Places",
-    "transfer":"transfer",
-    "childrenNum":"children Number",
+    "countries":"Countries",
+    "placesNum":"Number of Cities",
+    "transfer":"Transfer",
+    "childrenNum":"Children Number",
     "adultsNum":"Adults Number",
-    "childrenMaxNum":"children maximum number",
+    "childrenMaxNum":"Children maximum number",
     "childAge":"Child Age"
     },
     "validations":{
