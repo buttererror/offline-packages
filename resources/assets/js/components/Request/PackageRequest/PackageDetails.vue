@@ -1,3 +1,66 @@
+<i18n>
+    {
+
+    "ar":{
+    "packageDetails":{
+    "startPlace":"مكان البداية",
+    "startEndJourney":"بداية ونهاية الرحلة",
+    "countries":"البلاد",
+    "placesNum":"عدد الاماكن",
+    "transfer":"الانتقالات",
+    "childrenNum":"عدد الاطفال",
+    "adultsNum":"عدد البالغين",
+    "childrenMaxNum":"اقصى عدد للاطفال",
+    "childAge":"عمر الطفل"
+
+    },
+    "validations":{
+
+    },
+    "next":"التالى",
+    "back":"السابق",
+    "male":"ذكر",
+    "female":"مؤنث",
+    "noResults":"لايوجد نتائج",
+    "save":"حفظ",
+    "cancel":"الغاء",
+    "addBirthDate":"ضع تاريخ ميلادك",
+    "hotelPickerLang":"ar",
+    "yes":"نعم",
+    "no":"لا"
+    },
+
+    "en": {
+    "packageDetails":{
+    "startPlace":"Start Place",
+    "startEndJourney":"Start and End of Journey",
+    "countries":"countries",
+    "placesNum":"Number of Places",
+    "transfer":"transfer",
+    "childrenNum":"children Number",
+    "adultsNum":"Adults Number",
+    "childrenMaxNum":"children maximum number",
+    "childAge":"Child Age"
+    },
+    "validations":{
+
+    },
+    "next":"Next",
+    "back":"Back",
+    "male":"male",
+    "female":"female",
+    "noResults":"No Results",
+    "save":"save",
+    "cancel":"cancel",
+    "addBirthDate":"Add your BirthDate",
+    "hotelPickerLang":"en",
+    "yes":"yes",
+    "no":"no"
+    }
+    }
+</i18n>
+
+
 <template>
     <div id="detailsContainer">
         <div class="card">
@@ -7,12 +70,12 @@
             <div class="card-body">
                 <div class="form-group row">
                     <div class="col-6 offset-3">
-                        <input type="text" placeholder="مكان البدايه"
+                        <input type="text" :placeholder="$t('packageDetails.startPlace')"
                                v-model="packageMainDetails.startPlace"
                                @input="validateStartPlace"
                                style="text-align: right" class="form-control"/>
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right"> مكان البداية</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.startPlace')}}</label>
                 </div>
                 <div class="form-group row">
                     <div class="col-6 offset-3">
@@ -21,44 +84,46 @@
                                          :startDate="new Date()"
                                          :minNights="1"
                                          format="DD/MM/YYYY"
+                                         :i18n="hotelPickerLang"
                         >
 
 
                         </HotelDatePicker>
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">بداية ونهاية الرحلة</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.startEndJourney')}}</label>
                 </div>
 
                 <div class="row form-group">
                     <div class="col-6 offset-3">
                         <multiselect
-                            v-model="packageMainDetails.selectedCountries"
-                            placeholder="يمكنك البحث" tagPosition="bottom"
-                            :options="countries" openDirection="bottom"
-                            label="en_short_name"
-                            track-by="id"
-                            :multiple="true"
-                            :close-on-select="false"
-                            :hide-selected="true"
-                            :loading="isLoading"
-                            @search-change="countryFind"
-                            @input="validateCountries"
+                                v-model="packageMainDetails.selectedCountries"
+                                :placeholder="$t('packageDetails.countries')"
+                                tagPosition="bottom"
+                                :options="countries" openDirection="bottom"
+                                label="en_short_name"
+                                track-by="id"
+                                :multiple="true"
+                                :close-on-select="false"
+                                :hide-selected="true"
+                                :loading="isLoading"
+                                @search-change="countryFind"
+                                @input="validateCountries"
 
                         ></multiselect>
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">البلاد</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.countries')}}</label>
                 </div>
 
                 <div class="form-group row">
                     <div class="col-6 offset-3">
-                        <input type="number" placeholder="عدد الاماكن" min="0"
+                        <input type="number" :placeholder="$t('packageDetails.placesNum')" min="0"
                                style="text-align: right"
                                class="form-control"
                                v-model="packageMainDetails.placesNum"
                                @input="validatePlacesNum"
                         />
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">عدد المدن</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.placesNum')}}</label>
                 </div>
 
                 <div class="form-group row">
@@ -66,39 +131,41 @@
                         <toggle-button @change="setTransferRequest"
                                        v-model="packageMainDetails.transfer" :value="false"
                                        :sync="true"
-                                       :labels="{checked: 'نعم', unchecked: 'لا'}"
+                                       :labels="{checked: $t('yes'), unchecked: $t('no')}"
                                        :width="70"
                                        :height="30"
                                        switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
                         />
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">الانتقالات</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">{{$t('packageDetails.transfer')}}</label>
                 </div>
 
 
                 <div class="form-group row">
-                        <div class="col-3 d-flex align-items-center justify-content-end text-right
+                    <div class="col-3 d-flex align-items-center justify-content-end text-right
                                     rounded"
-                             style="background-color: rgba(91,192,222, .8);"
+                         style="background-color: rgba(91,192,222, .8);"
                          v-if="packageMainDetails.adultsNum">
-                        اقصي عدد للاطفال {{maxChildrenNum}}
+                        {{$t('packageDetails.childrenMaxNum')}} {{maxChildrenNum}}
                     </div>
                     <div v-else class="col-3"></div>
                     <div class="col-6 d-flex align-items-center">
-                        <input type="number" placeholder="عدد البالغين" style="text-align: right" class="form-control"
+                        <input type="number" :placeholder="$t('packageDetails.adultsNum')" style="text-align: right"
+                               class="form-control"
                                v-model="packageMainDetails.adultsNum" min="1" @input="validateAdultsNum"/>
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">عدد البالغين</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.adultsNum')}}</label>
                 </div>
                 <div class="form-group row">
                     <div class="col-6 offset-3 d-flex align-items-center">
-                        <input type="number" placeholder="عدد الاطفال" style="text-align: right"
+                        <input type="number"
+                               :placeholder="$t('packageDetails.childrenNum')" style="text-align: right"
                                v-model="packageMainDetails.childrenNumber"
                                class="form-control" min="0"
                                @input="updateChildAge"
                         />
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">عدد الاطفال</label>
+                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.childrenNum')}}</label>
                 </div>
 
                 <div v-if="show">
@@ -106,7 +173,7 @@
                     <div v-for="(num, key) in packageMainDetails.childrenNumber">
                         <div class="form-group row">
                             <div class="col-6 offset-3">
-                                <multiselect placeholder="عمر الطفل"
+                                <multiselect :placeholder="$t('packageDetails.childAge')"
                                              v-model="packageMainDetails.childrenAges[key]"
                                              :options="staticChildrenAges"
                                              tagPosition="top"
@@ -119,7 +186,9 @@
                                 <!--style="text-align: right"-->
                                 <!--class="form-control"/>-->
                             </div>
-                            <div class="col-form-label col-form-label-lg col-3 text-right"> عمر الطفل</div>
+                            <div class="col-form-label col-form-label-lg col-3 text-right">
+                                {{$t('packageDetails.childAge')}}
+                            </div>
                         </div>
                     </div>
 
@@ -128,9 +197,9 @@
             <div class="card-footer d-flex justify-content-between">
                 <button class="btn btn-primary" @click.prevent="nextComponent"
                         :class="{'disabled': !activateNextBtn}"
-                >التالى
+                >{{$t('next')}}
                 </button>
-                <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
+                <button class="btn btn-primary" @click.prevent="previousComponent">{{$t('back')}}</button>
             </div>
         </div>
     </div>
@@ -188,7 +257,22 @@
                     childrenNumber: 0,
                     childrenAges: [],
                 },
-
+                i18n_ar: {
+                    night: 'الليله',
+                    nights: 'الليالى',
+                    'day-names': ['الاحد', 'الاثنين', 'الثلاثاء', 'الاربعاء', 'الخميس', 'الجمعة', 'السبت'],
+                    'check-in': 'بداية الرحلة',
+                    'check-out': 'نهاية الرحلة',
+                    'month-names': ['يناير', 'فبراير', 'مارس', 'ابريل', 'مايو', 'يونيو', 'يوليو', 'اغسطس', 'سبتمبر', 'اكتوبر', 'نوفمبر', 'ديسمبر'],
+                },
+                i18n_en: {
+                    night: 'Night',
+                    nights: 'Nights',
+                    'day-names': ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+                    'check-in': 'Check-in',
+                    'check-out': 'Check-Out',
+                    'month-names': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                }
             }
         }
         ,
@@ -244,7 +328,7 @@
                 console.log("validating children ages");
                 console.log("childrenNumber", this.packageMainDetails.childrenNumber);
                 console.log("childrenAges", this.packageMainDetails.childrenAges);
-                if(this.packageMainDetails.childrenNumber === this.packageMainDetails.childrenAges.length){
+                if (this.packageMainDetails.childrenNumber === this.packageMainDetails.childrenAges.length) {
                     for (let i = 0; i < this.packageMainDetails.childrenAges.length; i++) {
                         if (!this.packageMainDetails.childrenAges[i]) {
                             this.validation.childrenAges = false;
@@ -252,33 +336,33 @@
                         }
                         this.validation.childrenAges = true;
                     }
-                }else if(this.packageMainDetails.childrenNumber < this.packageMainDetails.childrenAges.length){
-                   this.removeChildrenAges();
-                }else if(this.packageMainDetails.childrenNumber > this.packageMainDetails.childrenAges.length){
+                } else if (this.packageMainDetails.childrenNumber < this.packageMainDetails.childrenAges.length) {
+                    this.removeChildrenAges();
+                } else if (this.packageMainDetails.childrenNumber > this.packageMainDetails.childrenAges.length) {
                     this.validation.childrenAges = false;
                 }
                 this.activateNxtBtn();
             },
             validateChildrenNum() {
                 // validate the max children number allowed
-                if(Number(this.packageMainDetails.childrenNumber) <= Number(this.maxChildrenNum)){
+                if (Number(this.packageMainDetails.childrenNumber) <= Number(this.maxChildrenNum)) {
                     this.validation.childrenNumber = true;
-                }else{
+                } else {
                     this.validation.childrenNumber = false;
                 }
                 //
-                if(Number(this.packageMainDetails.childrenNumber) === 0){
+                if (Number(this.packageMainDetails.childrenNumber) === 0) {
                     this.removeChildrenAges();
                     this.validation.childrenNumber = true;
                     this.validation.childrenAges = true;
-                }else{
+                } else {
                     this.validateChildrenAge();
                     return;
                 }
                 this.activateNxtBtn();
             },
-            removeChildrenAges(){ // remove from childrenAges until it's equal to childrenNumber
-                while(this.packageMainDetails.childrenAges.length !== this.packageMainDetails.childrenNumber){
+            removeChildrenAges() { // remove from childrenAges until it's equal to childrenNumber
+                while (this.packageMainDetails.childrenAges.length !== this.packageMainDetails.childrenNumber) {
                     this.packageMainDetails.childrenAges.pop();
                 }
             },
@@ -334,9 +418,17 @@
                 });
             }
             ,
+        },
+        computed: {
+            hotelPickerLang: function () {
+                if (this.$t("hotelPickerLang") === "ar") {
+                    return this.i18n_ar
+                }
+                else {
+                    return this.i18n_en
+                }
+            }
         }
-        ,
-
     }
 </script>
 
