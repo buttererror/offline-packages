@@ -96,7 +96,7 @@
                         component: 'FinalNote',
                         step: 'Finalize'
                     });
-
+                    console.log("DestinationsDetails", this.destinationsDetails);
                 }
             },
             previousComponent() {

@@ -132,19 +132,6 @@
             <div class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.nightsNum')}}</div>
         </div>
 
-
-        <!--<div class="form-group row">-->
-        <!--<div class="col-6 offset-3">-->
-        <!--<datepicker placeholder="ضع تاريخ النهاية" class="text-right"-->
-        <!--:bootstrap-styling="true"-->
-        <!--:value="destinationDetails.endDate"-->
-        <!--:language="ar"-->
-        <!--v-model="destinationDetails.endDate"-->
-
-        <!--&gt;</datepicker>-->
-        <!--</div>-->
-        <!--<div class="col-form-label col-form-label-lg col-3 text-right">تاريخ النهاية</div>-->
-        <!--</div>-->
         <div class="form-group row">
             <div class="col-6 text-right offset-3">
                 <toggle-button v-model="destinationDetails.rentCar" :value="false"
@@ -310,7 +297,7 @@
                     nights: 'Nights',
                     'day-names': ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
                     'check-in': 'Check-in',
-                    'check-out': 'Check-Out',
+                    'check-out': 'Check-out',
                     'month-names': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 }
             }
@@ -320,8 +307,8 @@
             this.setCheckInDate();
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
-                window.packageDetails.destinationsDetails.push(this.destinationDetails);
             });
+            bus.$on("")
             bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
                 // console.log("hotelComponent validation", validation);
                 this.validation.accommodationDetailsValidation = validation;
