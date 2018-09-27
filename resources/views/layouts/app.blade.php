@@ -40,7 +40,14 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        <li class="nav-item">
+                            <a href="#" id="change_language" target="_self"
+                               class="nav-link"
+                               @click.prevent="changeLocale"
+                            >
+                                @{{currentLanguageLabel}}
+                            </a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

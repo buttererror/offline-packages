@@ -22,10 +22,9 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($language)
+    public function index()
     {
-        $data['language']=$language;
-        return view('home',$data);
+        return view('home');
     }
 
     public function getTranslations(){

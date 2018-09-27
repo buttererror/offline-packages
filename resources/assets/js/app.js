@@ -51,7 +51,37 @@ window.bus = new Vue();
 const app = new Vue({
     el: '#app',
     components: {BaseComponent},
-    i18n
+    i18n,
+    data(){
+        return {
+            currentLocale: '',
+            currentLanguageLabel: ''
+        }
+    },
+    mounted(){
+        let currentLocale = document.querySelector('html').lang;
+        if(currentLocale == 'ar'){
+            this.currentLanguageLabel = 'English';
+            this.currentLocale = 'ar';
+        }else{
+            this.currentLanguageLabel = 'عربي';
+            this.currentLocale = 'en';
+        }
+        this.$i18n.locale = currentLocale;
+    },
+    methods: {
+        changeLocale() {
+            if (this.currentLocale == 'en') {
+                this.currentLocale = 'ar';
+                this.currentLanguageLabel = 'English';
+            } else {
+                this.currentLocale = 'en';
+                this.currentLanguageLabel = 'عربي';
+            }
+            this.$i18n.locale = this.currentLocale;
+            axios.get('/change_locale');
+        }
+    }
 });
 
 

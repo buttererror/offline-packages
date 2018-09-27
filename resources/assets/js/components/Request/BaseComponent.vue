@@ -27,13 +27,11 @@
             }
         },
         mounted() {
-            this.lang = this.language;
-            console.log(this.language)
-            this.$i18n.locale= this.lang;
+            // this.lang = this.language;
         },
         watch : {
             lang(){
-                this.$i18n.locale= this.lang;
+                // this.$i18n.locale= this.lang;
             }
         }
     }
