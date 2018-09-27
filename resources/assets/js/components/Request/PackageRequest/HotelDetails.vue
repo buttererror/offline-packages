@@ -42,6 +42,7 @@
 
     },
 
+
     "en": {
     "packageDetails":{
     "startPlace":"Start Place",

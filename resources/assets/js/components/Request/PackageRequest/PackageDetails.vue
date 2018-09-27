@@ -2,16 +2,16 @@
     {
 
     "ar":{
-    "packageDetails":{
-    "startPlace":"مكان البداية",
-    "startEndJourney":"بداية ونهاية الرحلة",
-    "countries":"البلاد",
-    "placesNum":"عدد المدن",
-    "transfer":"الانتقالات",
-    "childrenNum":"عدد الاطفال",
-    "adultsNum":"عدد البالغين",
-    "childrenMaxNum":"اقصى عدد للاطفال",
-    "childAge":"عمر الطفل"
+        "packageDetails":{
+        "startPlace":"مكان البداية",
+        "startEndJourney":"بداية ونهاية الرحلة",
+        "countries":"البلاد",
+        "placesNum":"عدد المدن",
+        "transfer":"الانتقالات",
+        "childrenNum":"عدد الاطفال",
+        "adultsNum":"عدد البالغين",
+        "childrenMaxNum":"اقصى عدد للاطفال",
+        "childAge":"عمر الطفل"
 
     },
     "validations":{
@@ -27,7 +27,8 @@
     "addBirthDate":"ضع تاريخ ميلادك",
     "hotelPickerLang":"ar",
     "yes":"نعم",
-    "no":"لا"
+    "no":"لا",
+    "destinationDetails":"تفاصيل الاماكن"
     },
 
     "en": {
@@ -55,7 +56,9 @@
     "addBirthDate":"Add your BirthDate",
     "hotelPickerLang":"en",
     "yes":"yes",
-    "no":"no"
+    "no":"no",
+    "destinationDetails":"Destination Details"
+
     }
     }
 </i18n>
@@ -392,7 +395,7 @@
                     window.packageDetails.packageMainDetails = this.packageMainDetails;
                     this.$emit('next-component', {
                         component: 'DestinationBase',
-                        step: 'Destination Details'
+                        step: 'destinationDetails'
                     });
                 }
             },

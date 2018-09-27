@@ -1,9 +1,73 @@
+<i18n>
+    {
+
+    "ar":{
+    "packageDetails":{
+    "startPlace":"مكان البداية",
+    "startEndJourney":"بداية ونهاية الرحلة",
+    "countries":"البلاد",
+    "placesNum":"عدد المدن",
+    "transfer":"الانتقالات",
+    "childrenNum":"عدد الاطفال",
+    "adultsNum":"عدد البالغين",
+    "childrenMaxNum":"اقصى عدد للاطفال",
+    "childAge":"عمر الطفل"
+    },
+    "next":"التالى",
+    "back":"السابق",
+    "male":"ذكر",
+    "female":"مؤنث",
+    "noResults":"لايوجد نتائج",
+    "save":"حفظ",
+    "cancel":"الغاء",
+    "addBirthDate":"ضع تاريخ ميلادك",
+    "hotelPickerLang":"ar",
+    "yes":"نعم",
+    "no":"لا",
+    "destination":"مكان",
+    "destinations_details":"تفاصيل الاماكن",
+    "nextcity":"المدينه القادمة",
+    "prevcity":"المدينة السابقة"
+    },
+
+    "en": {
+    "packageDetails":{
+    "startPlace":"Start Place",
+    "startEndJourney":"Start and End of Journey",
+    "countries":"Countries",
+    "placesNum":"Number of Cities",
+    "transfer":"Transfer",
+    "childrenNum":"Children Number",
+    "adultsNum":"Adults Number",
+    "childrenMaxNum":"Children maximum number",
+    "childAge":"Child Age"
+    },
+    "next":"Next",
+    "back":"Back",
+    "male":"male",
+    "female":"female",
+    "noResults":"No Results",
+    "save":"save",
+    "cancel":"cancel",
+    "addBirthDate":"Add your BirthDate",
+    "hotelPickerLang":"en",
+    "yes":"yes",
+    "no":"no",
+    "destination":"Destination",
+    "destinations_details":"Destinations Details",
+    "nextcity":"Next City",
+    "prevcity":"Previous City"
+    }
+    }
+</i18n>
+
+
 <template>
     <div id="destination_details">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h4 class="card-title text-center">Destinations Details</h4>
-                <h5 class="card-subtitle text-center">Destination #{{cityNumber}}</h5>
+                <h4 class="card-title text-center">{{$t('destinations_details')}}</h4>
+                <h5 class="card-subtitle text-center">{{$t('destination')}} #{{cityNumber}}</h5>
             </div>
             <div class="card-body">
                 <div v-for="destinationNumber in placesNum">
@@ -20,17 +84,17 @@
                 <a href="#" @click.prevent="nextDestination"
                    class="btn btn-link btn-outline-primary m-4" :class="{
                'disabled': placesNum === cityNumber || placesNum === 1}"
-                >المدينة القادمة</a>
+                >{{$t('nextcity')}}</a>
                 <a href="#" @click.prevent="previousDestination"
                    class="btn btn-link btn-outline-primary m-4" :class="{
                'disabled': cityNumber === 1}"
-                >المدينة السابقة</a>
+                >{{$t('prevcity')}}</a>
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <button class="btn btn-primary" @click.prevent="nextComponent"
                         :class="{'disabled': !activateNextBtn}"
-                >التالى</button>
-                <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
+                >{{$t('next')}}</button>
+                <button class="btn btn-primary" @click.prevent="previousComponent">{{$t('back')}}</button>
             </div>
         </div>
     </div>
@@ -94,8 +158,9 @@
                 if(this.activateNextBtn){
                     this.$emit('next-component', {
                         component: 'FinalNote',
-                        step: 'Finalize'
+                        step: 'finalize'
                     });
+
                     console.log("DestinationsDetails", this.destinationsDetails);
                 }
             },

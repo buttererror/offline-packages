@@ -308,7 +308,6 @@
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
             });
-            bus.$on("")
             bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
                 // console.log("hotelComponent validation", validation);
                 this.validation.accommodationDetailsValidation = validation;

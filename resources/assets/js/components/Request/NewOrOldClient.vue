@@ -130,7 +130,7 @@
                     window.packageDetails.clientDetails = client;
                     this.$emit('next-component', {
                         component: "SelectService",
-                        step: "Service Selection"
+                        step: "serviceSelection"
                     });
                 }
             },

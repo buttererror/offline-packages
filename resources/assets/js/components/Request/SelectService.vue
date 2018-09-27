@@ -1,3 +1,47 @@
+<i18n>
+    {
+
+    "ar":{
+    "next":"التالى",
+    "back":"السابق",
+    "male":"ذكر",
+    "female":"مؤنث",
+    "noResults":"لايوجد نتائج",
+    "save":"حفظ",
+    "cancel":"الغاء",
+    "addBirthDate":"ضع تاريخ ميلادك",
+    "hotelPickerLang":"ar",
+    "yes":"نعم",
+    "no":"لا",
+    "destination":"مكان",
+    "destinations_details":"تفاصيل الاماكن",
+    "nextcity":"المدينه القادمة",
+    "prevcity":"المدينة السابقة"
+    },
+
+    "en": {
+
+    "next":"Next",
+    "back":"Back",
+    "male":"male",
+    "female":"female",
+    "noResults":"No Results",
+    "save":"save",
+    "cancel":"cancel",
+    "addBirthDate":"Add your BirthDate",
+    "hotelPickerLang":"en",
+    "yes":"yes",
+    "no":"no",
+    "destination":"Destination",
+    "destinations_details":"Destinations Details",
+    "nextcity":"Next City",
+    "prevcity":"Previous City"
+    }
+    }
+</i18n>
+
+
+
 <template>
     <div class="card">
         <div class="card-header bg-primary text-white">
@@ -25,7 +69,7 @@
             </div>
         </div>
         <div class="card-footer text-right">
-            <button class="btn btn-primary" @click.prevent="previousComponent">رجوع</button>
+            <button class="btn btn-primary" @click.prevent="previousComponent">{{$t('back')}}</button>
         </div>
     </div>
 </template>
@@ -47,7 +91,7 @@
             nextComponent() {
                 this.$emit('next-component', {
                     component: "PackageDetails",
-                    step: "Package Details"
+                    step: "packageDetails"
                 });
             },
             previousComponent() {

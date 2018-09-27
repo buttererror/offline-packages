@@ -99,7 +99,7 @@
                 </div>
             </div>
 
-            <label class="col-form-label col-3 text-right">{{$t('client.name')}} *</label>
+            <label class="col-form-label col-3 text-left">{{$t('client.name')}} *</label>
         </div>
 
         <div class="form-group row">
@@ -264,7 +264,6 @@
             Multiselect
         },
         mounted() {
-            console.log(this.$t('datePickerLang'));
             axios.get('/api/countries').then(response => {
                 response.data.forEach((country) => {
                     this.countries.push(country);

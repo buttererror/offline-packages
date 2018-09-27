@@ -1,11 +1,33 @@
+<i18n>
+   {
+
+   "ar":{
+   "searchClients":"بحث العملاء",
+   "serviceSelection":"اختيار الخدمة",
+   "packageDetails":"تفاصيل البتاعة",
+   "destinationDetails":"تفاصيل الاماكن",
+   "finalize":""
+   },
+
+   "en": {
+   "searchClients":"Search Clients",
+   "serviceSelection":"Service Selection",
+   "packageDetails":"Package Details",
+   "destinationDetails":"Destination Details",
+   "finalize":"Finalize"
+
+   }
+   }
+</i18n>
+
 <template>
    <div>
       <nav aria-label="breadcrumb">
          <ol class="breadcrumb">
             <li v-for="(crumb, order) in breadcrumbs" class="breadcrumb-item"
                 aria-current="page" :class="{active: breadcrumbs.length -1 === order}">
-               <span v-if="breadcrumbs.length -1 === order">{{crumb.step}}</span>
-               <a href="#" @click.prevent="removeCrumb(crumb)" v-else>{{crumb.step}}</a>
+               <span v-if="breadcrumbs.length -1 === order">{{$t(crumb.step)}}</span>
+               <a href="#" @click.prevent="removeCrumb(crumb)" v-else>{{$t(crumb.step)}}</a>
             </li>
          </ol>
       </nav>
@@ -44,7 +66,7 @@
             component: 'NewOrOldClient',
             breadcrumbs: [
                {
-                  step: "Search Clients",
+                  step: 'searchClients',
                   component: 'NewOrOldClient'
                }
             ],
@@ -54,6 +76,7 @@
       },
       methods: {
          nextComponent(data) {
+             console.log("data", data);
             this.component = data.component;
             this.breadcrumbs.push(data);
          },
