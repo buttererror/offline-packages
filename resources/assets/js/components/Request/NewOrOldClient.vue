@@ -1,29 +1,34 @@
 
 <i18n>
     {
-    "ar":{
-    "client": {
-    "add": "اضافة عميل جديد",
-    "choose":"اختار العميل",
-    "newData":"اضافة بيانات عميل جديد",
-    "search":"بحث العملاء",
-    "here":"هنا"
+        "ar":{
+            "client": {
+                "add": "اضافة عميل جديد",
+                "choose":"اختار العميل",
+                "newData":"اضافة بيانات عميل جديد",
+                "search":"بحث العملاء",
+                "here":"هنا"
 
-    },
-    "next":"التالى"
+            },
+            "next":"التالى",
+            "class": {
+                "footerDir": "text-left"
+            }
+        },
 
-    },
-
-    "en": {
-    "client": {
-    "add": "Add new Client",
-    "choose":"Choose Client",
-    "newData":"Add new Client Data",
-    "search":"Search Clients",
-    "here":"here"
-    },
-    "next":"next"
-    }
+        "en": {
+            "client": {
+                "add": "Add new Client",
+                "choose":"Choose Client",
+                "newData":"Add new Client Data",
+                "search":"Search Clients",
+                "here":"here"
+            },
+            "next":"next",
+            "class": {
+                "footerDir": "text-right"
+            }
+        }
     }
 </i18n>
 
@@ -74,8 +79,8 @@
                 </div>
             </div>
 
-            <div class="card-footer">
-                <button class="btn btn-primary " @click.prevent="nextComponent(client)"
+            <div class="card-footer" :class="$t('class.footerDir')">
+                <button class="btn btn-primary" @click.prevent="nextComponent(client)"
                         :class="{'disabled': disableSaveBtn}"
                 >{{$t("next")}}
                 </button>

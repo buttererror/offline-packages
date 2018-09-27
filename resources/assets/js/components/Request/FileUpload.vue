@@ -1,6 +1,20 @@
+<i18n>
+    {
+        "ar":{
+            "label": "اختار صورة"
+        },
+        "en":{
+            "label": "select a photo"
+        }
+    }
+
+</i18n>
+
 <template>
     <div>
-        <file-upload :url='url' :thumb-url='thumbUrl' @change="onFileChange"></file-upload>
+        <file-upload :url='url' :thumb-url='thumbUrl' @change="onFileChange" :btnLabel="$t('label')">
+
+        </file-upload>
         <input type="hidden" name="file_id" :value="file_id"/>
     </div>
 </template>

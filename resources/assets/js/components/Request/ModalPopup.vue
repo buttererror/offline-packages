@@ -15,11 +15,11 @@
             "validations":{
                 "addName":"من فضلك ادخل الاسم",
                 "nameChar":"مسموح فقط بالحروف العربية والانجليزية",
-                "mobileExists":"الرقم موجود مسبقا بالفعل",
+                "mobileExists":"الرقم موجود مسبقا",
                 "mobileCount":"عدد الارقام يجب ان يكون من 3 ل 20 رقم",
                 "mobileNumbers":"مسموح بالارقام فقط",
                 "mobileEmpty":"من فضلك ضع رقم التليفون",
-                "chooseGender":"ن فضلك اختار النوع",
+                "chooseGender":"من فضلك اختار النوع",
                 "addCountry":"من فضلك اختار المدينة",
                 "addCity":"من فضلك اختار المدينة",
                 "nationality":"من فضلك اختار الجنسية",
@@ -33,20 +33,28 @@
             "save":"حفظ",
             "cancel":"الغاء",
             "addBirthDate":"ضع تاريخ ميلادك",
-            "datePickerLang":"ar"
+            "datePickerLang":"ar",
+            "class":{
+                "labelDir":"text-right",
+                "buttonDir":"text-left"
+            },
+            "attribute":{
+                "dir":"rtl",
+                "buttonDir":"ltr"
+            }
         },
 
         "en": {
             "client": {
-                "add": "Add New Client",
-                "name": "name",
-                "telephone":"telephone",
-                "email":"email",
-                "gender":"gender",
-                "country":"Accomodation Country",
-                "city":"city",
+                "add": "Add a New Client",
+                "name": "Name",
+                "telephone":"Mobile",
+                "email":"Email",
+                "gender":"Gender",
+                "country":"Accommodation Country",
+                "city":"City",
                 "nationality":"Nationality",
-                "birthDate":"birthDate"
+                "birthDate":"BirthDate"
             },
             "validations":{
                 "addName":"Please Add Name",
@@ -62,14 +70,22 @@
                 "email":"please enter valid email",
                 "emailExists":"Email already exists"
             },
-            "next":"next",
-            "male":"male",
-            "female":"female",
+            "next":"Next",
+            "male":"Male",
+            "female":"Female",
             "noResults":"No Results",
-            "save":"save",
-            "cancel":"cancel",
+            "save":"Save",
+            "cancel":"Cancel",
             "addBirthDate":"Add your BirthDate",
-            "datePickerLang":"en"
+            "datePickerLang":"en",
+            "class":{
+                "labelDir":"text-left",
+                "buttonDir":"text-right"
+            },
+            "attribute":{
+                "dir":"ltr",
+                "buttonDir":"rtl"
+            }
         }
     }
 </i18n>
@@ -86,9 +102,10 @@
         <h5 slot="modal-title">
             {{ $t("client.add") }}
         </h5>
-        <div class="form-group row">
+        <div class="form-group row" :dir="$t('attribute.dir')">
 
-            <div class="col-6 offset-3">
+            <label class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.name')}} *</label>
+            <div class="col-6">
                 <input type="text"
                        dir="rtl" v-model.trim="clientData.name" class="form-control"
                        @input="validateName" @blur="validateName"
@@ -99,11 +116,11 @@
                 </div>
             </div>
 
-            <label class="col-form-label col-3 text-left">{{$t('client.name')}} *</label>
         </div>
 
-        <div class="form-group row">
-            <div class="col-6 offset-3">
+        <div class="form-group row" :dir="$t('attribute.dir')">
+            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.telephone')}} *</div>
+            <div class="col-6">
                 <input class="form-control" @input="validateMobile" @blur="validateMobile"
                        v-model.trim="clientData.mobile"
                        v-bind:class="{'is-invalid': validation.mobile.state === 'invalid',
@@ -112,11 +129,11 @@
                     {{validation.mobile.errorMessage}}
                 </div>
             </div>
-            <div class="col-form-label col-3 text-right">{{$t('client.telephone')}}</div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-6 offset-3">
+        <div class="form-group row" :dir="$t('attribute.dir')">
+            <div class="col-form-label col-3 text-nowrap" :class="$t('class.labelDir')">{{$t('client.email')}}</div>
+            <div class="col-6">
                 <input class="form-control" v-model="clientData.email"
                        @keyup.enter="validateEmail" @input="validateEmail" @blur="validateEmail"
                        v-bind:class="{'is-invalid': validation.email.state === 'invalid',
@@ -125,12 +142,12 @@
                     {{validation.email.errorMessage}}
                 </div>
             </div>
-            <div class="col-form-label col-3 text-right text-nowrap">{{$t('client.email')}}</div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-6 offset-3">
-                <select class="form-control" dir="rtl" v-model="clientData.gender"
+        <div class="form-group row" :dir="$t('attribute.dir')">
+            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.gender')}} *</div>
+            <div class="col-6">
+                <select class="form-control" :dir="$t('attribute.dir')" v-model="clientData.gender"
                         @blur="validateGender" @change="validateGender"
                         v-bind:class="{'is-invalid': validation.gender.state === 'invalid',
                         'is-valid': validation.gender.state === 'valid'}">
@@ -141,11 +158,11 @@
                     {{validation.gender.errorMessage}}
                 </div>
             </div>
-            <div class="col-form-label col-3 text-right">{{$t('client.gender')}} *</div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-6 offset-3">
+        <div class="form-group row" :dir="$t('attribute.dir')">
+            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.country')}} *</div>
+            <div class="col-6">
                 <multiselect v-model="country" :options="countries"
                              id="country"
                              label="en_short_name"
@@ -167,11 +184,11 @@
                 </div>
 
             </div>
-            <div class="col-form-label col-3 text-right">{{$t('client.country')}}</div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-6 offset-3">
+        <div class="form-group row" :dir="$t('attribute.dir')">
+            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.city')}} *</div>
+            <div class="col-6">
                 <multiselect
                     v-model="city" :options="cities" tagPosition="bottom"
                     placeholder="" label="name" selectLabel="" :tabIndex="0"
@@ -191,10 +208,10 @@
                 </div>
 
             </div>
-            <div class="col-form-label col-3 text-right">{{$t('client.city')}}</div>
         </div>
-        <div class="form-group row">
-            <div class="col-6 offset-3">
+        <div class="form-group row" :dir="$t('attribute.dir')">
+            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.nationality')}} *</div>
+            <div class="col-6">
                 <multiselect
                     v-model="nationality" :options="countries" tagPosition="bottom"
                     label="nationality"
@@ -215,11 +232,11 @@
                 </div>
 
             </div>
-            <div class="col-form-label col-3 text-right">* {{$t('client.nationality')}}</div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-6 offset-3">
+        <div class="form-group row" :dir="$t('attribute.dir')">
+            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.birthDate')}}</div>
+            <div class="col-6">
                 <datepicker :placeholder="$t('addBirthDate')" class="text-right"
                             v-model="clientData.birthDate"
                             :bootstrap-styling="true"
@@ -228,7 +245,6 @@
 
                 ></datepicker>
             </div>
-            <div class="col-form-label col-3 text-right">{{$t('client.birthDate')}}</div>
         </div>
 
         <div class="form-group row">
@@ -238,12 +254,14 @@
         </div>
 
 
-        <div slot="modal-footer" class="w-100">
-            <button class="btn btn-primary pull-left" @click="saveData"
+        <div slot="modal-footer" class="w-100" :class="$t('class.buttonDir')"
+             :dir="$t('attribute.buttonDir')"
+        >
+            <button class="btn btn-primary" @click="saveData"
                     :class="{'disabled': disableSaveBtn}">
                 {{$t('save')}}
             </button>
-            <button @click="cancel" class="btn btn-danger pull-left">{{$t('cancel')}}</button>
+            <button @click="cancel" class="btn btn-danger">{{$t('cancel')}}</button>
         </div>
     </b-modal>
 </template>

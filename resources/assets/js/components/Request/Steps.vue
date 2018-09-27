@@ -6,7 +6,8 @@
    "serviceSelection":"اختيار الخدمة",
    "packageDetails":"تفاصيل البتاعة",
    "destinationDetails":"تفاصيل الاماكن",
-   "finalize":""
+   "finalize":"انهاء",
+    "dir":"rtl"
    },
 
    "en": {
@@ -14,7 +15,8 @@
    "serviceSelection":"Service Selection",
    "packageDetails":"Package Details",
    "destinationDetails":"Destination Details",
-   "finalize":"Finalize"
+   "finalize":"Finalize",
+    "dir":"ltr"
 
    }
    }
@@ -23,7 +25,7 @@
 <template>
    <div>
       <nav aria-label="breadcrumb">
-         <ol class="breadcrumb">
+         <ol class="breadcrumb" :dir="$t('dir')">
             <li v-for="(crumb, order) in breadcrumbs" class="breadcrumb-item"
                 aria-current="page" :class="{active: breadcrumbs.length -1 === order}">
                <span v-if="breadcrumbs.length -1 === order">{{$t(crumb.step)}}</span>

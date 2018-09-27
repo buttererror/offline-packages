@@ -1,42 +1,29 @@
 <i18n>
     {
 
-    "ar":{
-    "next":"التالى",
-    "back":"السابق",
-    "male":"ذكر",
-    "female":"مؤنث",
-    "noResults":"لايوجد نتائج",
-    "save":"حفظ",
-    "cancel":"الغاء",
-    "addBirthDate":"ضع تاريخ ميلادك",
-    "hotelPickerLang":"ar",
-    "yes":"نعم",
-    "no":"لا",
-    "destination":"مكان",
-    "destinations_details":"تفاصيل الاماكن",
-    "nextcity":"المدينه القادمة",
-    "prevcity":"المدينة السابقة"
+        "ar":{
+            "back":"السابق",
+            "package": "باقة",
+            "accommodation":"إقامة",
+            "transfer":"انتقالات",
+            "tours":"رحلات",
+            "serviceSelection":"اختيار الخدمة",
+            "class": {
+                "footerDir":""
+            }
     },
 
-    "en": {
-
-    "next":"Next",
-    "back":"Back",
-    "male":"male",
-    "female":"female",
-    "noResults":"No Results",
-    "save":"save",
-    "cancel":"cancel",
-    "addBirthDate":"Add your BirthDate",
-    "hotelPickerLang":"en",
-    "yes":"yes",
-    "no":"no",
-    "destination":"Destination",
-    "destinations_details":"Destinations Details",
-    "nextcity":"Next City",
-    "prevcity":"Previous City"
-    }
+        "en": {
+            "back":"Back",
+            "package": "PACKAGE",
+            "accommodation":"ACCOMMODATION",
+            "transfer":"TRANSFER",
+            "tours":"TOURS",
+            "serviceSelection":"Service Selection",
+            "class": {
+                "footerDir":""
+            }
+        }
     }
 </i18n>
 
@@ -45,25 +32,25 @@
 <template>
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h4 class="card-title text-center">Service Selection</h4>
+            <h4 class="card-title text-center">{{$t("serviceSelection")}}</h4>
         </div>
         <div class="card-body text-white">
             <div class="d-flex flex-column justify-content-around" style="height: 50vh;">
                 <div class="d-flex justify-content-around">
                     <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height"
                          @click.prevent="nextComponent">
-                        <h5 class="text-center">PACKAGE</h5>
+                        <h5 class="text-center">{{$t("package")}}</h5>
                     </div>
                     <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height">
-                        <h5 class="text-center text-uppercase">Accomodation</h5>
+                        <h5 class="text-center text-uppercase">{{$t("accommodation")}}</h5>
                     </div>
                 </div>
                 <div class="d-flex justify-content-around">
                     <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height">
-                        <h5 class="text-center text-uppercase">Transfer</h5>
+                        <h5 class="text-center text-uppercase">{{$t("transfer")}}</h5>
                     </div>
                     <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height">
-                        <h5 class="text-center text-uppercase">Tours</h5>
+                        <h5 class="text-center text-uppercase">{{$t("tours")}}</h5>
                     </div>
                 </div>
             </div>
