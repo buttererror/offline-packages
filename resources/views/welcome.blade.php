@@ -83,8 +83,8 @@
         </div>
         @auth
             <div class="links">
-                <a href="{{ url('/home/en') }}">English </a>
-                <a href="{{ url('/home/ar') }}">اللغة العربية</a>
+                <a href="{{ url('/set_locale/en') }}">English </a>
+                <a href="{{ url('/set_locale/ar') }}">اللغة العربية</a>
 
             </div>
         @endauth
