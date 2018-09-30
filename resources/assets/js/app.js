@@ -84,7 +84,6 @@ const app = new Vue({
     }
 });
 
-
 window.packageDetails = {};
 
 

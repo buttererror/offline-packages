@@ -354,9 +354,6 @@
             bus.$on("next-destination", () => {
                 bus.$emit(`destination-details-${this.destinationNumber}`, this.hotelDetails);
             });
-            bus.$on("package-completed", () => {
-                // axios
-            });
         },
         watch: {
             accomType() {
@@ -581,6 +578,7 @@
                 this.hotelDetails.selectedRoomView = '';
                 this.hotelDetails.selectedStars = '';
                 this.hotelDetails.hotelName = '';
+                this.editRoomsData();
                 if (this.accomType === 'Apartment' || this.accomType === 'Hotel') {
                     this.hotelDetails.area = '';
                 }

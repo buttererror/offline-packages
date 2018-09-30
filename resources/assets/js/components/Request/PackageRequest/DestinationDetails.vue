@@ -308,6 +308,9 @@
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
             });
+            bus.$on("next-destination", () => {
+                window.packageDetails.destinationsDetails.push(this.destinationDetails);
+            });
             bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
                 // console.log("hotelComponent validation", validation);
                 this.validation.accommodationDetailsValidation = validation;
@@ -335,6 +338,7 @@
                 this.destinationDetails.checkOutDate = checkOut;
                 this.validateCheckOutDate();
                 this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
+                console.log("this.destinationDetails", this.destinationDetails);
 
             },
             setArentedCar(car) {

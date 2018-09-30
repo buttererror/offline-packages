@@ -4,7 +4,7 @@
    "ar":{
    "searchClients":"بحث العملاء",
    "serviceSelection":"اختيار الخدمة",
-   "packageDetails":"تفاصيل البتاعة",
+   "packageDetails":"تفاصيل الباقة",
    "destinationDetails":"تفاصيل الاماكن",
    "finalize":"انهاء",
     "dir":"rtl"

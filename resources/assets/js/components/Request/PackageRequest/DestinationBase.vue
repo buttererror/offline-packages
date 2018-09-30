@@ -116,7 +116,7 @@
                 cities: [],
                 selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
                 placesNum: Number(window.packageDetails.packageMainDetails.placesNum),
-                destinationsDetails: window.packageDetails.destinationsDetails,
+                destinationsDetails: [],
                 date: new Date(),
                 destinationsValidation: [],
                 activateNextBtn: false,
@@ -124,9 +124,10 @@
             }
         },
         mounted() {
+            window.packageDetails.destinationsDetails = [];
             bus.$on(`per-destination-validation`, (destinationValidation) => {
-                console.log("per destination validation", destinationValidation);
-                console.log("index", this.cityNumber -1);
+                // console.log("per destination validation", destinationValidation);
+                // console.log("index", this.cityNumber -1);
                 this.destinationsValidation[this.cityNumber - 1] = destinationValidation;
             });
             bus.$on('go-back', (component) => {
@@ -134,9 +135,11 @@
             });
             bus.$on("any-input", () => {
                 this.activateNxtBtn();
-                console.log("destinations Validation", this.destinationsValidation);
+                // console.log("destinations Validation", this.destinationsValidation);
             });
-            window.packageDetails.destinationsDetails = [];
+            // bus.$on("collect-destinations", (destinationDetails) => {
+            //
+            // });
             let selectedCountriesIds = [];
             this.selectedCountries.forEach(function (element) {
                 selectedCountriesIds.push(element.id)
@@ -149,9 +152,11 @@
             nextDestination() {
                 bus.$emit(`destination-details-${this.cityNumber}`);
                 this.cityNumber++;
+                bus.$emit("next-destination");
             },
             previousDestination() {
                 this.cityNumber--;
+                bus.$emit("previous-destination");
                 bus.$emit(`destination-details-${this.cityNumber}`);
             },
             nextComponent() {
@@ -161,7 +166,7 @@
                         step: 'finalize'
                     });
 
-                    console.log("DestinationsDetails", this.destinationsDetails);
+                    console.log("package", window.packageDetails);
                 }
             },
             previousComponent() {
