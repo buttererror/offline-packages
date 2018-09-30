@@ -101,7 +101,7 @@
                                      v-model="hotelDetails.roomsNum"
                                      :options="adultsRange"
                                      :multiple="false"
-                                     @input="update()"
+                                     @input="putRoomsNum()"
                                      :disabled="disableRoomNum"
                         ></multiselect>
                     </div>
@@ -369,7 +369,7 @@
                     this.childrenOptions.push({age: `child -${this.childrenAges[i]} years`, id: i})
                 }
             },
-            update() {
+            putRoomsNum() {
                 // console.log("updating rooms number");
                 for (let i = 0; i < this.hotelDetails.roomsNum; i++) {
                     this.sortAdults.push([]);
@@ -409,6 +409,7 @@
                 this.adultsNumberChosen += this.hotelDetails.selectedAdultsNum[index];
                 this.fillRoom(index + 1);
                 this.validateAdultsNum();
+                this.processValidationBeforeSend();
                 this.sendValidationToDestination();
             },
             validateAdultsNum() {
@@ -532,6 +533,7 @@
                 this.childrenOptions.splice(this.childrenOptions.indexOf(value), 1);
                 this.childrenNumberChosen++;
                 this.validateChildrenNum();
+                this.processValidationBeforeSend();
                 this.sendValidationToDestination();
                 // console.log("childrenChosen", this.childrenNumberChosen);
 
@@ -541,6 +543,7 @@
                 this.childrenOptions.push(option);
                 this.childrenNumberChosen--;
                 this.validateChildrenNum();
+                this.processValidationBeforeSend();
                 this.sendValidationToDestination();
                 // console.log("childrenChosen", this.childrenNumberChosen);
             },
@@ -578,10 +581,10 @@
                 this.hotelDetails.selectedRoomView = '';
                 this.hotelDetails.selectedStars = '';
                 this.hotelDetails.hotelName = '';
-                this.editRoomsData();
                 if (this.accomType === 'Apartment' || this.accomType === 'Hotel') {
                     this.hotelDetails.area = '';
                 }
+                this.editRoomsData();
             }
         }
 

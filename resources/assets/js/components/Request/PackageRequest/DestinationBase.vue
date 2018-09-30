@@ -150,14 +150,14 @@
         },
         methods: {
             nextDestination() {
-                bus.$emit(`destination-details-${this.cityNumber}`);
+                // bus.$emit(`destination-details-${this.cityNumber}`);
                 this.cityNumber++;
                 bus.$emit("next-destination");
             },
             previousDestination() {
                 this.cityNumber--;
                 bus.$emit("previous-destination");
-                bus.$emit(`destination-details-${this.cityNumber}`);
+                // bus.$emit(`destination-details-${this.cityNumber}`);
             },
             nextComponent() {
                 if(this.activateNextBtn){
