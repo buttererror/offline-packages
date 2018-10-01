@@ -8,9 +8,7 @@
             "transfer":"انتقالات",
             "tours":"رحلات",
             "serviceSelection":"اختيار الخدمة",
-            "class": {
-                "footerDir":""
-            }
+            "dir": "rtl"
     },
 
         "en": {
@@ -20,9 +18,7 @@
             "transfer":"TRANSFER",
             "tours":"TOURS",
             "serviceSelection":"Service Selection",
-            "class": {
-                "footerDir":""
-            }
+            "dir":"ltr"
         }
     }
 </i18n>
@@ -30,7 +26,7 @@
 
 
 <template>
-    <div class="card">
+    <div class="card" :dir="$t('dir')">
         <div class="card-header bg-primary text-white">
             <h4 class="card-title text-center">{{$t("serviceSelection")}}</h4>
         </div>
