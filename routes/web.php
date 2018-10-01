@@ -13,3 +13,14 @@ Route::get('countries','CountriesController@index')->name('show.countries');
 Route::post('package','PackageController@store')->name('store.package');
 Route::get('cities','PackageController@showCities')->name('showcities.package');
 Route::get('show/translations','HomeController@getTranslations');
+Route::group([
+    'prefix' => 'auth'
+], function () {
+
+    Route::post('login', 'AuthenticateController@login');
+    Route::post('logout', 'AuthenticateController@logout')->name('logout');
+    Route::post('refresh', 'AuthenticateController@refresh');
+    Route::post('me', 'AuthenticateController@me');
+
+});
+

@@ -77,9 +77,8 @@
                                             <template slot="button-content">
                                                 <em>{{Auth::user()->name}}</em>
                                             </template>
-                                            <b-dropdown-item href="{{route('logout')}}"
-                                                             onclick="event.preventDefault();
-                                                             document.getElementById('logout-form').submit();"
+                                            <b-dropdown-item  @click="logoutUser();"
+
                                             > Signout
 
                                             </b-dropdown-item>
