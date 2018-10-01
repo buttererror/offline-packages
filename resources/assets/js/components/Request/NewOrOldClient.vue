@@ -47,7 +47,8 @@
 
                 </h2>
                 <div class="row mt-4">
-                    <div class="col-6 offset-3">
+                    <div class="offset-3"></div>
+                    <div class="col-6">
 
                         <multiselect v-model="client" :options="clients" label="name"
                                      tagPosition="bottom" openDirection="bottom"
@@ -98,7 +99,7 @@
             Multiselect
         },
         mounted() {
-            document.getElementById("select_input").autofocus = true;
+            // document.getElementById("select_input").autofocus = true;
             let $selectBtn = document.getElementsByClassName("multiselect__select")[0];
             document.getElementsByClassName("multiselect")[0].removeChild($selectBtn);
             document.getElementsByClassName("multiselect__tags")[0].classList.add("select_tags");

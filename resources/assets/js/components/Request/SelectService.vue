@@ -8,7 +8,8 @@
             "transfer":"انتقالات",
             "tours":"رحلات",
             "serviceSelection":"اختيار الخدمة",
-            "dir": "rtl"
+            "dir": "rtl",
+            "buttonDir": "text-right"
     },
 
         "en": {
@@ -18,7 +19,8 @@
             "transfer":"TRANSFER",
             "tours":"TOURS",
             "serviceSelection":"Service Selection",
-            "dir":"ltr"
+            "dir":"ltr",
+            "buttonDir": "text-left"
         }
     }
 </i18n>
@@ -38,20 +40,20 @@
                         <h5 class="text-center">{{$t("package")}}</h5>
                     </div>
                     <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height">
-                        <h5 class="text-center text-uppercase">{{$t("accommodation")}}</h5>
+                        <h5 class="text-center text-nowrap">{{$t("accommodation")}}</h5>
                     </div>
                 </div>
                 <div class="d-flex justify-content-around">
                     <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height">
-                        <h5 class="text-center text-uppercase">{{$t("transfer")}}</h5>
+                        <h5 class="text-center">{{$t("transfer")}}</h5>
                     </div>
                     <div class="col-3 bg-secondary d-flex flex-column justify-content-center pointer box-height">
-                        <h5 class="text-center text-uppercase">{{$t("tours")}}</h5>
+                        <h5 class="text-center">{{$t("tours")}}</h5>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card-footer text-right">
+        <div class="card-footer" :class="$t('buttonDir')">
             <button class="btn btn-primary" @click.prevent="previousComponent">{{$t('back')}}</button>
         </div>
     </div>

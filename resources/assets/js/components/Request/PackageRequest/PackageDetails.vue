@@ -4,7 +4,7 @@
     "ar":{
         "packageDetails":{
         "startPlace":"مكان البداية",
-        "startEndJourney":"بداية ونهاية الرحلة",
+        "startEndJourney":"بداية الرحلة",
         "countries":"البلاد",
         "placesNum":"عدد المدن",
         "transfer":"الانتقالات",
@@ -14,9 +14,7 @@
         "childAge":"عمر الطفل"
 
     },
-    "validations":{
-
-    },
+    "header":"تفاصيل الباقة",
     "next":"التالى",
     "back":"السابق",
     "male":"ذكر",
@@ -28,13 +26,15 @@
     "hotelPickerLang":"ar",
     "yes":"نعم",
     "no":"لا",
-    "destinationDetails":"تفاصيل الاماكن"
+    "destinationDetails":"تفاصيل الاماكن",
+    "labelDir":"ltr",
+    "labelClass":"text-right"
     },
 
     "en": {
     "packageDetails":{
     "startPlace":"Start Place",
-    "startEndJourney":"Start and End of Journey",
+    "startEndJourney":"Start of Journey",
     "countries":"Countries",
     "placesNum":"Number of Cities",
     "transfer":"Transfer",
@@ -43,9 +43,7 @@
     "childrenMaxNum":"Children maximum number",
     "childAge":"Child Age"
     },
-    "validations":{
-
-    },
+    "header":"Package Details",
     "next":"Next",
     "back":"Back",
     "male":"male",
@@ -57,8 +55,9 @@
     "hotelPickerLang":"en",
     "yes":"yes",
     "no":"no",
-    "destinationDetails":"Destination Details"
-
+    "destinationDetails":"Destination Details",
+    "labelDir":"rtl",
+    "labelClass":"text-left"
     }
     }
 </i18n>
@@ -68,32 +67,40 @@
     <div id="detailsContainer">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h4 class="card-title text-center">Package Details</h4>
+                <h4 class="card-title text-center">{{$t('header')}}</h4>
             </div>
             <div class="card-body">
                 <div class="form-group row">
-                    <div class="col-6 offset-3">
+                    <label class="col-form-label col-form-label-lg col-3"
+                           :class="$t('labelClass')"
+                    >{{$t('packageDetails.startPlace')}}</label>
+                    <div class="col-6">
                         <input type="text" :placeholder="$t('packageDetails.startPlace')"
                                v-model="packageMainDetails.startPlace"
                                @input="validateStartPlace"
-                               style="text-align: right" class="form-control"/>
+                               class="form-control"/>
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.startPlace')}}</label>
                 </div>
                 <div class="form-group row">
-                    <div class="col-6 offset-3">
+                    <label class="col-form-label col-form-label-lg col-3"
+                           :class="$t('labelClass')"
+                    >{{$t('packageDetails.startEndJourney')}}</label>
+                    <div class="col-6">
                         <datepicker @input="validateTripStartAt"
                                     v-model="updatedDate"
                                     :bootstrap-styling="true"
-                                    calendar-class="h5 w-100"
+                                    calendar-class="h5 w-100">
 
-                        ></datepicker>
+
+                        </datepicker>
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.startEndJourney')}}</label>
                 </div>
 
                 <div class="row form-group">
-                    <div class="col-6 offset-3">
+                    <label class="col-form-label col-form-label-lg col-3"
+                           :class="$t('labelClass')"
+                    >{{$t('packageDetails.countries')}}</label>
+                    <div class="col-6">
                         <multiselect
                                 v-model="packageMainDetails.selectedCountries"
                                 :placeholder="$t('packageDetails.countries')"
@@ -110,23 +117,26 @@
 
                         ></multiselect>
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.countries')}}</label>
                 </div>
 
                 <div class="form-group row">
-                    <div class="col-6 offset-3">
+                    <label class="col-form-label col-form-label-lg col-3"
+                           :class="$t('labelClass')"
+                    >{{$t('packageDetails.placesNum')}}</label>
+                    <div class="col-6">
                         <input type="number" :placeholder="$t('packageDetails.placesNum')" min="0"
-                               style="text-align: right"
-                               class="form-control"
+                                   class="form-control"
                                v-model="packageMainDetails.placesNum"
                                @input="validatePlacesNum"
                         />
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.placesNum')}}</label>
                 </div>
 
                 <div class="form-group row">
-                    <div class="col-3 offset-6 text-right">
+                    <label class="col-form-label col-form-label-lg col-3 text-nowrap"
+                           :class="$t('labelClass')"
+                    >{{$t('packageDetails.transfer')}}</label>
+                    <div class="col-6 text-center">
                         <toggle-button @change="setTransferRequest"
                                        v-model="packageMainDetails.transfer" :value="false"
                                        :sync="true"
@@ -136,42 +146,50 @@
                                        switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
                         />
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-nowrap text-right">{{$t('packageDetails.transfer')}}</label>
                 </div>
 
 
                 <div class="form-group row">
-                    <div class="col-3 d-flex align-items-center justify-content-end text-right
-                                    rounded"
-                         style="background-color: rgba(91,192,222, .8);"
-                         v-if="packageMainDetails.adultsNum">
-                        {{$t('packageDetails.childrenMaxNum')}} {{maxChildrenNum}}
-                    </div>
-                    <div v-else class="col-3"></div>
+                    <label class="col-form-label col-form-label-lg col-3"
+                           :class="$t('labelClass')"
+                    >{{$t('packageDetails.adultsNum')}}</label>
+                    <!--<div class="col-3 d-flex align-items-center justify-content-end text-right-->
+                                    <!--rounded"-->
+                         <!--style="background-color: rgba(91,192,222, .8);"-->
+                         <!--v-if="packageMainDetails.adultsNum">-->
+                        <!--{{$t('packageDetails.childrenMaxNum')}} {{maxChildrenNum}}-->
+                    <!--</div>-->
+                    <!--<div v-else class="col-3"></div>-->
                     <div class="col-6 d-flex align-items-center">
-                        <input type="number" :placeholder="$t('packageDetails.adultsNum')" style="text-align: right"
+                        <input type="number" :placeholder="$t('packageDetails.adultsNum')"
                                class="form-control"
                                v-model="packageMainDetails.adultsNum" min="1" @input="validateAdultsNum"/>
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.adultsNum')}}</label>
                 </div>
                 <div class="form-group row">
-                    <div class="col-6 offset-3 d-flex align-items-center">
+                    <label class="col-form-label col-form-label-lg col-3"
+                           :class="$t('labelClass')"
+                    >{{$t('packageDetails.childrenNum')}}</label>
+                    <div class="col-6 d-flex align-items-center">
                         <input type="number"
-                               :placeholder="$t('packageDetails.childrenNum')" style="text-align: right"
+                               :placeholder="$t('packageDetails.childrenNum')"
                                v-model="packageMainDetails.childrenNumber"
                                class="form-control" min="0"
                                @input="updateChildAge"
                         />
                     </div>
-                    <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.childrenNum')}}</label>
                 </div>
 
                 <div v-if="show">
 
                     <div v-for="(num, key) in packageMainDetails.childrenNumber">
                         <div class="form-group row">
-                            <div class="col-6 offset-3">
+                            <label class="col-form-label col-form-label-lg col-3"
+                                   :class="$t('labelClass')"
+                            >
+                                {{$t('packageDetails.childAge')}}
+                            </label>
+                            <div class="col-6">
                                 <multiselect :placeholder="$t('packageDetails.childAge')"
                                              v-model="packageMainDetails.childrenAges[key]"
                                              :options="staticChildrenAges"
@@ -181,15 +199,12 @@
 
                                 </multiselect>
                             </div>
-                            <div class="col-form-label col-form-label-lg col-3 text-right">
-                                {{$t('packageDetails.childAge')}}
-                            </div>
                         </div>
                     </div>
 
                 </div>
             </div>
-            <div class="card-footer d-flex justify-content-between">
+            <div class="card-footer d-flex justify-content-between" :dir="$t('labelDir')">
                 <button class="btn btn-primary" @click.prevent="nextComponent"
                         :class="{'disabled': !activateNextBtn}"
                 >{{$t('next')}}

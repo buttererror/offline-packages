@@ -39,7 +39,6 @@
                 "buttonDir":"text-left"
             },
             "attribute":{
-                "dir":"rtl",
                 "buttonDir":"ltr"
             }
         },
@@ -83,7 +82,6 @@
                 "buttonDir":"text-right"
             },
             "attribute":{
-                "dir":"ltr",
                 "buttonDir":"rtl"
             }
         }
@@ -102,66 +100,70 @@
         <h5 slot="modal-title">
             {{ $t("client.add") }}
         </h5>
-        <div class="form-group row" :dir="$t('attribute.dir')">
+        <div class="form-group row">
 
-            <label class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.name')}} *</label>
+            <label class="col-form-label col-form-label-lg col-3" :class="$t('class.labelDir')">{{$t('client.name')}} *</label>
             <div class="col-6">
                 <input type="text"
-                       dir="rtl" v-model.trim="clientData.name" class="form-control"
+                       v-model.trim="clientData.name" class="form-control"
                        @input="validateName" @blur="validateName"
                        v-bind:class="{'is-invalid': validation.name.state === 'invalid',
                        'is-valid': validation.name.state === 'valid'}">
-                <div class="invalid-feedback" v-if="validation.name.state === 'invalid'">
+                <div class="invalid-feedback" :class="$t('class.labelDir')"
+                     v-if="validation.name.state === 'invalid'">
                     {{validation.name.errorMessage}}
                 </div>
             </div>
 
         </div>
 
-        <div class="form-group row" :dir="$t('attribute.dir')">
-            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.telephone')}} *</div>
+        <div class="form-group row">
+            <label class="col-form-label col-form-label-lg col-3" :class="$t('class.labelDir')">{{$t('client.telephone')}} *</label>
             <div class="col-6">
                 <input class="form-control" @input="validateMobile" @blur="validateMobile"
                        v-model.trim="clientData.mobile"
                        v-bind:class="{'is-invalid': validation.mobile.state === 'invalid',
                         'is-valid': validation.mobile.state === 'valid'}">
-                <div class="invalid-feedback" v-if="validation.mobile.state === 'invalid'">
+                <div class="invalid-feedback" :class="$t('class.labelDir')"
+                     v-if="validation.mobile.state === 'invalid'">
                     {{validation.mobile.errorMessage}}
                 </div>
             </div>
         </div>
 
-        <div class="form-group row" :dir="$t('attribute.dir')">
-            <div class="col-form-label col-3 text-nowrap" :class="$t('class.labelDir')">{{$t('client.email')}}</div>
+        <div class="form-group row">
+            <div class="col-form-label col-form-label-lg col-3 text-nowrap" :class="$t('class.labelDir')">{{$t('client.email')}}</div>
             <div class="col-6">
                 <input class="form-control" v-model="clientData.email"
                        @keyup.enter="validateEmail" @input="validateEmail" @blur="validateEmail"
                        v-bind:class="{'is-invalid': validation.email.state === 'invalid',
                         'is-valid': validation.email.state === 'valid'}">
-                <div class="invalid-feedback" v-if="validation.email.state === 'invalid'">
+                <div class="invalid-feedback" :class="$t('class.labelDir')"
+                     v-if="validation.email.state === 'invalid'">
                     {{validation.email.errorMessage}}
                 </div>
             </div>
         </div>
 
-        <div class="form-group row" :dir="$t('attribute.dir')">
-            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.gender')}} *</div>
+        <div class="form-group row">
+            <label class="col-form-label col-form-label-lg col-3" :class="$t('class.labelDir')">{{$t('client.gender')}} *</label>
             <div class="col-6">
-                <select class="form-control" :dir="$t('attribute.dir')" v-model="clientData.gender"
+                <select class="form-control" v-model="clientData.gender"
                         @blur="validateGender" @change="validateGender"
                         v-bind:class="{'is-invalid': validation.gender.state === 'invalid',
                         'is-valid': validation.gender.state === 'valid'}">
                     <option value="male">{{$t('male')}}</option>
                     <option value="female">{{$t('female')}}</option>
                 </select>
-                <div class="invalid-feedback" v-if="validation.gender.state === 'invalid'">
+                <div class="invalid-feedback" :class="$t('class.labelDir')"
+                     v-if="validation.gender.state === 'invalid'">
                     {{validation.gender.errorMessage}}
                 </div>
             </div>
         </div>
 
-        <div class="form-group row" :dir="$t('attribute.dir')">
-            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.country')}} *</div>
+        <div class="form-group row">
+            <label class="col-form-label col-form-label-lg col-3" :class="$t('class.labelDir')">{{$t('client.country')}} *</label>
             <div class="col-6">
                 <multiselect v-model="country" :options="countries"
                              id="country"
@@ -179,15 +181,16 @@
                 >
                     <template slot="noResult">{{$t("noResults")}}</template>
                 </multiselect>
-                <div class="invalid-feedback d-block" v-if="validation.country.state === 'invalid'">
+                <div class="invalid-feedback d-block" :class="$t('class.labelDir')"
+                     v-if="validation.country.state === 'invalid'">
                     {{this.validation.country.errorMessage}}
                 </div>
 
             </div>
         </div>
 
-        <div class="form-group row" :dir="$t('attribute.dir')">
-            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.city')}} *</div>
+        <div class="form-group row">
+            <label class="col-form-label col-form-label-lg col-3" :class="$t('class.labelDir')">{{$t('client.city')}} *</label>
             <div class="col-6">
                 <multiselect
                     v-model="city" :options="cities" tagPosition="bottom"
@@ -203,14 +206,15 @@
                     <template slot="noResult">{{$t("noResults")}}</template>
 
                 </multiselect>
-                <div class="invalid-feedback d-block" v-if="validation.city.state === 'invalid'">
+                <div class="invalid-feedback d-block" :class="$t('class.labelDir')"
+                     v-if="validation.city.state === 'invalid'">
                     {{this.validation.city.errorMessage}}
                 </div>
 
             </div>
         </div>
-        <div class="form-group row" :dir="$t('attribute.dir')">
-            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.nationality')}} *</div>
+        <div class="form-group row">
+            <label class="col-form-label col-form-label-lg col-3" :class="$t('class.labelDir')">{{$t('client.nationality')}} *</label>
             <div class="col-6">
                 <multiselect
                     v-model="nationality" :options="countries" tagPosition="bottom"
@@ -227,15 +231,16 @@
                     <template slot="noResult">{{$t("noResults")}}</template>
 
                 </multiselect>
-                <div class="invalid-feedback d-block" v-if="validation.nationality.state === 'invalid'">
+                <div class="invalid-feedback d-block" :class="$t('class.labelDir')"
+                     v-if="validation.nationality.state === 'invalid'">
                     {{this.validation.nationality.errorMessage}}
                 </div>
 
             </div>
         </div>
 
-        <div class="form-group row" :dir="$t('attribute.dir')">
-            <div class="col-form-label col-3" :class="$t('class.labelDir')">{{$t('client.birthDate')}}</div>
+        <div class="form-group row">
+            <label class="col-form-label col-form-label-lg col-3" :class="$t('class.labelDir')">{{$t('client.birthDate')}}</label>
             <div class="col-6">
                 <datepicker :placeholder="$t('addBirthDate')" class="text-right"
                             v-model="clientData.birthDate"
@@ -248,7 +253,8 @@
         </div>
 
         <div class="form-group row">
-            <div class="col-6 offset-3">
+            <div class="offset-3"></div>
+            <div class="col-6">
                 <UploadFile></UploadFile>
             </div>
         </div>
