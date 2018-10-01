@@ -1,185 +1,192 @@
 <i18n>
-    {
+   {
 
-    "ar":{
-    "packageDetails":{
-    "startPlace":"مكان البداية",
-    "startEndJourney":"بداية ونهاية الرحلة",
-    "countries":"البلاد",
-    "placesNum":"عدد المدن",
-    "transfer":"الانتقالات",
-    "childrenNum":"عدد الاطفال",
-    "adultsNum":"عدد البالغين",
-    "childrenMaxNum":"اقصى عدد للاطفال",
-    "childAge":"عمر الطفل"
-    },
-    "next":"التالى",
-    "back":"السابق",
-    "male":"ذكر",
-    "female":"مؤنث",
-    "noResults":"لايوجد نتائج",
-    "save":"حفظ",
-    "cancel":"الغاء",
-    "addBirthDate":"ضع تاريخ ميلادك",
-    "hotelPickerLang":"ar",
-    "yes":"نعم",
-    "no":"لا",
-    "destination":"مكان",
-    "destinations_details":"تفاصيل الاماكن",
-    "nextcity":"المدينه القادمة",
-    "prevcity":"المدينة السابقة"
-    },
+   "ar":{
+   "packageDetails":{
+   "startPlace":"مكان البداية",
+   "startEndJourney":"بداية ونهاية الرحلة",
+   "countries":"البلاد",
+   "placesNum":"عدد المدن",
+   "transfer":"الانتقالات",
+   "childrenNum":"عدد الاطفال",
+   "adultsNum":"عدد البالغين",
+   "childrenMaxNum":"اقصى عدد للاطفال",
+   "childAge":"عمر الطفل"
+   },
+   "next":"التالى",
+   "back":"السابق",
+   "male":"ذكر",
+   "female":"مؤنث",
+   "noResults":"لايوجد نتائج",
+   "save":"حفظ",
+   "cancel":"الغاء",
+   "addBirthDate":"ضع تاريخ ميلادك",
+   "hotelPickerLang":"ar",
+   "yes":"نعم",
+   "no":"لا",
+   "destination":"مكان",
+   "destinations_details":"تفاصيل الاماكن",
+   "nextcity":"المدينه القادمة",
+   "prevcity":"المدينة السابقة"
+   },
 
-    "en": {
-    "packageDetails":{
-    "startPlace":"Start Place",
-    "startEndJourney":"Start and End of Journey",
-    "countries":"Countries",
-    "placesNum":"Number of Cities",
-    "transfer":"Transfer",
-    "childrenNum":"Children Number",
-    "adultsNum":"Adults Number",
-    "childrenMaxNum":"Children maximum number",
-    "childAge":"Child Age"
-    },
-    "next":"Next",
-    "back":"Back",
-    "male":"male",
-    "female":"female",
-    "noResults":"No Results",
-    "save":"save",
-    "cancel":"cancel",
-    "addBirthDate":"Add your BirthDate",
-    "hotelPickerLang":"en",
-    "yes":"yes",
-    "no":"no",
-    "destination":"Destination",
-    "destinations_details":"Destinations Details",
-    "nextcity":"Next City",
-    "prevcity":"Previous City"
-    }
-    }
+   "en": {
+   "packageDetails":{
+   "startPlace":"Start Place",
+   "startEndJourney":"Start and End of Journey",
+   "countries":"Countries",
+   "placesNum":"Number of Cities",
+   "transfer":"Transfer",
+   "childrenNum":"Children Number",
+   "adultsNum":"Adults Number",
+   "childrenMaxNum":"Children maximum number",
+   "childAge":"Child Age"
+   },
+   "next":"Next",
+   "back":"Back",
+   "male":"male",
+   "female":"female",
+   "noResults":"No Results",
+   "save":"save",
+   "cancel":"cancel",
+   "addBirthDate":"Add your BirthDate",
+   "hotelPickerLang":"en",
+   "yes":"yes",
+   "no":"no",
+   "destination":"Destination",
+   "destinations_details":"Destinations Details",
+   "nextcity":"Next City",
+   "prevcity":"Previous City"
+   }
+   }
 </i18n>
 
 
 <template>
-    <div id="destination_details">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h4 class="card-title text-center">{{$t('destinations_details')}}</h4>
-                <h5 class="card-subtitle text-center">{{$t('destination')}} #{{cityNumber}}</h5>
+   <div id="destination_details">
+      <div class="card">
+         <div class="card-header bg-primary text-white">
+            <h4 class="card-title text-center">{{$t('destinations_details')}}</h4>
+            <h5 class="card-subtitle text-center">{{$t('destination')}} #{{cityNumber}}</h5>
+         </div>
+         <div class="card-body">
+            <div v-for="destinationNumber in placesNum">
+               <keep-alive>
+                  <DestinationDetails v-if="destinationNumber === cityNumber"
+                                      :cityNumber="destinationNumber" :cities="cities"
+                  >
+                  </DestinationDetails>
+               </keep-alive>
             </div>
-            <div class="card-body">
-                <div v-for="destinationNumber in placesNum">
-                    <keep-alive>
-                        <DestinationDetails v-if="destinationNumber === cityNumber"
-                                            :cityNumber="destinationNumber" :cities="cities"
-                        >
-                        </DestinationDetails>
-                    </keep-alive>
-                </div>
-            </div>
+         </div>
 
-            <div class="text-center" style="user-select: none">
-                <a href="#" @click.prevent="nextDestination"
-                   class="btn btn-link btn-outline-primary m-4" :class="{
+         <div class="text-center" style="user-select: none">
+            <a href="#" @click.prevent="nextDestination"
+               class="btn btn-link btn-outline-primary m-4" :class="{
                'disabled': placesNum === cityNumber || placesNum === 1}"
-                >{{$t('nextcity')}}</a>
-                <a href="#" @click.prevent="previousDestination"
-                   class="btn btn-link btn-outline-primary m-4" :class="{
+            >{{$t('nextcity')}}</a>
+            <a href="#" @click.prevent="previousDestination"
+               class="btn btn-link btn-outline-primary m-4" :class="{
                'disabled': cityNumber === 1}"
-                >{{$t('prevcity')}}</a>
-            </div>
-            <div class="card-footer d-flex justify-content-between">
-                <button class="btn btn-primary" @click.prevent="nextComponent"
-                        :class="{'disabled': !activateNextBtn}"
-                >{{$t('next')}}</button>
-                <button class="btn btn-primary" @click.prevent="previousComponent">{{$t('back')}}</button>
-            </div>
-        </div>
-    </div>
+            >{{$t('prevcity')}}</a>
+         </div>
+         <div class="card-footer d-flex justify-content-between">
+            <button class="btn btn-primary" @click.prevent="nextComponent"
+                    :class="{'disabled': !activateNextBtn}"
+            >{{$t('next')}}
+            </button>
+            <button class="btn btn-primary" @click.prevent="previousComponent">{{$t('back')}}</button>
+         </div>
+      </div>
+   </div>
 </template>
 
 <script>
-    import DestinationDetails from "./DestinationDetails";
+   import DestinationDetails from "./DestinationDetails";
 
 
-    export default {
-        name: "DestinationBase",
-        props: ["data"],
-        components: {
-            DestinationDetails,
-        },
-        data() {
-            return {
-                cityNumber: 1,
-                cities: [],
-                selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
-                placesNum: Number(window.packageDetails.packageMainDetails.placesNum),
-                destinationsDetails: window.packageDetails.destinationsDetails,
-                date: new Date(),
-                destinationsValidation: [],
-                activateNextBtn: false,
-                updateListening: null
+   export default {
+      name: "DestinationBase",
+      props: ["data"],
+      components: {
+         DestinationDetails,
+      },
+      data() {
+         return {
+            cityNumber: 1,
+            cities: [],
+            selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
+            placesNum: Number(window.packageDetails.packageMainDetails.placesNum),
+            destinationsDetails: [],
+            date: new Date(),
+            destinationsValidation: [],
+            activateNextBtn: false,
+            updateListening: null
+         }
+      },
+      mounted() {
+         window.packageDetails.destinationsDetails = [];
+         bus.$on(`per-destination-validation`, (destinationValidation) => {
+            // console.log("per destination validation", destinationValidation);
+            // console.log("index", this.cityNumber -1);
+            this.destinationsValidation[this.cityNumber - 1] = destinationValidation;
+         });
+         bus.$on('go-back', (component) => {
+            this.$emit('selected-component', component);
+         });
+         bus.$on("any-input", () => {
+            this.activateNxtBtn();
+            // console.log("destinations Validation", this.destinationsValidation);
+         });
+         // bus.$on("collect-destinations", (destinationDetails) => {
+         //
+         // });
+         let selectedCountriesIds = [];
+         this.selectedCountries.forEach(function (element) {
+            selectedCountriesIds.push(element.id)
+         });
+         axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
+            this.cities = response.data.cities;
+         });
+      },
+      methods: {
+         nextDestination() {
+            bus.$emit(`next-destination-${this.cityNumber}`, this.cityNumber - 1);
+            // bus.$emit(`destination-details-${this.cityNumber}`);
+            this.cityNumber++;
+         },
+         previousDestination() {
+            bus.$emit(`previous-destination-${this.cityNumber}`, this.cityNumber - 1);
+            this.cityNumber--;
+            // bus.$emit(`destination-details-${this.cityNumber}`);
+         },
+         nextComponent() {
+            if (this.activateNextBtn) {
+               bus.$emit(`next-component-${this.cityNumber}`, this.cityNumber - 1);
+               this.$emit('next-component', {
+                  component: 'FinalNote',
+                  step: 'finalize'
+               });
+
+               console.log("package", window.packageDetails);
             }
-        },
-        mounted() {
-            bus.$on(`per-destination-validation`, (destinationValidation) => {
-                console.log("per destination validation", destinationValidation);
-                console.log("index", this.cityNumber -1);
-                this.destinationsValidation[this.cityNumber - 1] = destinationValidation;
-            });
-            bus.$on('go-back', (component) => {
-                this.$emit('selected-component', component);
-            });
-            bus.$on("any-input", () => {
-                this.activateNxtBtn();
-                console.log("destinations Validation", this.destinationsValidation);
-            });
-            window.packageDetails.destinationsDetails = [];
-            let selectedCountriesIds = [];
-            this.selectedCountries.forEach(function (element) {
-                selectedCountriesIds.push(element.id)
-            });
-            axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
-                this.cities = response.data.cities;
-            });
-        },
-        methods: {
-            nextDestination() {
-                bus.$emit(`destination-details-${this.cityNumber}`);
-                this.cityNumber++;
-            },
-            previousDestination() {
-                this.cityNumber--;
-                bus.$emit(`destination-details-${this.cityNumber}`);
-            },
-            nextComponent() {
-                if(this.activateNextBtn){
-                    this.$emit('next-component', {
-                        component: 'FinalNote',
-                        step: 'finalize'
-                    });
-
-                    console.log("DestinationsDetails", this.destinationsDetails);
-                }
-            },
-            previousComponent() {
-                this.$emit('previous-component', "PackageDetails");
-            },
-            activateNxtBtn() {
-                if(this.placesNum === this.destinationsValidation.length){
-                    for(let i = 0; i < this.destinationsValidation.length; i++){
-                        if(!this.destinationsValidation[i]){
-                            this.activateNextBtn = false;
-                            break;
-                        }
-                        this.activateNextBtn = true;
-                    }
-                }
+         },
+         previousComponent() {
+            this.$emit('previous-component', "PackageDetails");
+         },
+         activateNxtBtn() {
+            if (this.placesNum === this.destinationsValidation.length) {
+               for (let i = 0; i < this.destinationsValidation.length; i++) {
+                  if (!this.destinationsValidation[i]) {
+                     this.activateNextBtn = false;
+                     break;
+                  }
+                  this.activateNextBtn = true;
+               }
             }
-        }
-    }
+         }
+      }
+   }
 </script>
 
 <style scoped>

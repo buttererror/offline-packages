@@ -82,16 +82,12 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-6 offset-3">
-                        <HotelDatePicker @checkInChanged="getCheckInDate"
-                                         @checkOutChanged="getCheckOutDate"
-                                         :startDate="new Date()"
-                                         :minNights="1"
-                                         format="DD/MM/YYYY"
-                                         :i18n="hotelPickerLang"
-                        >
+                        <datepicker @input="validateTripStartAt"
+                                    v-model="updatedDate"
+                                    :bootstrap-styling="true"
+                                    calendar-class="h5 w-100"
 
-
-                        </HotelDatePicker>
+                        ></datepicker>
                     </div>
                     <label class="col-form-label col-form-label-lg col-3 text-right">{{$t('packageDetails.startEndJourney')}}</label>
                 </div>
@@ -184,10 +180,6 @@
                                 >
 
                                 </multiselect>
-                                <!--<input type="number" placeholder="عمر الطفل" min="1"-->
-                                <!--v-model="packageMainDetails.childrenAges[key]"-->
-                                <!--style="text-align: right"-->
-                                <!--class="form-control"/>-->
                             </div>
                             <div class="col-form-label col-form-label-lg col-3 text-right">
                                 {{$t('packageDetails.childAge')}}
@@ -239,10 +231,14 @@
                 activateNextBtn: false,
                 maxChildrenNum: null,
                 maxChildrenPerRoom: 4,
+                updatedDate: null,
+                disabledDates: {
+                    to: new Date()
+                },
                 validation: {
                     startPlace: false,
                     tripStartAt: false,
-                    tripEndAt: false,
+                    // tripEndAt: false,
                     selectedCountries: false,
                     adultsNum: false,
                     placesNum: false,
@@ -252,7 +248,7 @@
                 packageMainDetails: {
                     startPlace: '',
                     tripStartAt: null,
-                    tripEndAt: null,
+                    // tripEndAt: null,
                     selectedCountries: [],
                     placesNum: null,
                     transfer: false,
@@ -260,22 +256,22 @@
                     childrenNumber: 0,
                     childrenAges: [],
                 },
-                i18n_ar: {
-                    night: 'الليله',
-                    nights: 'الليالى',
-                    'day-names': ['الاحد', 'الاثنين', 'الثلاثاء', 'الاربعاء', 'الخميس', 'الجمعة', 'السبت'],
-                    'check-in': 'بداية الرحلة',
-                    'check-out': 'نهاية الرحلة',
-                    'month-names': ['يناير', 'فبراير', 'مارس', 'ابريل', 'مايو', 'يونيو', 'يوليو', 'اغسطس', 'سبتمبر', 'اكتوبر', 'نوفمبر', 'ديسمبر'],
-                },
-                i18n_en: {
-                    night: 'Night',
-                    nights: 'Nights',
-                    'day-names': ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
-                    'check-in': 'Check-in',
-                    'check-out': 'Check-Out',
-                    'month-names': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                }
+                // i18n_ar: {
+                //     night: 'الليله',
+                //     nights: 'الليالى',
+                //     'day-names': ['الاحد', 'الاثنين', 'الثلاثاء', 'الاربعاء', 'الخميس', 'الجمعة', 'السبت'],
+                //     'check-in': 'بداية الرحلة',
+                //     'check-out': 'نهاية الرحلة',
+                //     'month-names': ['يناير', 'فبراير', 'مارس', 'ابريل', 'مايو', 'يونيو', 'يوليو', 'اغسطس', 'سبتمبر', 'اكتوبر', 'نوفمبر', 'ديسمبر'],
+                // },
+                // i18n_en: {
+                //     night: 'Night',
+                //     nights: 'Nights',
+                //     'day-names': ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+                //     'check-in': 'Check-in',
+                //     'check-out': 'Check-Out',
+                //     'month-names': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                // }
             }
         }
         ,
@@ -301,7 +297,7 @@
                 if (this.packageMainDetails.startPlace) {
                     this.validation.startPlace = true;
                 } else this.validation.startPlace = false;
-                console.log(this.validation.startPlace);
+                // console.log(this.validation.startPlace);
                 this.activateNxtBtn();
 
             },
@@ -321,16 +317,16 @@
 
             },
             validatePlacesNum() {
-                console.log(this.packageMainDetails.placesNum);
+                // console.log(this.packageMainDetails.placesNum);
                 if (Number(this.packageMainDetails.placesNum)) {
                     this.validation.placesNum = true;
                 } else this.validation.placesNum = false;
                 this.activateNxtBtn();
             },
             validateChildrenAge() {
-                console.log("validating children ages");
-                console.log("childrenNumber", this.packageMainDetails.childrenNumber);
-                console.log("childrenAges", this.packageMainDetails.childrenAges);
+                // console.log("validating children ages");
+                // console.log("childrenNumber", this.packageMainDetails.childrenNumber);
+                // console.log("childrenAges", this.packageMainDetails.childrenAges);
                 if (this.packageMainDetails.childrenNumber === this.packageMainDetails.childrenAges.length) {
                     for (let i = 0; i < this.packageMainDetails.childrenAges.length; i++) {
                         if (!this.packageMainDetails.childrenAges[i]) {
@@ -372,24 +368,28 @@
             setTransferRequest(transfer) {
                 this.packageMainDetails.transfer = transfer.value;
             },
-            getCheckInDate(checkIn) {
-                this.packageMainDetails.tripStartAt = checkIn;
-                if (this.packageMainDetails.tripStartAt) {
+            validateTripStartAt() {
+                if (this.updatedDate) {
                     this.validation.tripStartAt = true;
+                    // set the time to 0, fixing nightsNum
+                    let date = this.updatedDate.getDate();
+                    let month = this.updatedDate.getMonth();
+                    let year = this.updatedDate.getFullYear();
+                    this.packageMainDetails.tripStartAt = new Date(year, month, date, 0, 0, 0);
                 } else {
                     this.validation.tripStartAt = false;
                 }
                 this.activateNxtBtn();
             },
-            getCheckOutDate(checkOut) {
-                this.packageMainDetails.tripEndAt = checkOut;
-                if (this.packageMainDetails.tripStartAt) {
-                    this.validation.tripEndAt = true;
-                } else {
-                    this.validation.tripEndAt = false;
-                }
-                this.activateNxtBtn();
-            },
+            // getCheckOutDate(checkOut) {
+            //     this.packageMainDetails.tripEndAt = checkOut;
+            //     if (this.packageMainDetails.tripStartAt) {
+            //         this.validation.tripEndAt = true;
+            //     } else {
+            //         this.validation.tripEndAt = false;
+            //     }
+            //     this.activateNxtBtn();
+            // },
             nextComponent() {
                 if (this.activateNextBtn) {
                     window.packageDetails.packageMainDetails = this.packageMainDetails;

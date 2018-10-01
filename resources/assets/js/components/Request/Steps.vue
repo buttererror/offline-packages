@@ -4,10 +4,10 @@
    "ar":{
    "searchClients":"بحث العملاء",
    "serviceSelection":"اختيار الخدمة",
-   "packageDetails":"تفاصيل البتاعة",
+   "packageDetails":"تفاصيل الباقة",
    "destinationDetails":"تفاصيل الاماكن",
    "finalize":"انهاء",
-    "dir":"rtl"
+   "dir":"rtl"
    },
 
    "en": {
@@ -16,7 +16,7 @@
    "packageDetails":"Package Details",
    "destinationDetails":"Destination Details",
    "finalize":"Finalize",
-    "dir":"ltr"
+   "dir":"ltr"
 
    }
    }
@@ -34,12 +34,15 @@
          </ol>
       </nav>
       <keep-alive>
-         <component v-if="component !== 'DestinationBase'" @next-component="nextComponent" @selected-component="goToSelected"
-                    @previous-component="previousComponent" v-bind:is="component">
+         <component v-if="component !== 'DestinationBase'" @next-component="nextComponent"
+                    @selected-component="goToSelected"
+                    @previous-component="previousComponent" v-bind:is="component"
+         >
 
          </component>
       </keep-alive>
-      <component v-if="component === 'DestinationBase'" @next-component="nextComponent" @selected-component="goToSelected"
+      <component v-if="component === 'DestinationBase'" @next-component="nextComponent"
+                 @selected-component="goToSelected"
                  @previous-component="previousComponent" v-bind:is="component">
 
       </component>
@@ -78,7 +81,7 @@
       },
       methods: {
          nextComponent(data) {
-             console.log("data", data);
+            console.log("data", data);
             this.component = data.component;
             this.breadcrumbs.push(data);
          },
