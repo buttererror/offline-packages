@@ -22,7 +22,7 @@ class ClientController extends Controller
     public function store(ClientRequest $request)
     {
         if (!$request->isJson()) {
-        abort(400);
+            abort(400);
         }
 
         $data=$request->all();

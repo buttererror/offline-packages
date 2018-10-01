@@ -8,23 +8,13 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-// let en = '';
-// let ar = '';
-// $.ajax({
-//     type: 'get',
-//     async: false,
-//     url: '/show/translations',
-//     success: (response) => {
-//         ar = response.ar;
-//         en = response.en;
-//     }
-// });
 
 import BootstrapVue from 'bootstrap-vue'
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import FileUpload from 'v-file-upload';
 import ToggleButton from 'vue-js-toggle-button';
 import VueI18n from 'vue-i18n'
+import VueRouter from 'vue-router';
 
 Vue.use(VueI18n);
 
@@ -40,35 +30,53 @@ Vue.use(BootstrapVue);
  */
 
 import BaseComponent from './components/Request/BaseComponent';
+import Steps from './components/Request/Steps';
 
 
 const i18n = new VueI18n({
     locale: 'en'
 });
 
+const routes = [
+    {path: '/step', component: Steps},
+];
+
+
+const router = new VueRouter({
+    routes
+});
+
 window.bus = new Vue();
 
 const app = new Vue({
     el: '#app',
+    router,
     components: {BaseComponent},
     i18n,
-    data(){
+    data() {
         return {
             currentLocale: '',
-            currentLanguageLabel: ''
+            currentLanguageLabel: '',
+            user: {
+                id: '',
+                name: '',
+                password: '',
+                csrf_token: ''
+            }
         }
     },
-    mounted(){
+    mounted() {
         let currentLocale = document.querySelector('html').lang;
-        if(currentLocale == 'ar'){
+        if (currentLocale == 'ar') {
             this.currentLanguageLabel = 'English';
             this.currentLocale = 'ar';
-        }else{
+        } else {
             this.currentLanguageLabel = 'عربي';
             this.currentLocale = 'en';
         }
         this.$i18n.locale = currentLocale;
     },
+
     methods: {
         changeLocale() {
             if (this.currentLocale == 'en') {
@@ -80,6 +88,31 @@ const app = new Vue({
             }
             this.$i18n.locale = this.currentLocale;
             axios.get('/change_locale');
+        },
+        loginUser() {
+            axios.post('/auth/login', {
+                'email': this.user.email,
+                'password': this.user.password
+            }).then(response => {
+
+                localStorage.setItem('token','Bearer '+ response.data.access_token)
+
+                axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
+                let url = response.data.url;
+                localStorage.setItem('user_id', response.data.user.id);
+                window.location.href=url;
+
+
+            });
+        },
+        logoutUser() {
+            axios.post('/auth/logout').then(response => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user_id');
+
+                window.location.href = response.data.url
+
+            });
         }
     }
 });

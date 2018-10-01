@@ -52,7 +52,10 @@
             savePackage() {
                 axios.post('/api/package', {
                     'package_details': window.packageDetails.packageMainDetails,
-                    'destination_details': window.packageDetails.destinationsDetails
+                    'destination_details': window.packageDetails.destinationsDetails,
+                    'client_details':window.packageDetails.clientDetails,
+                    'user_id':localStorage.getItem('user_id'),
+                    'note':this.noteText
 
                 }).then(response => {
 

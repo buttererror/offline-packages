@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Package extends Model
 {
@@ -55,34 +56,36 @@ class Package extends Model
     public function savePackageDetails($data){
 
         $packageCountries=[];
-//        $this->client_id=$data['client_id'];
-        $this->start_date=Carbon::parse($data['package_details']['startDate']);
-        $this->end_date=Carbon::parse($data['package_details']['endDate']);
+        $this->start_date=Carbon::parse($data['package_details']['tripStartAt']);
+        $this->end_date=Carbon::parse($data['package_details']['tripEndAt']);
         $this->start_place=$data['package_details']['startPlace'];
         $this->adults=$data['package_details']['adultsNum'];
-        $this->children_count=$data['package_details']['childrenNum'];
+        $this->children_count=$data['package_details']['childrenNumber'];
         $this->number_of_destinations=$data['package_details']['placesNum'];
         $this->transfer=$data['package_details']['transfer'];
-//        $this->note=$data['note'];
+        $this->note=$data['note'];
+        $this->children=json_encode($data['package_details']['childrenAges']);
+        $this->client_id=$data['client_details']['id'];
+        $this->user_id=$data['user_id'];
         $this->save();
         foreach($data['package_details']['selectedCountries'] as $selectedCountry){
             array_push($packageCountries,$selectedCountry['id']);
         }
 
-        $this->country->attach($packageCountries);
-        $this->accommodationRequests->insert([
-            'accommodation_type'=>$data['accommodation_type'],
-            'rooms'=>$data['rooms'],
-            'checkin'=>$data['checkin'],
-            'checkout'=>$data['checkout'],
-            'nights'=>$data['nights'],
-            'hotel_name'=>$data['hotel_name'],
-            'area_name'=>$data['area'],
-            'room_type'=>$data['room_type'],
-            'room_view'=>$data['room_view'],
-            'stars'=>$data['stars'],
-            'note'=>$data['note'],
-        ]);
+        $this->country()->attach($packageCountries);
+//        $this->accommodationRequests->insert([
+//            'accommodation_type'=>$data['accommodation_type'],
+//            'rooms'=>$data['rooms'],
+//            'checkin'=>$data['checkin'],
+//            'checkout'=>$data['checkout'],
+//            'nights'=>$data['nights'],
+//            'hotel_name'=>$data['hotel_name'],
+//            'area_name'=>$data['area'],
+//            'room_type'=>$data['room_type'],
+//            'room_view'=>$data['room_view'],
+//            'stars'=>$data['stars'],
+//            'note'=>$data['note'],
+//        ]);
 
     }
 }

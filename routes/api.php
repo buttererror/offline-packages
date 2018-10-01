@@ -17,11 +17,27 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group([
+    'prefix' => 'auth'
+], function () {
+
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
+
+});
+
+
+
+
+
+
 Route::post('accommodation_request', 'AccommodationRequestController@store')
     ->name('accommodation_request.store');
 
 Route::post('client', 'ClientController@store')
-    ->name('client.store');
+    ->name('client.store')->middleware('auth:api');
 
 Route::post('/save_file', 'ClientController@saveFile');
 
@@ -32,7 +48,7 @@ Route::post('package','PackageController@store')
     ->name('package.store');
 
 Route::get('client/search', 'ClientController@search')
-    ->name('client.search');
+    ->name('client.search')->middleware('auth:api');
 
 Route::get('countries','CountryController@index')
     ->name('country.index');

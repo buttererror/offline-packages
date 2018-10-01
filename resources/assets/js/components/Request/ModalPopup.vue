@@ -528,6 +528,7 @@
             },
             saveData() {
                 if (!this.disableSaveBtn) {
+                    axios.defaults.headers.common['Authorization']=localStorage.getItem('token')
                     axios.post("api/client", this.clientData)
                         .then((response) => {
                             console.log(response.data);
