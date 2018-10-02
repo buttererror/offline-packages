@@ -268,7 +268,9 @@
                 show: false,
                 showAccomodationType: false,
                 carLevel: ['standard', 'premium'],
-                accomodationType: [this.$t('typeHotel'), this.$t('typeApartment')],
+                accomodationType: [
+                    this.$t('packageDetails.typeHotel'),
+                    this.$t('packageDetails.typeApartment')],
                 tripStartAt: window.packageDetails.packageMainDetails.tripStartAt,
                 adultsNum: window.packageDetails.packageMainDetails.adultsNum,
                 childrenNum: window.packageDetails.packageMainDetails.childrenNum,
@@ -288,7 +290,7 @@
                     rentCarWithDriver: false, // optional
                     reserveAccomodation: false, // optional but has mandatory
                     selectedCarLevel: '', // mandatory if optional selected
-                    selectedAccomodationType: 'Hotel',
+                    selectedAccomodationType: this.$t('packageDetails.typeHotel'),
                     needTours: false, // optional
                     nightsNum: 0, // readonly
                     hotelDetails: {} // collected in one value
@@ -333,8 +335,10 @@
                 console.log(window.packageDetails.destinationsDetails);
             });
             bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
-                // console.log("hotelComponent validation", validation);
-                this.validation.accommodationDetailsValidation = validation;
+                console.log("hotelComponent validation", validation);
+                if(this.destinationDetails.selectedAccomodationType === this.$t('packageDetails.typeHotel')){
+                    this.validation.accommodationDetailsValidation = validation;
+                }
                 this.validateWholeAccommodationDetails();
             });
             // trigger this event from inside hotel component to send data on input
@@ -420,11 +424,14 @@
 
             },
             validateReserveAccommodation() {
-                if (this.destinationDetails.reserveAccomodation) {
+                console.log("updating", this.destinationDetails.selectedAccomodationType);
+                if (this.destinationDetails.reserveAccomodation &&
+                    this.$t('packageDetails.typeHotel') === this.destinationDetails.selectedAccomodationType) {
                     this.validation.accommodationDetailsValidation = false;
                 } else {
                     this.validation.accommodationDetailsValidation = true;
                 }
+                console.log("afterUpdating", this.validation.accommodationDetailsValidation);
                 this.processValidationData();
                 this.sendValidationToBase();
             },
@@ -452,7 +459,14 @@
                 bus.$emit("any-input");
             },
             emptyOnAccommodationType() {
-                // console.log("empty");
+                console.log(this.destinationDetails.selectedAccomodationType);
+                if (this.destinationDetails.selectedAccomodationType === this.$t('packageDetails.typeHotel')) {
+                    this.validation.accommodationDetailsValidation = false;
+                } else {
+                    this.validation.accommodationDetailsValidation = true;
+                }
+                this.processValidationData();
+                this.sendValidationToBase();
                 bus.$emit(`empty-accommodation-fields-${this.cityNumber}`);
             }
         },
