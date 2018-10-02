@@ -1,12 +1,23 @@
+<i18n>
+    {
+        "ar":{
+            "dir":"rtl"
+        },
+        "en":{
+            "dir":"ltr"
+        }
+    }
+</i18n>
+
 <template>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <steps></steps>
+                <steps :dir="$t('dir')"></steps>
             </div>
         </div>
 
-        <modal-popup></modal-popup>
+        <modal-popup :dir="$t('dir')"></modal-popup>
 
     </div>
 </template>

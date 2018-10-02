@@ -6,7 +6,7 @@
    "serviceSelection":"اختيار الخدمة",
    "packageDetails":"تفاصيل الباقة",
    "destinationDetails":"تفاصيل الاماكن",
-   "finalize":"انهاء",
+   "finalize":"ملاحظات اخيرة",
    "dir":"rtl"
    },
 
@@ -15,7 +15,7 @@
    "serviceSelection":"Service Selection",
    "packageDetails":"Package Details",
    "destinationDetails":"Destination Details",
-   "finalize":"Finalize",
+   "finalize":"Final Notes",
    "dir":"ltr"
 
    }
@@ -81,7 +81,6 @@
       },
       methods: {
          nextComponent(data) {
-            console.log("data", data);
             this.component = data.component;
             this.breadcrumbs.push(data);
          },
