@@ -59,6 +59,7 @@
                     <keep-alive>
                         <DestinationDetails v-if="destinationNumber === cityNumber"
                                             :cityNumber="destinationNumber" :cities="cities"
+                                            :checkIn="everyCheckout" :checkIns="checkIns"
                         >
                         </DestinationDetails>
                     </keep-alive>
@@ -107,7 +108,8 @@
                 destinationsValidation: [],
                 activateNextBtn: false,
                 updateListening: null,
-                everyCheckout: null
+                everyCheckout: window.packageDetails.packageMainDetails.tripStartAt,
+                checkIns: []
             }
         },
         mounted() {
@@ -134,23 +136,20 @@
             axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
                 this.cities = response.data.cities;
             });
-            bus.$on(`checkout-date-destination-${this.cityNumber}`, (checkout) => {
-                this.everyCheckout = new Date(checkout);
+            bus.$on("checkout-date-destination", (checkout) => {
+                console.log("props", checkout);
+                this.everyCheckout = checkout;
             });
         },
         methods: {
             nextDestination() {
-                bus.$emit(`next-destination-${this.cityNumber}`, {
-                    index: this.cityNumber - 1,
-                    checkout: this.everyCheckout
-                });
-                // bus.$emit(`destination-details-${this.cityNumber}`);
+                this.checkIns[this.cityNumber - 1] = this.everyCheckout;
+                bus.$emit(`next-destination-${this.cityNumber}`, this.cityNumber - 1);
                 this.cityNumber++;
             },
             previousDestination() {
                 bus.$emit(`previous-destination-${this.cityNumber}`, this.cityNumber - 1);
                 this.cityNumber--;
-                // bus.$emit(`destination-details-${this.cityNumber}`);
             },
             nextComponent() {
                 if (this.activateNextBtn) {

@@ -106,17 +106,17 @@
 
                 <HotelDatePicker @checkInChanged="getCheckInDate"
                                  @checkOutChanged="getCheckOutDate"
-                                 :startDate="rangeDateStartAt"
+                                 :startDate="startRangeDate"
                                  :minNights="1"
                                  format="DD/MM/YYYY"
                                  :hoveringTooltip="getNights"
                                  :i18n="hotelPickerLang"
+                                 :showYear="true"
+                                 :startingDateValue="startRangeDate"
                 >
 
 
                 </HotelDatePicker>
-                {{typeof rangeDateStartAt}} {{typeof tripStartAt}}
-
             </div>
 
         </div>
@@ -255,7 +255,7 @@
 
     export default {
         name: "DestinationDetails",
-        props: ["cities", "cityNumber"],
+        props: ["cities", "cityNumber", "checkIn", "checkIns"],
         components: {
             Datepicker,
             Multiselect,
@@ -274,9 +274,10 @@
                     this.$t('packageDetails.typeHotel'),
                     this.$t('packageDetails.typeApartment')],
                 tripStartAt: window.packageDetails.packageMainDetails.tripStartAt,
-                rangeDateStartAt: null,
                 adultsNum: window.packageDetails.packageMainDetails.adultsNum,
                 childrenNum: window.packageDetails.packageMainDetails.childrenNum,
+                startRangeDate: this.checkIn,
+                nextCheckIn: null,
                 validation: {
                     city: false,
                     checkInDate: false,
@@ -317,25 +318,18 @@
             }
         },
         mounted() {
-            console.log("cityNumber", this.cityNumber);
-            if(this.cityNumber == 1){
-                console.log("Im here");
-                this.rangeDateStartAt = this.tripStartAt;
-            }
-
-            // console.log("mounting");
             this.setCheckInDate();
-            bus.$on(`next-destination-${this.cityNumber - 1}`, (destination) => {
-                this.rangeDateStartAt = destination.checkout;
-            });
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
             });
-            bus.$on(`next-destination-${this.cityNumber}`, (destination) => {
-                window.packageDetails.destinationsDetails[destination.index] = this.destinationDetails;
+            bus.$on(`next-destination-${this.cityNumber}`, (cityIndex) => {
+                window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
+                bus.$emit("checkout-date-destination", this.nextCheckIn);
             });
             bus.$on(`previous-destination-${this.cityNumber}`, (cityIndex) => {
                 window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
+                // this.startRangeDate = this.checkIns[cityIndex - 1];
+                console.log("setting startRange when stepping back", this.startRangeDate);
             });
             bus.$on(`next-component-${this.cityNumber}`, (cityIndex) => {
                 window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
@@ -354,22 +348,24 @@
 
         methods: {
             setCheckInDate() {
-                this.destinationDetails.checkInDate = this.tripStartAt;
+                this.destinationDetails.checkInDate = this.checkIn;
                 this.validateCheckInDate();
             },
             getNights(checkIn, checkOut) {
                 return (new Date(checkOut) - new Date(checkIn)) / (1000 * 3600 * 24);
             },
             getCheckInDate(checkIn) {
+                console.log("checkIn", checkIn);
+                console.log("this.checkIn", this.checkIn);
                 this.destinationDetails.checkInDate = checkIn;
                 this.validateCheckInDate();
             },
             getCheckOutDate(checkOut) {
+                console.log("checkout", checkOut);
                 this.destinationDetails.checkOutDate = checkOut;
-                bus.$emit(`checkout-date-destination-${this.cityNumber}`, checkOut);
+                if (checkOut) this.nextCheckIn = checkOut;
                 this.validateCheckOutDate();
                 this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
-
             },
             setArentedCar(car) {
                 this.destinationDetails.rentCar = car.value;
@@ -478,6 +474,12 @@
                 result.setDate(result.getDate() + parseInt(Math.abs(this.updateCheckOutDate)));
                 // destinationDetails.nightsNum = this.updateCheckOutDate;
                 this.destinationDetails.endDate = result;
+            },
+            checkIn(newValue) {
+                // bus.$on(`next-destination-${this.cityNumber}`, () => {
+                    console.log("newValue", newValue);
+                    this.startRangeDate = newValue;
+                // });
             }
         },
         computed: {
@@ -488,7 +490,19 @@
                 else {
                     return this.i18n_en
                 }
-            }
+            },
+            // startRangeDate: {
+            //     get() {
+            //         console.log("cityNumber", this.cityNumber);
+            //         console.log("array", this.checkIns);
+            //         // bus.$on(`previous-destination-${this.cityNumber}`, () => {
+            //         //     return this.checkIns[this.cityNumber - 1];
+            //         // });
+            //         return this.checkIn;
+            //     },
+            //     set() {
+            //     }
+            // }
         }
 
 
