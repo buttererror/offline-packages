@@ -33,7 +33,7 @@ class Package extends Model
     ];
 
     public function accommodationRequests(){
-        return $this->hasMany('App/AccommodationRequest');
+        return $this->hasMany(PackageAccommodation::class);
     }
 
     public function transferRequests(){
@@ -57,7 +57,7 @@ class Package extends Model
 
         $packageCountries=[];
         $this->start_date=Carbon::parse($data['package_details']['tripStartAt']);
-        $this->end_date=Carbon::parse($data['package_details']['tripEndAt']);
+        $this->end_date=Carbon::parse($data['package_details']['tripStartAt']);
         $this->start_place=$data['package_details']['startPlace'];
         $this->adults=$data['package_details']['adultsNum'];
         $this->children_count=$data['package_details']['childrenNumber'];
@@ -73,19 +73,33 @@ class Package extends Model
         }
 
         $this->country()->attach($packageCountries);
-//        $this->accommodationRequests->insert([
-//            'accommodation_type'=>$data['accommodation_type'],
-//            'rooms'=>$data['rooms'],
-//            'checkin'=>$data['checkin'],
-//            'checkout'=>$data['checkout'],
-//            'nights'=>$data['nights'],
-//            'hotel_name'=>$data['hotel_name'],
-//            'area_name'=>$data['area'],
-//            'room_type'=>$data['room_type'],
-//            'room_view'=>$data['room_view'],
-//            'stars'=>$data['stars'],
-//            'note'=>$data['note'],
-//        ]);
+        foreach ($data['destination_details'] as $destination_detail){
+            $other_services=[];
+
+            $services= new \stdClass();
+            $services->rent_car=$destination_detail['rentCar'];
+            $services->car_with_driver=$destination_detail['rentCarWithDriver'];
+            $services->car_level=$destination_detail['selectedCarLevel'];
+            $services->need_tours=$destination_detail['needTours'];
+            array_push($other_services,$services);
+
+            $this->accommodationRequests()->create([
+                'accommodation_type'=>$destination_detail['selectedAccomodationType'],
+                'checkin'=>Carbon::parse($destination_detail['checkInDate']),
+                'checkout'=>Carbon::parse($destination_detail['checkOutDate']),
+                'nights'=>$destination_detail['nightsNum'],
+                'city_id'=>$destination_detail['selectedCity']['id'],
+                'country_id'=>$destination_detail['selectedCity']['country_id'],
+                'rooms'=>$destination_detail['hotelDetails']['roomsNum'],
+                'hotel_name'=>$destination_detail['hotelDetails']['hotelName'],
+                'area_name'=>$destination_detail['hotelDetails']['area'],
+                'room_type'=>$destination_detail['hotelDetails']['selectedRoomType'],
+                'room_view'=>$destination_detail['hotelDetails']['selectedRoomView'],
+                'stars'=>$destination_detail['hotelDetails']['selectedStars'],
+                'other_services'=>json_encode($other_services)
+            ]);
+        }
+
 
     }
 }
