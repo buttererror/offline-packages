@@ -106,17 +106,19 @@
 
                 <HotelDatePicker @checkInChanged="getCheckInDate"
                                  @checkOutChanged="getCheckOutDate"
-                                 :startDate="tripStartAt"
+                                 :startDate="rangeDateStartAt"
                                  :minNights="1"
                                  format="DD/MM/YYYY"
                                  :hoveringTooltip="getNights"
-                                 :startingDateValue="new Date(tripStartAt)"
                                  :i18n="hotelPickerLang"
                 >
 
 
                 </HotelDatePicker>
+                {{typeof rangeDateStartAt}} {{typeof tripStartAt}}
+
             </div>
+
         </div>
 
 
@@ -268,8 +270,11 @@
                 show: false,
                 showAccomodationType: false,
                 carLevel: ['standard', 'premium'],
-                accomodationType: [this.$t('typeHotel'), this.$t('typeApartment')],
+                accomodationType: [
+                    this.$t('packageDetails.typeHotel'),
+                    this.$t('packageDetails.typeApartment')],
                 tripStartAt: window.packageDetails.packageMainDetails.tripStartAt,
+                rangeDateStartAt: null,
                 adultsNum: window.packageDetails.packageMainDetails.adultsNum,
                 childrenNum: window.packageDetails.packageMainDetails.childrenNum,
                 validation: {
@@ -288,7 +293,7 @@
                     rentCarWithDriver: false, // optional
                     reserveAccomodation: false, // optional but has mandatory
                     selectedCarLevel: '', // mandatory if optional selected
-                    selectedAccomodationType: 'Hotel',
+                    selectedAccomodationType: this.$t('packageDetails.typeHotel'),
                     needTours: false, // optional
                     nightsNum: 0, // readonly
                     hotelDetails: {} // collected in one value
@@ -312,29 +317,33 @@
             }
         },
         mounted() {
+            console.log("cityNumber", this.cityNumber);
+            if(this.cityNumber == 1){
+                console.log("Im here");
+                this.rangeDateStartAt = this.tripStartAt;
+            }
+
             // console.log("mounting");
             this.setCheckInDate();
+            bus.$on(`next-destination-${this.cityNumber - 1}`, (destination) => {
+                this.rangeDateStartAt = destination.checkout;
+            });
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
             });
-            bus.$on(`next-destination-${this.cityNumber}`, (cityIndex) => {
-                console.log("next-destination", cityIndex)
-                window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
-                console.log(window.packageDetails.destinationsDetails);
+            bus.$on(`next-destination-${this.cityNumber}`, (destination) => {
+                window.packageDetails.destinationsDetails[destination.index] = this.destinationDetails;
             });
             bus.$on(`previous-destination-${this.cityNumber}`, (cityIndex) => {
-                console.log("previous-destination", cityIndex)
                 window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
-                console.log(window.packageDetails.destinationsDetails);
             });
             bus.$on(`next-component-${this.cityNumber}`, (cityIndex) => {
-                console.log("next-component", cityIndex)
                 window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
-                console.log(window.packageDetails.destinationsDetails);
             });
             bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
-                // console.log("hotelComponent validation", validation);
-                this.validation.accommodationDetailsValidation = validation;
+                if (this.destinationDetails.selectedAccomodationType === this.$t('packageDetails.typeHotel')) {
+                    this.validation.accommodationDetailsValidation = validation;
+                }
                 this.validateWholeAccommodationDetails();
             });
             // trigger this event from inside hotel component to send data on input
@@ -357,9 +366,9 @@
             },
             getCheckOutDate(checkOut) {
                 this.destinationDetails.checkOutDate = checkOut;
+                bus.$emit(`checkout-date-destination-${this.cityNumber}`, checkOut);
                 this.validateCheckOutDate();
                 this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
-                console.log("this.destinationDetails", this.destinationDetails);
 
             },
             setArentedCar(car) {
@@ -420,7 +429,8 @@
 
             },
             validateReserveAccommodation() {
-                if (this.destinationDetails.reserveAccomodation) {
+                if (this.destinationDetails.reserveAccomodation &&
+                    this.$t('packageDetails.typeHotel') === this.destinationDetails.selectedAccomodationType) {
                     this.validation.accommodationDetailsValidation = false;
                 } else {
                     this.validation.accommodationDetailsValidation = true;
@@ -452,7 +462,13 @@
                 bus.$emit("any-input");
             },
             emptyOnAccommodationType() {
-                // console.log("empty");
+                if (this.destinationDetails.selectedAccomodationType === this.$t('packageDetails.typeHotel')) {
+                    this.validation.accommodationDetailsValidation = false;
+                } else {
+                    this.validation.accommodationDetailsValidation = true;
+                }
+                this.processValidationData();
+                this.sendValidationToBase();
                 bus.$emit(`empty-accommodation-fields-${this.cityNumber}`);
             }
         },

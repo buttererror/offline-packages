@@ -2,16 +2,17 @@
     {
 
     "ar":{
-        "packageDetails":{
-        "startPlace":"مكان البداية",
-        "startEndJourney":"بداية الرحلة",
-        "countries":"البلاد",
-        "placesNum":"عدد المدن",
-        "transfer":"الانتقالات",
-        "childrenNum":"عدد الاطفال",
-        "adultsNum":"عدد البالغين",
-        "childrenMaxNum":"اقصى عدد للاطفال",
-        "childAge":"عمر الطفل"
+    "packageDetails":{
+    "startPlace":"مكان البداية",
+    "endPlace":"مكان النهاية",
+    "startEndJourney":"بداية الرحلة",
+    "countries":"البلاد",
+    "placesNum":"عدد المدن",
+    "transfer":"الانتقالات",
+    "childrenNum":"عدد الاطفال",
+    "adultsNum":"عدد البالغين",
+    "childrenMaxNum":"اقصى عدد للاطفال",
+    "childAge":"عمر الطفل"
 
     },
     "header":"تفاصيل الباقة",
@@ -23,7 +24,7 @@
     "save":"حفظ",
     "cancel":"الغاء",
     "addBirthDate":"ضع تاريخ ميلادك",
-    "hotelPickerLang":"ar",
+    "datePickerLang":"ar",
     "yes":"نعم",
     "no":"لا",
     "destinationDetails":"تفاصيل الاماكن",
@@ -33,7 +34,8 @@
 
     "en": {
     "packageDetails":{
-    "startPlace":"Start Place",
+    "startPlace":"Pickup Place",
+    "endPlace":"Drop off Place",
     "startEndJourney":"Start of Journey",
     "countries":"Countries",
     "placesNum":"Number of Cities",
@@ -52,7 +54,7 @@
     "save":"save",
     "cancel":"cancel",
     "addBirthDate":"Add your BirthDate",
-    "hotelPickerLang":"en",
+    "datePickerLang":"en",
     "yes":"yes",
     "no":"no",
     "destinationDetails":"Destination Details",
@@ -84,12 +86,26 @@
                 <div class="form-group row">
                     <label class="col-form-label col-form-label-lg col-3"
                            :class="$t('labelClass')"
+                    >{{$t('packageDetails.endPlace')}}</label>
+                    <div class="col-6">
+                        <input type="text" :placeholder="$t('packageDetails.endPlace')"
+                               v-model="packageMainDetails.endPlace"
+                               @input="validateEndPlace"
+                               class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-form-label-lg col-3"
+                           :class="$t('labelClass')"
                     >{{$t('packageDetails.startEndJourney')}}</label>
                     <div class="col-6">
                         <datepicker @input="validateTripStartAt"
-                                    v-model="updatedDate"
+                                    v-model="packageMainDetails.tripStartAt"
+                                    :disabledDates="disabledDates"
                                     :bootstrap-styling="true"
-                                    calendar-class="h5 w-100">
+                                    calendar-class="h5 w-100"
+                                    :language="ar"
+                        >
 
 
                         </datepicker>
@@ -102,18 +118,18 @@
                     >{{$t('packageDetails.countries')}}</label>
                     <div class="col-6">
                         <multiselect
-                                v-model="packageMainDetails.selectedCountries"
-                                :placeholder="$t('packageDetails.countries')"
-                                tagPosition="bottom"
-                                :options="countries" openDirection="bottom"
-                                label="en_short_name"
-                                track-by="id"
-                                :multiple="true"
-                                :close-on-select="false"
-                                :hide-selected="true"
-                                :loading="isLoading"
-                                @search-change="countryFind"
-                                @input="validateCountries"
+                            v-model="packageMainDetails.selectedCountries"
+                            :placeholder="$t('packageDetails.countries')"
+                            tagPosition="bottom"
+                            :options="countries" openDirection="bottom"
+                            label="en_short_name"
+                            track-by="id"
+                            :multiple="true"
+                            :close-on-select="false"
+                            :hide-selected="true"
+                            :loading="isLoading"
+                            @search-change="countryFind"
+                            @input="validateCountries"
 
                         ></multiselect>
                     </div>
@@ -125,7 +141,7 @@
                     >{{$t('packageDetails.placesNum')}}</label>
                     <div class="col-6">
                         <input type="number" :placeholder="$t('packageDetails.placesNum')" min="0"
-                                   class="form-control"
+                               class="form-control"
                                v-model="packageMainDetails.placesNum"
                                @input="validatePlacesNum"
                         />
@@ -154,10 +170,10 @@
                            :class="$t('labelClass')"
                     >{{$t('packageDetails.adultsNum')}}</label>
                     <!--<div class="col-3 d-flex align-items-center justify-content-end text-right-->
-                                    <!--rounded"-->
-                         <!--style="background-color: rgba(91,192,222, .8);"-->
-                         <!--v-if="packageMainDetails.adultsNum">-->
-                        <!--{{$t('packageDetails.childrenMaxNum')}} {{maxChildrenNum}}-->
+                    <!--rounded"-->
+                    <!--style="background-color: rgba(91,192,222, .8);"-->
+                    <!--v-if="packageMainDetails.adultsNum">-->
+                    <!--{{$t('packageDetails.childrenMaxNum')}} {{maxChildrenNum}}-->
                     <!--</div>-->
                     <!--<div v-else class="col-3"></div>-->
                     <div class="col-6 d-flex align-items-center">
@@ -222,7 +238,7 @@
     import {en, ar} from 'vuejs-datepicker/dist/locale';
     import Multiselect from 'vue-multiselect';
     import DestinationDetails from './DestinationDetails';
-    import HotelDatePicker from 'vue-hotel-datepicker'
+    import HotelDatePicker from 'vue-hotel-datepicker';
 
 
     export default {
@@ -235,8 +251,6 @@
         },
         data() {
             return {
-                ar,
-                en,
                 show: false,
                 isLoading: false,
                 countries: [
@@ -246,12 +260,9 @@
                 activateNextBtn: false,
                 maxChildrenNum: null,
                 maxChildrenPerRoom: 4,
-                updatedDate: null,
-                disabledDates: {
-                    to: new Date()
-                },
                 validation: {
                     startPlace: false,
+                    endPlace: false,
                     tripStartAt: false,
                     // tripEndAt: false,
                     selectedCountries: false,
@@ -262,6 +273,7 @@
                 },
                 packageMainDetails: {
                     startPlace: '',
+                    endPlace: '',
                     tripStartAt: null,
                     // tripEndAt: null,
                     selectedCountries: [],
@@ -315,6 +327,12 @@
                 // console.log(this.validation.startPlace);
                 this.activateNxtBtn();
 
+            },
+            validateEndPlace() {
+                if (this.packageMainDetails.endPlace) {
+                    this.validation.endPlace = true;
+                } else this.validation.endPlace = false;
+                this.activateNxtBtn();
             },
             validateCountries() {
                 if (this.packageMainDetails.selectedCountries.length) {
@@ -384,13 +402,10 @@
                 this.packageMainDetails.transfer = transfer.value;
             },
             validateTripStartAt() {
-                if (this.updatedDate) {
+                if (this.packageMainDetails.tripStartAt) {
                     this.validation.tripStartAt = true;
                     // set the time to 0, fixing nightsNum
-                    let date = this.updatedDate.getDate();
-                    let month = this.updatedDate.getMonth();
-                    let year = this.updatedDate.getFullYear();
-                    this.packageMainDetails.tripStartAt = new Date(year, month, date, 0, 0, 0);
+                    this.packageMainDetails.tripStartAt.setHours(0,0,0,0);
                 } else {
                     this.validation.tripStartAt = false;
                 }
@@ -438,13 +453,18 @@
             ,
         },
         computed: {
-            hotelPickerLang: function () {
-                if (this.$t("hotelPickerLang") === "ar") {
-                    return this.i18n_ar
+            ar: function () {
+                if (this.$t("datePickerLang") === "ar") {
+                    return ar
                 }
                 else {
-                    return this.i18n_en
+                    return en
                 }
+            },
+            disabledDates() {
+                let date = new Date();
+                date.setDate(new Date().getDate() - 1);
+                return {to: date};
             }
         }
     }

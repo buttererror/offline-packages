@@ -75,7 +75,7 @@
 
 
 <template>
-    <div v-if="accomType === 'Hotel'">
+    <div v-if="accomType === 'Hotel' || accomType === 'فندق'">
 
         <div class="card pb-0">
             <div class="card-header card-title h5 text-center">
@@ -236,7 +236,6 @@
                 <div class="col-6">
                     <input type="text" :placeholder="$t('packageDetails.hotelName')"
                            v-model="hotelDetails.hotelName"
-                           @input="validateHotelName"
                            class="form-control"/>
                 </div>
             </div>
@@ -248,7 +247,6 @@
                 <div class="col-6">
                     <input type="text" :placeholder="$t('packageDetails.area')"
                            v-model="hotelDetails.area"
-                           @input="validateHotelArea"
                            class="form-control"/>
                 </div>
             </div>
@@ -264,7 +262,6 @@
             <div class="col-6">
                 <input type="text" :placeholder="$t('packageDetails.area')"
                        v-model="hotelDetails.area"
-                       @input="validateApartmentArea"
                        class="form-control"/>
             </div>
         </div>
@@ -314,12 +311,12 @@
                         selectedRoomType: false,
                         selectedRoomView: false,
                         selectedStars: false,
-                        hotelName: false,
-                        area: false
+                        // hotelName: false,
+                        // area: false
                     },
-                    apartment: {
-                        area: false,
-                    }
+                    // apartment: {
+                    //     area: false,
+                    // }
                 },
                 accommodationDetailsValidation: false,
                 hotelDetails: {
@@ -343,6 +340,7 @@
                 console.log("children 0", this.validation.hotel.selectedChildrenNum);
             }
             bus.$on(`empty-accommodation-fields-${this.destinationNumber}`, () => {
+                console.log("accommodationType:", this.accomType);
                 this.emptyOnAccommodationType();
             });
             this.remainingAdults = this.adultsNumber;
@@ -368,7 +366,7 @@
         },
         watch: {
             accomType() {
-                if (this.accomType === "Apartment") {
+                if (this.accomType === "Apartment" || this.accomType === "شقة") {
                     this.editRoomsData();
                 }
             }
@@ -475,45 +473,45 @@
                 this.processValidationBeforeSend();
                 this.sendValidationToDestination();
             },
-            validateHotelName() {
-                // console.log("validating hotelName");
-                if (this.hotelDetails.hotelName) {
-                    this.validation.hotel.hotelName = true;
-                } else {
-                    this.validation.hotel.hotelName = false;
-                }
-                // console.log(this.validation.hotel.hotelName);
-                this.processValidationBeforeSend();
-                this.sendValidationToDestination();
-
-            },
-            validateHotelArea() {
-                // console.log("validating hotelArea");
-                if (this.hotelDetails.area) {
-                    this.validation.hotel.area = true;
-                } else {
-                    this.validation.hotel.area = false;
-                }
-                // console.log(this.validation.hotel.area);
-                this.processValidationBeforeSend();
-                this.sendValidationToDestination();
-
-            },
-            validateApartmentArea() {
-                // console.log("validating apartment area");
-                // console.log("apartmentArea", this.hotelDetails.area);
-                if (this.hotelDetails.area) {
-                    this.validation.apartment.area = true;
-                } else {
-                    this.validation.apartment.area = false;
-                }
-                // console.log("apartmentArea validation", this.validation.apartment.area);
-                this.processValidationBeforeSend();
-                this.sendValidationToDestination();
-
-            },
+            // validateHotelName() {
+            //     // console.log("validating hotelName");
+            //     if (this.hotelDetails.hotelName) {
+            //         this.validation.hotel.hotelName = true;
+            //     } else {
+            //         this.validation.hotel.hotelName = false;
+            //     }
+            //     // console.log(this.validation.hotel.hotelName);
+            //     this.processValidationBeforeSend();
+            //     this.sendValidationToDestination();
+            //
+            // },
+            // validateHotelArea() {
+            //     // console.log("validating hotelArea");
+            //     if (this.hotelDetails.area) {
+            //         this.validation.hotel.area = true;
+            //     } else {
+            //         this.validation.hotel.area = false;
+            //     }
+            //     // console.log(this.validation.hotel.area);
+            //     this.processValidationBeforeSend();
+            //     this.sendValidationToDestination();
+            //
+            // },
+            // validateApartmentArea() {
+            //     // console.log("validating apartment area");
+            //     // console.log("apartmentArea", this.hotelDetails.area);
+            //     if (this.hotelDetails.area) {
+            //         this.validation.apartment.area = true;
+            //     } else {
+            //         this.validation.apartment.area = false;
+            //     }
+            //     // console.log("apartmentArea validation", this.validation.apartment.area);
+            //     this.processValidationBeforeSend();
+            //     this.sendValidationToDestination();
+            //
+            // },
             processValidationBeforeSend() {
-                if (this.accomType === 'Hotel') {
+                // if (this.accomType === 'Hotel' || this.accomType === 'فندق') {
                     // loop and the result either true or false
                     for (let checkHotel in this.validation.hotel) {
                         if (!this.validation.hotel[checkHotel]) {
@@ -521,21 +519,22 @@
                             return;
                         }
                         this.accommodationDetailsValidation = true;
-                    }
+                    // }
                     // console.log("the return value", this.accommodationDetailsValidation);
-                } else if (this.accomType === 'Apartment') {
-                    // loop and the result either true or false
-                    if (!this.validation.apartment.area) {
-                        this.accommodationDetailsValidation = false;
-                    } else {
-                        this.accommodationDetailsValidation = true;
-                    }
+                // } else if (this.accomType === 'Apartment' || this.accomType === "شقة") {
+                //     console.log("Im not supposed to be here");
+                //     // loop and the result either true or false
+                //     if (!this.validation.apartment.area) {
+                //         this.accommodationDetailsValidation = false;
+                //     } else {
+                //         this.accommodationDetailsValidation = true;
+                //     }
                 }
             },
             sendValidationToDestination() {
                 bus.$emit(`hotel-validation-dest-${this.destinationNumber}`,
                     this.accommodationDetailsValidation);
-                this.sendValidationToBaseOnInput(); // this, that duplicate the destinations validation
+                this.sendValidationToBaseOnInput();
             },
             sendValidationToBaseOnInput() {
                 bus.$emit(`send-validation-destination-from-nested-inputs-${this.destinationNumber}`);
@@ -571,8 +570,7 @@
                 this.hotelDetails.selectedChildrenNum = [];
                 this.hotelDetails.roomsNum = '';
                 this.fillChildrenOptions();
-                this.validateOnHotelDetails();
-
+                // this.validateOnHotelDetails();
             },
             validateOnHotelDetails() {
                 this.validateAdultsNum();
@@ -580,9 +578,9 @@
                 this.validateSelectedRoomType();
                 this.validateSelectedRoomView();
                 this.validateSelectedStars();
-                this.validateHotelName();
-                this.validateHotelArea();
-                this.validateApartmentArea();
+                // this.validateHotelName();
+                // this.validateHotelArea();
+                // this.validateApartmentArea();
                 this.processValidationBeforeSend();
                 this.sendValidationToDestination();
             },
@@ -592,9 +590,7 @@
                 this.hotelDetails.selectedRoomView = '';
                 this.hotelDetails.selectedStars = '';
                 this.hotelDetails.hotelName = '';
-                if (this.accomType === 'Apartment' || this.accomType === 'Hotel') {
-                    this.hotelDetails.area = '';
-                }
+                this.hotelDetails.area = '';
                 this.editRoomsData();
             }
         }
