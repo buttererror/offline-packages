@@ -3,61 +3,63 @@
 
     "ar":{
         "packageDetails":{
-        "startPlace":"مكان البداية",
-        "startEndJourney":"بداية الرحلة",
-        "countries":"البلاد",
-        "placesNum":"عدد المدن",
-        "transfer":"الانتقالات",
-        "childrenNum":"عدد الاطفال",
-        "adultsNum":"عدد البالغين",
-        "childrenMaxNum":"اقصى عدد للاطفال",
-        "childAge":"عمر الطفل"
+            "startPlace":"مكان البداية",
+            "endPlace":"مكان النهاية",
+            "startEndJourney":"بداية الرحلة",
+            "countries":"البلاد",
+            "placesNum":"عدد المدن",
+            "transfer":"الانتقالات",
+            "childrenNum":"عدد الاطفال",
+            "adultsNum":"عدد البالغين",
+            "childrenMaxNum":"اقصى عدد للاطفال",
+            "childAge":"عمر الطفل"
 
-    },
-    "header":"تفاصيل الباقة",
-    "next":"التالى",
-    "back":"السابق",
-    "male":"ذكر",
-    "female":"مؤنث",
-    "noResults":"لايوجد نتائج",
-    "save":"حفظ",
-    "cancel":"الغاء",
-    "addBirthDate":"ضع تاريخ ميلادك",
-    "hotelPickerLang":"ar",
-    "yes":"نعم",
-    "no":"لا",
-    "destinationDetails":"تفاصيل الاماكن",
-    "labelDir":"ltr",
-    "labelClass":"text-right"
+        },
+        "header":"تفاصيل الباقة",
+        "next":"التالى",
+        "back":"السابق",
+        "male":"ذكر",
+        "female":"مؤنث",
+        "noResults":"لايوجد نتائج",
+        "save":"حفظ",
+        "cancel":"الغاء",
+        "addBirthDate":"ضع تاريخ ميلادك",
+        "hotelPickerLang":"ar",
+        "yes":"نعم",
+        "no":"لا",
+        "destinationDetails":"تفاصيل الاماكن",
+        "labelDir":"ltr",
+        "labelClass":"text-right"
     },
 
     "en": {
-    "packageDetails":{
-    "startPlace":"Start Place",
-    "startEndJourney":"Start of Journey",
-    "countries":"Countries",
-    "placesNum":"Number of Cities",
-    "transfer":"Transfer",
-    "childrenNum":"Children Number",
-    "adultsNum":"Adults Number",
-    "childrenMaxNum":"Children maximum number",
-    "childAge":"Child Age"
-    },
-    "header":"Package Details",
-    "next":"Next",
-    "back":"Back",
-    "male":"male",
-    "female":"female",
-    "noResults":"No Results",
-    "save":"save",
-    "cancel":"cancel",
-    "addBirthDate":"Add your BirthDate",
-    "hotelPickerLang":"en",
-    "yes":"yes",
-    "no":"no",
-    "destinationDetails":"Destination Details",
-    "labelDir":"rtl",
-    "labelClass":"text-left"
+        "packageDetails":{
+            "startPlace":"Pickup Place",
+            "endPlace":"Drop off Place",
+            "startEndJourney":"Start of Journey",
+            "countries":"Countries",
+            "placesNum":"Number of Cities",
+            "transfer":"Transfer",
+            "childrenNum":"Children Number",
+            "adultsNum":"Adults Number",
+            "childrenMaxNum":"Children maximum number",
+            "childAge":"Child Age"
+        },
+        "header":"Package Details",
+        "next":"Next",
+        "back":"Back",
+        "male":"male",
+        "female":"female",
+        "noResults":"No Results",
+        "save":"save",
+        "cancel":"cancel",
+        "addBirthDate":"Add your BirthDate",
+        "hotelPickerLang":"en",
+        "yes":"yes",
+        "no":"no",
+        "destinationDetails":"Destination Details",
+        "labelDir":"rtl",
+        "labelClass":"text-left"
     }
     }
 </i18n>
@@ -78,6 +80,17 @@
                         <input type="text" :placeholder="$t('packageDetails.startPlace')"
                                v-model="packageMainDetails.startPlace"
                                @input="validateStartPlace"
+                               class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-form-label-lg col-3"
+                           :class="$t('labelClass')"
+                    >{{$t('packageDetails.endPlace')}}</label>
+                    <div class="col-6">
+                        <input type="text" :placeholder="$t('packageDetails.endPlace')"
+                               v-model="packageMainDetails.endPlace"
+                               @input="validateEndPlace"
                                class="form-control"/>
                     </div>
                 </div>
@@ -252,6 +265,7 @@
                 },
                 validation: {
                     startPlace: false,
+                    endPlace: false,
                     tripStartAt: false,
                     // tripEndAt: false,
                     selectedCountries: false,
@@ -262,6 +276,7 @@
                 },
                 packageMainDetails: {
                     startPlace: '',
+                    endPlace: '',
                     tripStartAt: null,
                     // tripEndAt: null,
                     selectedCountries: [],
@@ -315,6 +330,12 @@
                 // console.log(this.validation.startPlace);
                 this.activateNxtBtn();
 
+            },
+            validateEndPlace() {
+                if (this.packageMainDetails.endPlace) {
+                    this.validation.endPlace = true;
+                } else this.validation.endPlace = false;
+                this.activateNxtBtn();
             },
             validateCountries() {
                 if (this.packageMainDetails.selectedCountries.length) {

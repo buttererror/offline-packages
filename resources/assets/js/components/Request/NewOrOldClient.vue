@@ -132,13 +132,13 @@
             },
             nextComponent(client) {
                 console.log("here");
-                if (!this.disableSaveBtn) {
+                // if (!this.disableSaveBtn) {
                     window.packageDetails.clientDetails = client;
                     this.$emit('next-component', {
                         component: "SelectService",
                         step: "serviceSelection"
                     });
-                }
+                // }
             },
             validateSearchBox(eventType) {
                 console.log(this.client)
