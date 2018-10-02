@@ -53,6 +53,7 @@ class Package extends Model
     }
 
     public function savePackageDetails($data){
+        dd($data);
 
         $packageCountries=[];
         $this->start_date=Carbon::parse($data['package_details']['tripStartAt']);

@@ -29,6 +29,7 @@ Route::group([
 });
 
 
+Route::post('/save_file', 'ClientController@saveFile');
 
 
 Route::group(['middleware'=>'Jwt'],function(){
@@ -39,7 +40,6 @@ Route::group(['middleware'=>'Jwt'],function(){
     Route::post('client', 'ClientController@store')
         ->name('client.store');
 
-    Route::post('/save_file', 'ClientController@saveFile');
 
     Route::post('transfer_request', 'TransferRequestController@store')
         ->name('transfer_request.store');
