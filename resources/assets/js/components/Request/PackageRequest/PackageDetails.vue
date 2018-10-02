@@ -100,7 +100,8 @@
                     >{{$t('packageDetails.startEndJourney')}}</label>
                     <div class="col-6">
                         <datepicker @input="validateTripStartAt"
-                                    v-model="updatedDate" :disabledDates="disabledDates"
+                                    v-model="packageMainDetails.tripStartAt"
+                                    :disabledDates="disabledDates"
                                     :bootstrap-styling="true"
                                     calendar-class="h5 w-100"
                                     :language="ar"
@@ -259,7 +260,6 @@
                 activateNextBtn: false,
                 maxChildrenNum: null,
                 maxChildrenPerRoom: 4,
-                updatedDate: null,
                 validation: {
                     startPlace: false,
                     endPlace: false,
@@ -402,18 +402,13 @@
                 this.packageMainDetails.transfer = transfer.value;
             },
             validateTripStartAt() {
-                console.log(this.updatedDate)
-                // if (this.updatedDate) {
-                //     this.validation.tripStartAt = true;
-                //     // set the time to 0, fixing nightsNum
-                //     let updateDate = new Date(this.updated)
-                //     let date = this.updatedDate.getDate();
-                //     let month = this.updatedDate.getMonth();
-                //     let year = this.updatedDate.getFullYear();
-                //     this.packageMainDetails.tripStartAt = new Date(year, month, date, 0, 0, 0);
-                // } else {
-                //     this.validation.tripStartAt = false;
-                // }
+                if (this.packageMainDetails.tripStartAt) {
+                    this.validation.tripStartAt = true;
+                    // set the time to 0, fixing nightsNum
+                    this.packageMainDetails.tripStartAt.setHours(0,0,0,0);
+                } else {
+                    this.validation.tripStartAt = false;
+                }
                 this.activateNxtBtn();
             },
             // getCheckOutDate(checkOut) {
