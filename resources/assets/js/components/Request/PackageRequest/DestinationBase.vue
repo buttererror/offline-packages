@@ -106,7 +106,8 @@
                 date: new Date(),
                 destinationsValidation: [],
                 activateNextBtn: false,
-                updateListening: null
+                updateListening: null,
+                everyCheckout: null
             }
         },
         mounted() {
@@ -133,10 +134,16 @@
             axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
                 this.cities = response.data.cities;
             });
+            bus.$on(`checkout-date-destination-${this.cityNumber}`, (checkout) => {
+                this.everyCheckout = new Date(checkout);
+            });
         },
         methods: {
             nextDestination() {
-                bus.$emit(`next-destination-${this.cityNumber}`, this.cityNumber - 1);
+                bus.$emit(`next-destination-${this.cityNumber}`, {
+                    index: this.cityNumber - 1,
+                    checkout: this.everyCheckout
+                });
                 // bus.$emit(`destination-details-${this.cityNumber}`);
                 this.cityNumber++;
             },
