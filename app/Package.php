@@ -14,7 +14,6 @@ class Package extends Model
         'user_id',
         'nights',
         'start_date',
-        'end_date',
         'start_place',
         'adults',
         'children_count',
@@ -57,7 +56,6 @@ class Package extends Model
 
         $packageCountries=[];
         $this->start_date=Carbon::parse($data['package_details']['tripStartAt']);
-        $this->end_date=Carbon::parse($data['package_details']['tripStartAt']);
         $this->start_place=$data['package_details']['startPlace'];
         $this->adults=$data['package_details']['adultsNum'];
         $this->children_count=$data['package_details']['childrenNumber'];

@@ -31,35 +31,38 @@ Route::group([
 
 
 
+Route::group(['middleware'=>'Jwt'],function(){
+
+    Route::post('accommodation_request', 'AccommodationRequestController@store')
+        ->name('accommodation_request.store');
+
+    Route::post('client', 'ClientController@store')
+        ->name('client.store');
+
+    Route::post('/save_file', 'ClientController@saveFile');
+
+    Route::post('transfer_request', 'TransferRequestController@store')
+        ->name('transfer_request.store');
+
+    Route::post('package','PackageController@store')
+        ->name('package.store');
+
+    Route::get('client/search', 'ClientController@search')
+        ->name('client.search');
+
+    Route::get('countries','CountryController@index')
+        ->name('country.index');
+    Route::post('countries','CountryController@searchCountry');
 
 
-Route::post('accommodation_request', 'AccommodationRequestController@store')
-    ->name('accommodation_request.store');
+    Route::get('client/mobile/is_unique','ClientController@isMobileUnique')
+        ->name('client_mobile_is_unique.isMobileUnique');
 
-Route::post('client', 'ClientController@store')
-    ->name('client.store')->middleware('auth:api');
+    Route::get('client/email/is_unique','ClientController@isEmailUnique')
+        ->name('client_email_is_unique.isEmailُUnique');
 
-Route::post('/save_file', 'ClientController@saveFile');
-
-Route::post('transfer_request', 'TransferRequestController@store')
-    ->name('transfer_request.store');
-
-Route::post('package','PackageController@store')
-    ->name('package.store');
-
-Route::get('client/search', 'ClientController@search')
-    ->name('client.search')->middleware('auth:api');
-
-Route::get('countries','CountryController@index')
-    ->name('country.index');
-Route::post('countries','CountryController@searchCountry');
+    Route::get('package/request','PackageController@index');
+    Route::post('cities','CountryController@cities');
+});
 
 
-Route::get('client/mobile/is_unique','ClientController@isMobileUnique')
-    ->name('client_mobile_is_unique.isMobileUnique');
-
-Route::get('client/email/is_unique','ClientController@isEmailUnique')
-    ->name('client_email_is_unique.isEmailُUnique');
-
-Route::get('package/request','PackageController@index');
-Route::post('cities','CountryController@cities');
