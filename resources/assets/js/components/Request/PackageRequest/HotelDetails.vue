@@ -337,10 +337,9 @@
                 this.validation.hotel.selectedChildrenNum = true;
                 this.processValidationBeforeSend();
                 this.sendValidationToDestination();
-                console.log("children 0", this.validation.hotel.selectedChildrenNum);
+                // console.log("children 0", this.validation.hotel.selectedChildrenNum);
             }
             bus.$on(`empty-accommodation-fields-${this.destinationNumber}`, () => {
-                console.log("accommodationType:", this.accomType);
                 this.emptyOnAccommodationType();
             });
             this.remainingAdults = this.adultsNumber;
