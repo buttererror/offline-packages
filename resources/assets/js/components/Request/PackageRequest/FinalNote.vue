@@ -58,6 +58,7 @@
                     'note':this.noteText
 
                 }).then(response => {
+                    this.$toastr('info', response.data.success)
 
                 })
             },

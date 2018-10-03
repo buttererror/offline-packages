@@ -15,9 +15,15 @@ import FileUpload from 'v-file-upload';
 import ToggleButton from 'vue-js-toggle-button';
 import VueI18n from 'vue-i18n'
 import VueRouter from 'vue-router';
+import VueToastr from '@deveodk/vue-toastr'
 
 Vue.use(VueI18n);
 
+Vue.use(VueToastr, {
+    defaultPosition: 'toast-top-right',
+    defaultType: 'info',
+    defaultTimeout: 3000
+});
 
 Vue.use(ToggleButton);
 Vue.use(FileUpload);
@@ -121,3 +127,4 @@ window.packageDetails = {};
 
 
 import 'vue-multiselect/dist/vue-multiselect.min.css'
+import '@deveodk/vue-toastr/dist/@deveodk/vue-toastr.css'
