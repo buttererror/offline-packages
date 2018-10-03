@@ -19,7 +19,6 @@ class CreatePackagesTable extends Migration
             $table->unsignedInteger('user_id');
             $table->string('title')->nullable();
             $table->date('start_date');
-            $table->date('end_date');
             $table->unsignedInteger('adults');
             $table->unsignedInteger('children_count')->nullable();
             $table->unsignedInteger('number_of_destinations');

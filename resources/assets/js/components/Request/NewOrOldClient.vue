@@ -125,6 +125,11 @@
                     }
                 }).then(response => {
                     this.clients = response.data;
+                }).catch(e=>{
+                    axios.post('/logout').then(response => {
+
+                     window.location.href="/login";
+                    });
                 });
             },
             handleNewClientClicked() {
