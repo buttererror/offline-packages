@@ -17,20 +17,13 @@ class PackageController extends Controller
     public function store(Request $request)
     {
 
-//        $request->validate([
-//            'client_id' => 'required|integer|exists:clients,id',
-//            'title' => 'nullable|string|max:255',
-//            'start_date' => 'nullable|date_format:Y-m-d|after:yesterday',
-//            'star_place' => 'nullable|string|max:255',
-//            'note' => 'nullable|string|max:500'
-//        ]);
         $data = $request->all();
         $package = new Package();
         $package->savePackageDetails($data);
 
 
         return response()->json([
-            'package' => $package
-        ], 201);
+            'success' => "package Request saved successfully"
+        ], 200);
     }
 }

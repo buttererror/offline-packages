@@ -53,7 +53,6 @@ class Package extends Model
     }
 
     public function savePackageDetails($data){
-        dd($data);
 
         $packageCountries=[];
         $this->start_date=Carbon::parse($data['package_details']['tripStartAt']);
@@ -74,6 +73,7 @@ class Package extends Model
         $this->country()->attach($packageCountries);
         foreach ($data['destination_details'] as $destination_detail){
             $other_services=[];
+            $rooms_data=[];
 
             $services= new \stdClass();
             $services->rent_car=$destination_detail['rentCar'];
@@ -81,6 +81,17 @@ class Package extends Model
             $services->car_level=$destination_detail['selectedCarLevel'];
             $services->need_tours=$destination_detail['needTours'];
             array_push($other_services,$services);
+            if(array_key_exists('roomsNum',$destination_detail['hotelDetails'])){
+                for($i=0;$i<count($destination_detail['hotelDetails']['roomsNum']);$i++){
+                    $rooms=new \stdClass();
+                    $rooms->room_number=$i+1;
+                    $rooms->adults=$destination_detail['hotelDetails']['selectedAdultsNum'][$i];
+                    $rooms->children=$destination_detail['hotelDetails']['selectedChildrenNum'][$i];
+                    array_push($rooms_data,$rooms);
+
+                }
+
+            }
 
             $this->accommodationRequests()->create([
                 'accommodation_type'=>$destination_detail['selectedAccomodationType'],
@@ -89,15 +100,17 @@ class Package extends Model
                 'nights'=>$destination_detail['nightsNum'],
                 'city_id'=>$destination_detail['selectedCity']['id'],
                 'country_id'=>$destination_detail['selectedCity']['country_id'],
-                'rooms'=>$destination_detail['hotelDetails']['roomsNum'],
-                'hotel_name'=>$destination_detail['hotelDetails']['hotelName'],
-                'area_name'=>$destination_detail['hotelDetails']['area'],
-                'room_type'=>$destination_detail['hotelDetails']['selectedRoomType'],
-                'room_view'=>$destination_detail['hotelDetails']['selectedRoomView'],
-                'stars'=>$destination_detail['hotelDetails']['selectedStars'],
+                'rooms'=>json_encode($rooms_data),
+                'hotel_name'=>array_key_exists('hotelName',$destination_detail['hotelDetails'])?$destination_detail['hotelDetails']['hotelName']:null,
+                'area_name'=>array_key_exists('area',$destination_detail['hotelDetails'])?$destination_detail['hotelDetails']['area']:null,
+                'room_type'=>array_key_exists('selectedRoomType',$destination_detail['hotelDetails'])?$destination_detail['hotelDetails']['selectedRoomType']:null,
+                'room_view'=>array_key_exists('selectedRoomView',$destination_detail['hotelDetails'])?$destination_detail['hotelDetails']['selectedRoomView']:null,
+                'stars'=> array_key_exists('selectedStars',$destination_detail['hotelDetails'])?$destination_detail['hotelDetails']['selectedStars']:null,
                 'other_services'=>json_encode($other_services)
             ]);
         }
+
+
 
 
     }
