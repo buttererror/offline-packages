@@ -421,13 +421,13 @@
             //     this.activateNxtBtn();
             // },
             nextComponent() {
-                if (this.activateNextBtn) {
+                // if (this.activateNextBtn) {
                     window.packageDetails.packageMainDetails = this.packageMainDetails;
                     this.$emit('next-component', {
                         component: 'DestinationBase',
                         step: 'destinationDetails'
                     });
-                }
+                // }
             },
             previousComponent() {
                 this.$emit('previous-component', "SelectService");
