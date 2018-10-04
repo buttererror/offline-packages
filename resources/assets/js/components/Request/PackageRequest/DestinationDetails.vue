@@ -102,21 +102,22 @@
             <label class="col-form-label col-form-label-lg col-3" :class="$t('labelDir')"
             >{{$t('packageDetails.startEndJourney')}}
             </label>
-            <div class="col-6">
+            <div class="col-6" id="drophere">
 
-                <HotelDatePicker @checkInChanged="getCheckInDate"
-                                 @checkOutChanged="getCheckOutDate"
-                                 :startDate="startRangeDate"
-                                 :minNights="1"
-                                 format="DD/MM/YYYY"
-                                 :hoveringTooltip="getNights"
-                                 :i18n="hotelPickerLang"
-                                 :showYear="true"
-                                 :startingDateValue="startRangeDate"
-                >
+                <!--<HotelDatePicker @checkInChanged="getCheckInDate"-->
+                                 <!--@checkOutChanged="getCheckOutDate"-->
+                                 <!--:startDate="startRangeDate"-->
+                                 <!--:minNights="1"-->
+                                 <!--format="DD/MM/YYYY"-->
+                                 <!--:hoveringTooltip="getNights"-->
+                                 <!--:i18n="hotelPickerLang"-->
+                                 <!--:showYear="true"-->
+                                 <!--:startingDateValue="startRangeDate"-->
+                                 <!--ref="myDatePicker"-->
+                <!--&gt;-->
 
 
-                </HotelDatePicker>
+                <!--</HotelDatePicker>-->
             </div>
 
         </div>
@@ -250,7 +251,7 @@
     import Multiselect from 'vue-multiselect';
     import HotelDetail from './HotelDetails';
     import HotelDatePicker from 'vue-hotel-datepicker';
-
+    window.HotelDatePicker = HotelDatePicker;
     import {en, ar} from 'vuejs-datepicker/dist/locale'
 
     export default {
@@ -318,6 +319,7 @@
             }
         },
         mounted() {
+            window.md = this.modifyStartDateRange;
             this.setCheckInDate();
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
@@ -466,6 +468,16 @@
                 this.processValidationData();
                 this.sendValidationToBase();
                 bus.$emit(`empty-accommodation-fields-${this.cityNumber}`);
+            },
+            modifyStartDateRange(date){
+                this.startRangeDate = date;
+                let HotelDatePickerClass = Vue.extend(HotelDatePicker);
+                let instance = new HotelDatePickerClass({
+                    propsData: { startDate: date}
+                });
+                instance.$mount();
+                document.querySelector('#drophere').innerHTML = '';
+                document.querySelector('#drophere').appendChild(instance.$el);
             }
         },
         watch: {
