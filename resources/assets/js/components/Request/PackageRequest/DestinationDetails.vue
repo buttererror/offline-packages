@@ -33,7 +33,8 @@
     "hotelPickerLang":"ar",
     "yes":"نعم",
     "no":"لا",
-    "labelDir":"text-right"
+    "labelDir":"text-right",
+    "rangeDateMessage":"برجاء استكمال التواريخ السابقة"
     },
 
     "en": {
@@ -67,7 +68,9 @@
     "hotelPickerLang":"en",
     "yes":"yes",
     "no":"no",
-    "labelDir":"text-left"
+    "labelDir":"text-left",
+    "rangeDateMessage":"Please, complete the previous dates"
+
     }
     }
 </i18n>
@@ -102,7 +105,7 @@
             <label class="col-form-label col-form-label-lg col-3" :class="$t('labelDir')"
             >{{$t('packageDetails.startEndJourney')}}
             </label>
-            <div class="col-6 bg-danger" style="height: 48px" v-if="disable"></div>
+            <div class="col-6 text-danger bg-white text-center d-flex flex-column justify-content-center" style="height: 48px" v-if="disable">{{$t("rangeDateMessage")}}</div>
             <div class="col-6" v-else>
 
                 <HotelDatePicker :startDate="startRangeDate"
@@ -394,20 +397,29 @@
                 return (new Date(checkOut) - new Date(checkIn)) / (1000 * 3600 * 24);
             },
             getCheckInDate(checkIn) {
+                console.log("------------------------");
+                console.log("changing checkIn");
                 console.log("checkIn", checkIn);
                 console.log("this.checkIn", this.checkIn);
+                console.log("------------------------");
                 this.destinationDetails.checkInDate = checkIn;
                 this.validateCheckInDate();
             },
             getCheckOutDate(checkOut) {
+                console.log("------------------------");
+                console.log("changing checkOut");
                 console.log("checkout", checkOut);
                 this.destinationDetails.checkOutDate = checkOut;
                 if (checkOut || !this.destinationDetails.checkInDate && !checkOut) {
                     this.nextCheckIn = checkOut;
+                    console.log("this.checkIn", this.checkIn);
+                    console.log("checkIn", this.destinationDetails.checkInDate);
                     this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
                 } else {
                     this.destinationDetails.nightsNum = 0;
                 }
+                console.log("nightsNum", this.destinationDetails.nightsNum);
+                console.log("------------------------");
                 this.validateCheckOutDate();
             },
             setArentedCar(car) {
@@ -511,22 +523,30 @@
                 bus.$emit(`empty-accommodation-fields-${this.cityNumber}`);
             },
             clearRangeSelection() {
+                console.log("----------");
+                console.log("clear-selection");
                 bus.$emit(`clear-selection-${this.cityNumber}`);
-                console.log("_________");
-                console.log(this.checkInDate, this.checkOutDate);
-                console.log("_________");
+                this.destinationDetails.checkInDate = null;
+                this.destinationDetails.checkOutDate = null;
+                this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, this.destinationDetails.checkOutDate);
+                console.log("checkInDate, checkOutDate ~ data");
+                console.log(this.destinationDetails.checkInDate, this.destinationDetails.checkOutDate);
+                console.log("----------");
             },
             setStartDate(date) {
+                console.log("setting checkIn");
+                this.setCheckInDate(); // set checkInDate with the new value
                 bus.$emit(`set-checkIn-${this.cityNumber}`, date);
             },
             setEndDate(date) {
+                console.log("setting checkOut");
                 bus.$emit(`set-checkOut-${this.cityNumber}`, date);
             }
         },
         watch: {
             checkIn(newValue) {
-                console.log("newValue", newValue);
-                console.log("cityNumber in watch", this.cityNumber);
+                // console.log("newValue", newValue);
+                // console.log("cityNumber in watch", this.cityNumber);
                 this.startRangeDate = newValue;
                 this.clearRangeSelection();
                 this.setStartDate(newValue);

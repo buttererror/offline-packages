@@ -140,7 +140,7 @@
                 this.cities = response.data.cities;
             });
             bus.$on("checkout-date-destination", (rangeDate) => {
-                console.log("on next destination:", this.cityNumber, rangeDate);
+                // console.log("on next destination:", this.cityNumber, rangeDate);
                 this.everyCheckIn = rangeDate.checkOut;
                 this.checkIns[this.cityNumber] = [];
                 this.rangesDatesCheckList[this.cityNumber - 1] = [];
@@ -153,11 +153,11 @@
         },
         methods: {
             validateRangePicker(length) {
-                console.log("inside the function");
-                console.log(this.rangesDatesCheckList.length);
+                // console.log("inside the function");
+                // console.log(this.rangesDatesCheckList.length);
                 if(!length) return this.disableRangeDate = false;
                 for(let i = 0; i < length; i++){
-                    console.log("inside for", this.rangesDatesCheckList[i]);
+                    // console.log("inside for", this.rangesDatesCheckList[i]);
                     if(!this.rangesDatesCheckList[i]){
                         this.disableRangeDate = true;
                         return;
@@ -166,7 +166,7 @@
                 this.disableRangeDate = false;
             },
             nextDestination() {
-                console.log("ranges check", this.rangesDatesCheckList);
+                // console.log("ranges check", this.rangesDatesCheckList);
                 bus.$emit(`next-destination-${this.cityNumber}`, this.cityNumber - 1);
                 this.validateRangePicker(this.cityNumber);
                 this.cityNumber++;
@@ -175,14 +175,14 @@
                 bus.$emit("previous", this.cityNumber - 1);
                 bus.$emit(`previous-destination-${this.cityNumber}`, this.cityNumber - 1);
                 this.everyCheckIn = this.checkIns[this.cityNumber - 1][0];
-                console.log("when back", this.everyCheckIn);
+                // console.log("when back", this.everyCheckIn);
                 this.cityNumber--;
-                console.log("___");
-                console.log("previous");
-                console.log("cityNumber", this.cityNumber);
-                console.log("ranges check", this.rangesDatesCheckList);
-                console.log("ranges length", this.rangesDatesCheckList.length);
-                console.log("_____");
+                // console.log("___");
+                // console.log("previous");
+                // console.log("cityNumber", this.cityNumber);
+                // console.log("ranges check", this.rangesDatesCheckList);
+                // console.log("ranges length", this.rangesDatesCheckList.length);
+                // console.log("_____");
                 this.validateRangePicker(this.cityNumber - 1);
             },
             nextComponent() {
@@ -193,7 +193,7 @@
                         step: 'finalize'
                     });
 
-                    console.log("package", window.packageDetails);
+                    // console.log("package", window.packageDetails);
                 }
             },
             previousComponent() {

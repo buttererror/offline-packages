@@ -32,7 +32,9 @@
     "yes":"نعم",
     "no":"لا",
     "edit":"تعديل",
-    "labelDir":"text-right"
+    "labelDir":"text-right",
+    "adultsNumberLabel":"كبار",
+    "childrenNumberLabel":"صغار"
 
     },
 
@@ -68,7 +70,9 @@
     "yes":"yes",
     "no":"no",
     "edit":"Edit",
-    "labelDir":"text-left"
+    "labelDir":"text-left",
+    "adultsNumberLabel":"Adults",
+    "childrenNumberLabel":"Children"
     }
     }
 </i18n>
@@ -157,20 +161,6 @@
                     </div>
                 </div>
                 <div v-if="show" class="row">
-                    <div class="col-6">
-                        <b-alert show variant="info d-flex justify-content-around rounded-0"
-                                 style="margin-bottom: 0">
-                            <div class="h6 text-danger d-inline-block">
-                                ({{adultsNumberChosen}}) :{{$t('adults')}}<br>
-                                ({{childrenNumberChosen}}) :{{$t('children')}}
-                            </div>
-                            <div class="h6 text-success d-inline-block">
-                                ({{adultsNumber}}) :{{$t('adults')}}<br>
-                                ({{childrenNumber}}) :{{$t('children')}}
-                            </div>
-                        </b-alert>
-                    </div>
-
                     <b-alert show variant="light"
                              class="d-flex justify-content-center col-6 align-items-stretch"
                              style="margin-bottom: 0"
@@ -178,6 +168,20 @@
                     >
                         <button class="btn btn-light btn-block p-0" @click="editRoomsData">{{$t('edit')}}</button>
                     </b-alert>
+                    <div class="col-6">
+                        <b-alert show variant="info d-flex justify-content-around rounded-0"
+                                 style="margin-bottom: 0">
+                            <div class="h6 text-danger d-inline-block">
+                                 {{$t('packageDetails.adults')}} : ({{adultsNumberChosen}})<br>
+                                {{$t('packageDetails.children')}} : ({{childrenNumberChosen}})
+                            </div>
+                            <div class="h6 text-success d-inline-block">
+                                {{$t('packageDetails.adults')}} : ({{adultsNumber}})<br>
+                                {{$t('packageDetails.children')}} : ({{childrenNumber}})
+                            </div>
+                        </b-alert>
+                    </div>
+
                 </div>
 
             </div>
