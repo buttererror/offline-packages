@@ -149,7 +149,10 @@
             });
             bus.$on("validate-range-picker", (mark) => {
                 this.rangesDatesCheckList[this.cityNumber - 1] = mark;
-            })
+            });
+            bus.$on("clear-next-ranges-selection", () => {
+
+            });
         },
         methods: {
             validateRangePicker(length) {

@@ -360,11 +360,8 @@
                     checkIn: this.checkIn,
                     checkOut: this.nextCheckIn
                 });
-                if(!this.destinationDetails.checkOutDate){
-                    bus.$emit("validate-range-picker", false);
-                }else{
-                    bus.$emit("validate-range-picker", true);
-                }
+                //TODO: bug in range date picker validation
+                this.validateRangePicker();
             });
             bus.$on(`previous-destination-${this.cityNumber}`, (cityIndex) => {
                 window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
@@ -496,6 +493,13 @@
                 this.processValidationData();
                 this.sendValidationToBase();
             },
+            validateRangePicker(){
+                if(!this.destinationDetails.checkOutDate){
+                    bus.$emit("validate-range-picker", false);
+                }else{
+                    bus.$emit("validate-range-picker", true);
+                }
+            },
             processValidationData() {
                 // process the data and get one property .. true or false for the whole destination
                 for (let check in this.validation) {
@@ -535,6 +539,9 @@
                 console.log(this.destinationDetails.checkInDate, this.destinationDetails.checkOutDate);
                 console.log("----------");
             },
+            clearNextRangesSelection(){
+                bus.$emit("clear-next-ranges-selection");
+            },
             setStartDate(date) {
                 console.log("setting checkIn");
                 this.setCheckInDate(); // set checkInDate with the new value
@@ -558,6 +565,7 @@
                 // console.log("cityNumber in watch", this.cityNumber);
                 this.startRangeDate = newValue;
                 this.clearRangeSelection();
+                this.clearNextRangesSelection();
                 this.setStartDate(newValue);
             }
         },
