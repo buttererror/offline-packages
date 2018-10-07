@@ -27,7 +27,9 @@
       <nav aria-label="breadcrumb">
          <ol class="breadcrumb" :dir="$t('dir')">
             <li v-for="(crumb, order) in breadcrumbs" class="breadcrumb-item"
-                aria-current="page" :class="{active: breadcrumbs.length -1 === order}">
+                aria-current="page" :class="{active: breadcrumbs.length -1 === order,
+                'breadcrumb-item-right': $t('dir') === 'rtl',
+                'breadcrumb-item-left': $t('dir') === 'ltr'}">
                <span v-if="breadcrumbs.length -1 === order">{{$t(crumb.step)}}</span>
                <a href="#" @click.prevent="removeCrumb(crumb)" v-else>{{$t(crumb.step)}}</a>
             </li>
@@ -105,5 +107,21 @@
 </script>
 
 <style scoped>
+    .breadcrumb-item-right::before{
+        padding-left: 0.5rem !important;
+        padding-right: 0 !important;
+    }
+    .breadcrumb-item-right{
+        padding-right: 0.5rem !important;
+        padding-left: 0 !important;
+    }
+    .breadcrumb-item-left::before{
+            padding-right: 0.5rem !important;
+            padding-left: 0 !important;
+    }
+    .breadcrumb-item-left{
+        padding-left: 0.5rem !important;
+        padding-right: 0 !important;
+    }
 
 </style>
