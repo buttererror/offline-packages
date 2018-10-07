@@ -351,6 +351,7 @@
             });
             bus.$on(`next-destination-${this.cityNumber}`, (cityIndex) => {
                 console.log("disable", this.disable);
+                this.accommodationTypeToEnglish();
                 window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
                 // console.log("nextCheckIn", this.nextCheckIn);
                 // console.log("checkInDate", this.destinationDetails.checkInDate);
@@ -374,6 +375,7 @@
                 // console.log("setting startRange when stepping back", this.startRangeDate);
             });
             bus.$on(`next-component-${this.cityNumber}`, (cityIndex) => {
+                this.accommodationTypeToEnglish();
                 window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
             });
             bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
@@ -541,6 +543,13 @@
             setEndDate(date) {
                 console.log("setting checkOut");
                 bus.$emit(`set-checkOut-${this.cityNumber}`, date);
+            },
+            accommodationTypeToEnglish() {
+                if(this.destinationDetails.selectedAccomodationType === "فندق"){
+                    this.destinationDetails.selectedAccomodationType = "Hotel";
+                }else if(this.destinationDetails.selectedAccomodationType === "شقة"){
+                    this.destinationDetails.selectedAccomodationType = "Apartment";
+                }
             }
         },
         watch: {
