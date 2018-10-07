@@ -24,7 +24,7 @@
 
         <div class="card-body">
             <b-form-textarea id="note"
-                             v-model.trim="noteText"
+                             v-model="noteText"
                              :placeholder="$t('enterSomething')"
                              :rows="5">
 
