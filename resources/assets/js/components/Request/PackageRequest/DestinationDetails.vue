@@ -105,7 +105,7 @@
             <label class="col-form-label col-form-label-lg col-3" :class="$t('labelDir')"
             >{{$t('packageDetails.startEndJourney')}}
             </label>
-            <div class="col-6 text-danger bg-white text-center d-flex flex-column justify-content-center" style="height: 48px" v-if="disable">{{$t("rangeDateMessage")}}</div>
+            <div class="col-6 bg-white text-center d-flex flex-column justify-content-center" style="height: 48px" v-if="disable">{{$t("rangeDateMessage")}}</div>
             <div class="col-6" v-else>
 
                 <HotelDatePicker :startDate="startRangeDate"
@@ -260,7 +260,7 @@
 
     export default {
         name: "DestinationDetails",
-        props: ["cities", "cityNumber", "checkIn", "checkIns", "disable"],
+        props: ["cities", "cityNumber", "disableBefore", "disable"],
         components: {
             Datepicker,
             Multiselect,
@@ -280,8 +280,8 @@
                 tripStartAt: window.packageDetails.packageMainDetails.tripStartAt,
                 adultsNum: window.packageDetails.packageMainDetails.adultsNum,
                 childrenNum: window.packageDetails.packageMainDetails.childrenNum,
-                startRangeDate: this.checkIn,
-                nextCheckIn: null,
+                startRangeDate: this.disableBefore,
+                nextStartDate: null,
                 validation: {
                     city: false,
                     checkInDate: false,
@@ -324,52 +324,31 @@
         mounted() {
             bus.$on(`checkInChanged-${this.cityNumber}`, (checkIn) => {
                 this.getCheckInDate(checkIn);
+                this.clearNextRangesSelection();
             });
             bus.$on(`checkOutChanged-${this.cityNumber}`, (checkOut) => {
                 this.getCheckOutDate(checkOut);
-            });
-            bus.$on('previous', (cityNumber) => {
-                // if(this.cityNumber === cityNumber){
-                //    console.log("on previous");
-                //    console.log("cityNumber", this.cityNumber);
-                //    console.log("checkIn prop", this.checkIn);
-                //    console.log("startRangeDate", this.startRangeDate);
-                //    console.log("checkIns", this.checkIns);
-                //    console.log("________");
-                //    this.clearRangeSelection();
-                //    if(typeof this.checkIns[this.cityNumber][0] !== 'undefined'){
-                //       this.setStartDate(this.checkIns[this.cityNumber][0]);
-                //    }
-                //    if(typeof this.checkIns[this.cityNumber][1] !== 'undefined'){
-                //       this.setStartDate(this.checkIns[this.cityNumber][1]);
-                //    }
-                // }
             });
             this.setCheckInDate();
             bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
                 this.destinationDetails.hotelDetails = hotelDetails;
             });
             bus.$on(`next-destination-${this.cityNumber}`, (cityIndex) => {
-                console.log("disable", this.disable);
+                // console.log("disable", this.disable);
                 this.accommodationTypeToEnglish();
                 window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
-                // console.log("nextCheckIn", this.nextCheckIn);
+                // console.log("nextStartDate", this.nextStartDate);
                 // console.log("checkInDate", this.destinationDetails.checkInDate);
-                // console.log("before send to base", {checkIn: this.destinationDetails.checkInDate, checkOut: this.nextCheckIn})
-                bus.$emit("checkout-date-destination", {
-                    checkIn: this.checkIn,
-                    checkOut: this.nextCheckIn
+                // console.log("before send to base", {checkIn: this.destinationDetails.checkInDate, checkOut: this.nextStartDate})
+                bus.$emit("next-start-date", {
+                    startDate: this.disableBefore,
+                    checkOut: this.nextStartDate
                 });
-                //TODO: bug in range date picker validation
+                // TODO: bug in range date picker validation
                 this.validateRangePicker();
             });
             bus.$on(`previous-destination-${this.cityNumber}`, (cityIndex) => {
                 window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
-                // console.log("cityNumber", this.cityNumber);
-                // console.log("cityIndex", cityIndex);
-                // console.log("this.checkIns", this.checkIns);
-                // this.startRangeDate = this.checkIns[cityIndex];
-                // console.log("setting startRange when stepping back", this.startRangeDate);
             });
             bus.$on(`next-component-${this.cityNumber}`, (cityIndex) => {
                 this.accommodationTypeToEnglish();
@@ -389,18 +368,18 @@
 
         methods: {
             setCheckInDate() {
-                this.destinationDetails.checkInDate = this.checkIn;
+                this.destinationDetails.checkInDate = this.disableBefore;
                 this.validateCheckInDate();
             },
             getNights(checkIn, checkOut) {
                 return (new Date(checkOut) - new Date(checkIn)) / (1000 * 3600 * 24);
             },
             getCheckInDate(checkIn) {
-                console.log("------------------------");
-                console.log("changing checkIn");
-                console.log("checkIn", checkIn);
-                console.log("this.checkIn", this.checkIn);
-                console.log("------------------------");
+                // console.log("------------------------");
+                // console.log("changing checkIn");
+                // console.log("checkIn", checkIn);
+                // console.log("this.checkIn", this.checkIn);
+                // console.log("------------------------");
                 this.destinationDetails.checkInDate = checkIn;
                 this.validateCheckInDate();
             },
@@ -410,15 +389,13 @@
                 console.log("checkout", checkOut);
                 this.destinationDetails.checkOutDate = checkOut;
                 if (checkOut || !this.destinationDetails.checkInDate && !checkOut) {
-                    this.nextCheckIn = checkOut;
-                    console.log("this.checkIn", this.checkIn);
-                    console.log("checkIn", this.destinationDetails.checkInDate);
+                    this.nextStartDate = checkOut;
                     this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
                 } else {
                     this.destinationDetails.nightsNum = 0;
                 }
-                console.log("nightsNum", this.destinationDetails.nightsNum);
-                console.log("------------------------");
+                // console.log("nightsNum", this.destinationDetails.nightsNum);
+                // console.log("------------------------");
                 this.validateCheckOutDate();
             },
             setArentedCar(car) {
@@ -529,26 +506,26 @@
                 bus.$emit(`empty-accommodation-fields-${this.cityNumber}`);
             },
             clearRangeSelection() {
-                console.log("----------");
-                console.log("clear-selection");
-                bus.$emit(`clear-selection-${this.cityNumber}`);
+                // console.log("----------");
+                // console.log("clear-selection");
+                bus.$emit(`clear-selection-${this.cityNumber}`); // listen in hotelDatePicker
                 this.destinationDetails.checkInDate = null;
                 this.destinationDetails.checkOutDate = null;
                 this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, this.destinationDetails.checkOutDate);
-                console.log("checkInDate, checkOutDate ~ data");
-                console.log(this.destinationDetails.checkInDate, this.destinationDetails.checkOutDate);
-                console.log("----------");
+                // console.log("checkInDate, checkOutDate ~ data");
+                // console.log(this.destinationDetails.checkInDate, this.destinationDetails.checkOutDate);
+                // console.log("----------");
             },
             clearNextRangesSelection(){
                 bus.$emit("clear-next-ranges-selection");
             },
             setStartDate(date) {
-                console.log("setting checkIn");
+                // console.log("setting checkIn");
                 this.setCheckInDate(); // set checkInDate with the new value
                 bus.$emit(`set-checkIn-${this.cityNumber}`, date);
             },
             setEndDate(date) {
-                console.log("setting checkOut");
+                // console.log("setting checkOut");
                 bus.$emit(`set-checkOut-${this.cityNumber}`, date);
             },
             accommodationTypeToEnglish() {
@@ -560,13 +537,12 @@
             }
         },
         watch: {
-            checkIn(newValue) {
-                // console.log("newValue", newValue);
-                // console.log("cityNumber in watch", this.cityNumber);
+            disableBefore(newValue) { // trigger when the start date changes
+                console.log("setting new value");
                 this.startRangeDate = newValue;
-                this.clearRangeSelection();
+                this.clearRangeSelection(); // this set checkIn and checkOut with null, call both validation
                 this.clearNextRangesSelection();
-                this.setStartDate(newValue);
+                this.setStartDate(newValue); // this call checkIn validation
             }
         },
         computed: {
@@ -577,19 +553,7 @@
                 else {
                     return this.i18n_en
                 }
-            },
-            // startRangeDate: {
-            //     get() {
-            //         console.log("cityNumber", this.cityNumber);
-            //         console.log("array", this.checkIns);
-            //         // bus.$on(`previous-destination-${this.cityNumber}`, () => {
-            //         //     return this.checkIns[this.cityNumber - 1];
-            //         // });
-            //         return this.checkIn;
-            //     },
-            //     set() {
-            //     }
-            // }
+            }
         }
 
 

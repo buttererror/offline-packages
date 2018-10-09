@@ -59,7 +59,7 @@
                     <keep-alive>
                         <DestinationDetails v-if="destinationNumber === cityNumber"
                                             :cityNumber="destinationNumber" :cities="cities"
-                                            :checkIn="everyCheckIn" :checkIns="checkIns"
+                                            :disableBefore="startDate"
                                             :disable="disableRangeDate"
                         >
                         </DestinationDetails>
@@ -91,7 +91,6 @@
 <script>
     import DestinationDetails from "./DestinationDetails";
 
-    //TODO: BUG in nights count - to reproduce go back and forth from destination to another
     export default {
         name: "DestinationBase",
         props: ["data"],
@@ -109,8 +108,8 @@
                 destinationsValidation: [],
                 activateNextBtn: false,
                 updateListening: null,
-                everyCheckIn: window.packageDetails.packageMainDetails.tripStartAt,
-                checkIns: [],
+                startDate: window.packageDetails.packageMainDetails.tripStartAt,
+                citiesStartDates: [],
                 rangesDatesCheckList: [],
                 disableRangeDate: false
             }
@@ -139,20 +138,30 @@
             axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
                 this.cities = response.data.cities;
             });
-            bus.$on("checkout-date-destination", (rangeDate) => {
-                // console.log("on next destination:", this.cityNumber, rangeDate);
-                this.everyCheckIn = rangeDate.checkOut;
-                this.checkIns[this.cityNumber] = [];
-                this.rangesDatesCheckList[this.cityNumber - 1] = [];
-                this.checkIns[this.cityNumber][0] = rangeDate.checkIn;
-                this.checkIns[this.cityNumber][1] = rangeDate.checkOut;
+            bus.$on("next-start-date", (rangeDate) => {
+                // console.log("on next destination:", this.cityNumber, startDate);
+                this.startDate = rangeDate.checkOut; // next city start date
+                this.citiesStartDates[this.cityNumber] = [];
+                this.citiesStartDates[this.cityNumber][0] = rangeDate.startDate;
+                this.citiesStartDates[this.cityNumber][1] = rangeDate.checkOut;
             });
             bus.$on("validate-range-picker", (mark) => {
                 this.rangesDatesCheckList[this.cityNumber - 1] = mark;
+                // if(this.cityNumber === this.placesNum - 1) { // put the last date with true
+                //     this.rangesDatesCheckList[this.cityNumber] = true;
+                // }
+                console.log("rangesDatesCheckList", this.rangesDatesCheckList);
             });
-            bus.$on("clear-next-ranges-selection", () => {
-
-            });
+            // bus.$on("clear-next-ranges-selection", () => {
+            //     console.log("clearing next ranges");
+            //     let nextCityIndex = this.cityNumber;
+            //     for(let i = nextCityIndex; i < this.destinationsValidation.length; i++){
+            //         // this.rangesDatesCheckList[i] = false;
+            //         this.destinationsValidation[i] = false;
+            //     }
+            //     console.log("ranges after clearing next", this.rangesDatesCheckList);
+            //     console.log("destinationsValidation", this.destinationsValidation);
+            // });
         },
         methods: {
             validateRangePicker(length) {
@@ -175,10 +184,10 @@
                 this.cityNumber++;
             },
             previousDestination() {
-                bus.$emit("previous", this.cityNumber - 1);
+                console.log("going back");
                 bus.$emit(`previous-destination-${this.cityNumber}`, this.cityNumber - 1);
-                this.everyCheckIn = this.checkIns[this.cityNumber - 1][0];
-                // console.log("when back", this.everyCheckIn);
+                this.startDate = this.citiesStartDates[this.cityNumber - 1][0]; // previous city start date
+                // console.log("when back", this.startDate);
                 this.cityNumber--;
                 // console.log("___");
                 // console.log("previous");
@@ -212,11 +221,6 @@
                         this.activateNextBtn = true;
                     }
                 }
-            }
-        },
-        watch: {
-            everyCheckIn() {
-
             }
         }
     }
