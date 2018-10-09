@@ -393,6 +393,7 @@
             getCheckOutDate(checkOut) {
                 console.log("------------------------");
                 console.log("changing checkOut");
+                console.log("checkIn", this.destinationDetails.checkInDate);
                 console.log("checkout", checkOut);
                 this.destinationDetails.checkOutDate = checkOut;
                 if (checkOut || !this.destinationDetails.checkInDate && !checkOut) {
