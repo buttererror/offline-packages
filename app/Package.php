@@ -86,6 +86,7 @@ class Package extends Model
                     $rooms=new \stdClass();
                     $rooms->room_number=$i+1;
                     $rooms->adults=$destination_detail['hotelDetails']['selectedAdultsNum'][$i];
+                    // TODO : FIX Error here when no children
                     $rooms->children=$destination_detail['hotelDetails']['selectedChildrenNum'][$i];
                     array_push($rooms_data,$rooms);
 
