@@ -322,6 +322,13 @@
             }
         },
         mounted() {
+            bus.$on(`clear-and-set-${this.cityNumber}`, (newValue) => {
+                console.log("clearing clearing");
+                this.startRangeDate = newValue;
+                this.clearRangeSelection(); // this set checkIn and checkOut with null, call both validation
+                this.clearNextRangesSelection();
+                this.setStartDate(newValue); // this call checkIn validation
+            });
             bus.$on(`checkInChanged-${this.cityNumber}`, (checkIn) => {
                 this.getCheckInDate(checkIn);
                 this.clearNextRangesSelection();
@@ -476,6 +483,8 @@
                 }else{
                     bus.$emit("validate-range-picker", true);
                 }
+                this.processValidationData();
+                this.sendValidationToBase();
             },
             processValidationData() {
                 // process the data and get one property .. true or false for the whole destination
@@ -537,13 +546,12 @@
             }
         },
         watch: {
-            disableBefore(newValue) { // trigger when the start date changes
+            "destinationDetails.checkOutDate"(newValue) { // trigger when the start date changes
                 console.log("setting new value");
-                this.startRangeDate = newValue;
-                this.clearRangeSelection(); // this set checkIn and checkOut with null, call both validation
-                this.clearNextRangesSelection();
-                this.setStartDate(newValue); // this call checkIn validation
-            }
+                console.log("cityNumber", this.cityNumber);
+                bus.$emit(`clear-and-set-${this.cityNumber + 1}`, newValue);
+            },
+            deep: true
         },
         computed: {
             hotelPickerLang: function () {

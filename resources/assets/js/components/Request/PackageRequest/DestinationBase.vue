@@ -128,9 +128,6 @@
                 this.activateNxtBtn();
                 // console.log("destinations Validation", this.destinationsValidation);
             });
-            // bus.$on("collect-destinations", (destinationDetails) => {
-            //
-            // });
             let selectedCountriesIds = [];
             this.selectedCountries.forEach(function (element) {
                 selectedCountriesIds.push(element.id)
@@ -147,21 +144,17 @@
             });
             bus.$on("validate-range-picker", (mark) => {
                 this.rangesDatesCheckList[this.cityNumber - 1] = mark;
-                // if(this.cityNumber === this.placesNum - 1) { // put the last date with true
-                //     this.rangesDatesCheckList[this.cityNumber] = true;
-                // }
                 console.log("rangesDatesCheckList", this.rangesDatesCheckList);
             });
-            // bus.$on("clear-next-ranges-selection", () => {
-            //     console.log("clearing next ranges");
-            //     let nextCityIndex = this.cityNumber;
-            //     for(let i = nextCityIndex; i < this.destinationsValidation.length; i++){
-            //         // this.rangesDatesCheckList[i] = false;
-            //         this.destinationsValidation[i] = false;
-            //     }
-            //     console.log("ranges after clearing next", this.rangesDatesCheckList);
-            //     console.log("destinationsValidation", this.destinationsValidation);
-            // });
+            bus.$on("clear-next-ranges-selection", () => {
+                console.log("clearing next ranges");
+                let nextCityIndex = this.cityNumber;
+                for(let i = nextCityIndex; i < this.destinationsValidation.length; i++){
+                    this.destinationsValidation[i] = false;
+                }
+                console.log("ranges after clearing next", this.rangesDatesCheckList);
+                console.log("destinationsValidation", this.destinationsValidation);
+            });
         },
         methods: {
             validateRangePicker(length) {
