@@ -573,7 +573,7 @@
                 this.hotelDetails.selectedChildrenNum = [];
                 this.hotelDetails.roomsNum = '';
                 this.fillChildrenOptions();
-                // this.validateOnHotelDetails();
+                this.validateOnHotelDetails();
             },
             validateOnHotelDetails() {
                 this.validateAdultsNum();
