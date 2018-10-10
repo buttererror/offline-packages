@@ -223,7 +223,7 @@
             currentDate: new Date(),
             months: [],
             activeMonthIndex: 0,
-            nextDisabledDate: null,
+            nextDisabledDate: Infinity,
             show: true,
             isOpen: false,
             xDown: null,
