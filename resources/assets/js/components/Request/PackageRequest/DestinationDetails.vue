@@ -114,7 +114,6 @@
                                  :hoveringTooltip="getNights"
                                  :i18n="hotelPickerLang"
                                  :showYear="true"
-                                 :startingDateValue="startRangeDate"
                                  dir="ltr" :cityNumber="cityNumber"
                 >
 

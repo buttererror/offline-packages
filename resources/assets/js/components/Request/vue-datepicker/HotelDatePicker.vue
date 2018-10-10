@@ -476,7 +476,6 @@
          document.addEventListener('touchstart', this.handleTouchStart, false);
          document.addEventListener('touchmove', this.handleTouchMove, false);
          window.addEventListener('resize', this.handleWindowResize);
-
          this.onElementHeightChange(document.body, () => {
             this.emitHeighChangeEvent();
          });
