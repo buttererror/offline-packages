@@ -19,6 +19,7 @@
 
         <!--<modal-popup :dir="$t('dir')"></modal-popup>-->
         <HotelDatePicker :startDate="startingDate"
+                         :startingDateValue="startingDate"
                          :minNights="1"
                          format="DD/MM/YYYY"
                          :showYear="true"
@@ -48,14 +49,14 @@
         data(){
             return{
                 'lang':'ar',
-                startingDate: new Date(),
+                startingDate: new Date('2018-11-11 05:00'),
                 checkInDate: null,
                 checkOutDate: null,
                 nightsNum: 0
             }
         },
         mounted() {
-            bus.$emit('set-checkIn-1', new Date());
+            this.checkInDate = this.startingDate;
             this.collectDates();
             window.changeStartDate = this.changeStartDate;
             // this.lang = this.language;
@@ -67,17 +68,29 @@
         },
         methods: {
             changeStartDate(date){
-                this.startingDate = new Date(date);
                 bus.$emit('clear-selection-1');
                 bus.$emit('set-checkIn-1', new Date(date));
+                this.startingDate = new Date(date);
             },
             collectDates() {
                 this.checkInDate = this.startingDate;
-                bus.$on('checkOutChanged-1', (date) => {
-                    this.checkInDate = date;
-                });
                 bus.$on('checkInChanged-1', (date) => {
+                    this.checkInDate = date;
+                    this.checkInDate.setHours(0,0,0,0);
+                    this.checkOutDate.setHours(0,0,0,0);
+                    this.nightsNum = (this.checkOutDate - this.checkInDate) / 1000 / 60 / 60 / 24;
+                    if(this.nightsNum < 0){
+                        this.nightsNum = 0;
+                    }
+                });
+                bus.$on('checkOutChanged-1', (date) => {
                     this.checkOutDate = date;
+                    this.checkInDate.setHours(0,0,0,0);
+                    this.checkOutDate.setHours(0,0,0,0);
+                    this.nightsNum = (this.checkOutDate - this.checkInDate) / 1000 / 60 / 60 / 24;
+                    if(this.nightsNum < 0){
+                        this.nightsNum = 0;
+                    }
                 });
             }
         }
