@@ -326,12 +326,12 @@
                 console.log("clearing clearing");
                 this.startRangeDate = newValue;
                 this.clearRangeSelection(); // this set checkIn and checkOut with null, call both validation
-                this.clearNextRangesSelection();
+                this.ValidateOnClearSelection();
                 this.setStartDate(newValue); // this call checkIn validation
             });
             bus.$on(`checkInChanged-${this.cityNumber}`, (checkIn) => {
                 this.getCheckInDate(checkIn);
-                this.clearNextRangesSelection();
+                this.ValidateOnClearSelection();
             });
             bus.$on(`checkOutChanged-${this.cityNumber}`, (checkOut) => {
                 this.getCheckOutDate(checkOut);
@@ -347,10 +347,6 @@
                 // console.log("nextStartDate", this.nextStartDate);
                 // console.log("checkInDate", this.destinationDetails.checkInDate);
                 // console.log("before send to base", {checkIn: this.destinationDetails.checkInDate, checkOut: this.nextStartDate})
-                bus.$emit("next-start-date", {
-                    startDate: this.disableBefore,
-                    checkOut: this.nextStartDate
-                });
                 // TODO: bug in range date picker validation
                 this.validateRangePicker();
             });
@@ -375,6 +371,7 @@
 
         methods: {
             setCheckInDate() {
+                console.log("setting new checkin date with disableBefore", this.disableBefore);
                 this.destinationDetails.checkInDate = this.disableBefore;
                 this.validateCheckInDate();
             },
@@ -521,16 +518,15 @@
                 bus.$emit(`clear-selection-${this.cityNumber}`); // listen in hotelDatePicker
                 this.destinationDetails.checkInDate = null;
                 this.destinationDetails.checkOutDate = null;
-                this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, this.destinationDetails.checkOutDate);
+                this.destinationDetails.nightsNum = 0;
                 // console.log("checkInDate, checkOutDate ~ data");
                 // console.log(this.destinationDetails.checkInDate, this.destinationDetails.checkOutDate);
                 // console.log("----------");
             },
-            clearNextRangesSelection(){
-                bus.$emit("clear-next-ranges-selection");
+            ValidateOnClearSelection(){
+                bus.$emit("clear-selection");
             },
             setStartDate(date) {
-                // console.log("setting checkIn");
                 this.setCheckInDate(); // set checkInDate with the new value
                 bus.$emit(`set-checkIn-${this.cityNumber}`, date);
             },
@@ -550,6 +546,11 @@
             "destinationDetails.checkOutDate"(newValue) { // trigger when the start date changes
                 console.log("setting new value");
                 console.log("cityNumber", this.cityNumber);
+                bus.$emit("next-start-date", {
+                    startDate: this.disableBefore,
+                    checkOut: this.nextStartDate
+                });
+                // bug: this $emit i'm changing its location to fix the bug
                 bus.$emit(`clear-and-set-${this.cityNumber + 1}`, newValue);
             },
             deep: true

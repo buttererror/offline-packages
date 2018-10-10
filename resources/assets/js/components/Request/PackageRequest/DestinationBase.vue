@@ -146,20 +146,16 @@
                 this.rangesDatesCheckList[this.cityNumber - 1] = mark;
                 console.log("rangesDatesCheckList", this.rangesDatesCheckList);
             });
-            bus.$on("clear-next-ranges-selection", () => {
-                console.log("clearing next ranges");
+            bus.$on("clear-selection", () => {
+                // set next destination validation with false
                 let nextCityIndex = this.cityNumber;
                 for(let i = nextCityIndex; i < this.destinationsValidation.length; i++){
                     this.destinationsValidation[i] = false;
                 }
-                console.log("ranges after clearing next", this.rangesDatesCheckList);
-                console.log("destinationsValidation", this.destinationsValidation);
             });
         },
         methods: {
-            validateRangePicker(length) {
-                // console.log("inside the function");
-                // console.log(this.rangesDatesCheckList.length);
+            multipleRangePickersValidation(length) {
                 if(!length) return this.disableRangeDate = false;
                 for(let i = 0; i < length; i++){
                     // console.log("inside for", this.rangesDatesCheckList[i]);
@@ -173,13 +169,14 @@
             nextDestination() {
                 // console.log("ranges check", this.rangesDatesCheckList);
                 bus.$emit(`next-destination-${this.cityNumber}`, this.cityNumber - 1);
-                this.validateRangePicker(this.cityNumber);
+                this.multipleRangePickersValidation(this.cityNumber);
                 this.cityNumber++;
             },
             previousDestination() {
                 console.log("going back");
-                bus.$emit(`previous-destination-${this.cityNumber}`, this.cityNumber - 1);
-                this.startDate = this.citiesStartDates[this.cityNumber - 1][0]; // previous city start date
+                let previousCityNumber = this.cityNumber - 1;
+                bus.$emit(`previous-destination-${this.cityNumber}`, previousCityNumber);
+                this.startDate = this.citiesStartDates[previousCityNumber][0]; // previous city start date
                 // console.log("when back", this.startDate);
                 this.cityNumber--;
                 // console.log("___");
@@ -188,7 +185,7 @@
                 // console.log("ranges check", this.rangesDatesCheckList);
                 // console.log("ranges length", this.rangesDatesCheckList.length);
                 // console.log("_____");
-                this.validateRangePicker(this.cityNumber - 1);
+                this.multipleRangePickersValidation(this.cityNumber - 1);
             },
             nextComponent() {
                 if (this.activateNextBtn) {
