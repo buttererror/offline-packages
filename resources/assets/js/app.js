@@ -36,6 +36,7 @@ Vue.use(BootstrapVue);
  */
 
 import BaseComponent from './components/Request/BaseComponent';
+import Request from './components/Request/Request';
 import Steps from './components/Request/Steps';
 
 
@@ -57,7 +58,7 @@ window.bus = new Vue();
 const app = new Vue({
     el: '#app',
     router,
-    components: {BaseComponent},
+    components: {BaseComponent,Request},
     i18n,
     data() {
         return {
@@ -101,8 +102,7 @@ const app = new Vue({
                 'password': this.user.password
             }).then(response => {
 
-                localStorage.setItem('token','Bearer '+ response.data.access_token)
-
+                localStorage.setItem('token','Bearer '+ response.data.access_token);
                 axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
                 let url = response.data.url;
                 localStorage.setItem('user_id', response.data.user.id);

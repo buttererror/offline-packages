@@ -13,7 +13,7 @@ $factory->define(App\Package::class, function (Faker $faker) {
     'number_of_destinations'=>rand(1,10),
     'children'=>null,
     'transfer'=>false,
-    'status'=>"s1",
+    'status'=>"new",
     'start_place'=>null,
     'note'=>null
 

@@ -1,7 +1,22 @@
 <?php
 
 Route::get('/', function () {
-    return view('welcome');
+    $where = [];
+    $where['client_id']='100';
+    $where['user_id']='8';
+    $operator=['=','<='];
+    $query = DB::table('packages');
+
+    foreach($where as $column => $value)
+    {
+        $index=0;
+        $query->where($column ,$operator[$index],$value);
+        $index++;
+    }
+    $packages = $query->get();
+
+    dd($packages);
+
 });
 Auth::routes();
 Route::get('/change_locale','HomeController@changeLocal');
@@ -23,4 +38,6 @@ Route::group([
     Route::post('me', 'AuthenticateController@me');
 
 });
-
+Route::get('/requests/{category}','PackageController@index');
+Route::get('/get/requests/{category}','PackageController@getRequests');
+Route::post('/update/request/status','PackageController@changeRequestStatus');

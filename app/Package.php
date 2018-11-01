@@ -30,6 +30,13 @@ class Package extends Model
         'children' => 'collection',
         'transfer' => 'boolean'
     ];
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($package){
+            $package->title = static::buildPackageTitle();
+        });
+    }
 
     public function accommodationRequests(){
         return $this->hasMany(PackageAccommodation::class);
@@ -111,8 +118,20 @@ class Package extends Model
         }
 
 
-
-
+    }
+    public static function buildPackageTitle(){
+        $rand_numbers = substr(uniqid('', true), -3);
+        $randomChars = 'SDFGHJKLPOIUYTREWQZXCVBNM';
+        $seed = str_split($randomChars);
+        $rand_chars='';
+        foreach (array_rand($seed, 3) as $k) {
+            $rand_chars .= $seed[$k];
+        }
+        $uniq = $rand_chars . $rand_numbers;
+        while(static::where('title', $uniq)->first()){
+            return static::buildPackageTitle();
+        }
+        return $uniq;
     }
 }
 
