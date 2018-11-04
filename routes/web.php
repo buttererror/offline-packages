@@ -38,6 +38,11 @@ Route::group([
     Route::post('me', 'AuthenticateController@me');
 
 });
-Route::get('/requests/{category}','PackageController@index');
-Route::get('/get/requests/{category}','PackageController@getRequests');
-Route::post('/update/request/status','PackageController@changeRequestStatus');
+
+Route::group(['middleware'=>'auth'],function(){
+    Route::get('/requests/{category}','PackageController@index');
+    Route::get('/get/requests/{category}','PackageController@getRequests');
+    Route::post('/update/request/status','PackageController@changeRequestStatus');
+    Route::post('/search/request','PackageController@searchRequest');
+
+});

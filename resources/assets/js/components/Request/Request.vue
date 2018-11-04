@@ -3,12 +3,13 @@
         <div class="row justify-content-center">
             <div class="form-group">
                 Search
-                <b-input class="mb-2 mr-sm-2 mb-sm-0" placeholder="Search" @input="filterRequests" v-model="filter_data"/>
+                <b-form-input class="mb-2 mr-sm-2 mb-sm-0" placeholder="Search" @input="filterRequests"
+                              v-model="filter_data"></b-form-input>
             </div>
             <br>
 
             <div class="col-md-8">
-                <div v-for="request in requests">
+                <div v-for="request in tempRequests">
                     <div v-show="request.id">
                         <b-card :title="request.title">
                             <p class="card-text">Start Date :{{request.start_date}}</p>
@@ -23,7 +24,8 @@
                                 </b-button>
                             </div>
                             <div v-if='role==="operator" && request.status==="received"'>
-                                <b-button variant="warning" @click="updateRequestStatus(request,'workingon')">Working on
+                                <b-button variant="warning" @click="updateRequestStatus(request,'workingon')">
+                                    Working on
                                     it
                                 </b-button>
                             </div>
@@ -38,10 +40,15 @@
                     <br>
                 </div>
                 <br>
-                <div v-if="requests.length>0">
-                    <b-pagination size="lg" :total-rows="requestsData.total" v-model="currentPage" :per-page="5"
-                                  @change="updateRequests">
+                <div v-if="tempRequests.length>0">
+                    <b-pagination size="lg" :total-rows="totalRows" v-model="currentPage" :per-page="5"
+                                  @input="updateRequests">
                     </b-pagination>
+                </div>
+                <div v-else>
+                    <b-alert variant="danger" show>No Results Found</b-alert>
+
+
                 </div>
             </div>
         </div>
@@ -56,9 +63,11 @@
         data() {
             return {
                 requests: this.requestsData.data,
+                tempRequests: this.requestsData.data,
+                totalRows: this.requestsData.total,
                 currentPage: 1,
                 userRole: this.role,
-                filter_data:''
+                filter_data: ''
             }
 
         },
@@ -67,25 +76,46 @@
         props: [
             'requestsData', 'role', 'category'
         ],
-        mounted() {
-            console.log(this.role);
-        },
         methods: {
             updateRequests() {
-                axios.get(`/get/requests/${this.category}/?page=${this.currentPage}`).then((response) => {
-                    console.log(response.data.requests);
-                    this.requests = response.data.requests.data;
-                });
+                if (this.filter_data == '') {
+                    axios.get(`/get/requests/${this.category}/?page=${this.currentPage}`).then((response) => {
+                        this.tempRequests = response.data.requests.data;
+                    });
+                }
+                else{
+                    axios.post(`/search/request/?page=${this.currentPage}`, {
+                        'query': this.filter_data,
+                        'category': this.category
+                    }).then(response => {
+                        this.tempRequests = response.data.requests.data;
+                        this.totalRows = response.data.requests.total;
+                    });
+                }
             },
             updateRequestStatus(request, status) {
                 axios.post('/update/request/status', {'id': request.id, 'status': status}).then(() => {
                     request.id = false;
-
                 });
             },
-            filterRequests(){
-                this.requests.filter(request=>request.name===this.filter_data);
-                console.log(this.requests);
+            filterRequests() {
+                if (this.filter_data == '') {
+                    this.tempRequests = this.requests;
+                    this.totalRows = this.requestsData.total;
+
+                }
+                else {
+                    axios.post('/search/request', {
+                        'query': this.filter_data,
+                        'category': this.category
+                    }).then(response => {
+                        this.tempRequests = response.data.requests.data;
+                        this.totalRows = response.data.requests.total;
+
+                    });
+                }
+
+
             }
         }
 

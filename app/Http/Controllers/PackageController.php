@@ -80,6 +80,18 @@ class PackageController extends Controller
         Package::where('id',$request_id)->update(['status'=>$request_status]);
     }
 
+    public function searchRequest(Request $request){
+        $data=$request->all();
+        if($data['category']=="all"){
+            $requests=Package::where('title','LIKE',$data['query'].'%')->paginate(5);
+        }
+        else{
+            $requests=Package::where('title','LIKE',$data['query'].'%')->where('status',$data['category'])->paginate(5);
+
+        }
+        return response()->json(['requests' => $requests]);
+    }
+
 
 
     public function create()
