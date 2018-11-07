@@ -1,22 +1,7 @@
 <?php
 
 Route::get('/', function () {
-    $where = [];
-    $where['client_id']='100';
-    $where['user_id']='8';
-    $operator=['=','<='];
-    $query = DB::table('packages');
-
-    foreach($where as $column => $value)
-    {
-        $index=0;
-        $query->where($column ,$operator[$index],$value);
-        $index++;
-    }
-    $packages = $query->get();
-
-    dd($packages);
-
+return redirect('/home');
 });
 Auth::routes();
 Route::get('/change_locale','HomeController@changeLocal');

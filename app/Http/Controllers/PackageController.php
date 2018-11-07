@@ -19,55 +19,54 @@ class PackageController extends Controller
     {
         $data = [];
         if ($category == "all") {
-            $data['requests'] = Package::paginate(5);
+            $data['requests'] = Package::with('accommodationRequests')->paginate(5);
         } else if ($category == "new") {
-            $data['requests'] = Package::where('status', 'new')->paginate(5);
+            $data['requests'] = Package::with('accommodationRequests')->where('status', 'new')->paginate(5);
         }
         else if ($category == "received") {
-            $data['requests'] = Package::where('status', 'received')->paginate(5);
+            $data['requests'] = Package::with('accommodationRequests')->where('status', 'received')->paginate(5);
         }
         else if ($category == "workingon") {
-            $data['requests'] = Package::where('status', 'workingon')->paginate(5);
+            $data['requests'] = Package::with('accommodationRequests')->where('status', 'workingon')->paginate(5);
             $data['role'] = \Auth::user()->role->name;
         }
         else if ($category == "failed") {
-            $data['requests'] = Package::where('status', 'failed')->paginate(5);
+            $data['requests'] = Package::with('accommodationRequests')->where('status', 'failed')->paginate(5);
         }
         else if ($category == "done") {
-            $data['requests'] = Package::where('status', 'done')->paginate(5);
+            $data['requests'] = Package::with('accommodationRequests')->where('status', 'done')->paginate(5);
         }
         else if ($category == "me"){
-            $data['requests'] = Package::where('user_id', Auth::id())->paginate(5); //category here is employee id
+            $data['requests'] = Package::with('accommodationRequests')->where('user_id', Auth::id())->paginate(5); //category here is employee id
         }
 
         $data['category']=$category;
         $data['role'] = \Auth::user()->role->name;
-
-
         return view('requests', $data);
     }
 
     public function getRequests($category)
     {
+
         if ($category == "all") {
-            $requests = Package::paginate(5);
+            $requests = Package::with('accommodationRequests')->paginate(5);
         } else if ($category == "new") {
-            $requests = Package::where('status', 'new')->paginate(5);
+            $requests = Package::with('accommodationRequests')->where('status', 'new')->paginate(5);
         }
         else if ($category == "received") {
-            $requests = Package::where('status', 'received')->paginate(5);
+            $requests = Package::with('accommodationRequests')->where('status', 'received')->paginate(5);
         }
         else if ($category == "workingon") {
-            $requests = Package::where('status', 'workingon')->paginate(5);
+            $requests = Package::with('accommodationRequests')->where('status', 'workingon')->paginate(5);
         }
         else if ($category == "failed") {
-            $requests = Package::where('status', 'failed')->paginate(5);
+            $requests = Package::with('accommodationRequests')->where('status', 'failed')->paginate(5);
         }
         else if ($category == "done") {
-            $requests = Package::where('status', 'done')->paginate(5);
+            $requests = Package::with('accommodationRequests')->where('status', 'done')->paginate(5);
         }
         else if ($category == "me"){
-            $requests = Package::where('user_id', Auth::id())->paginate(5); //category here is employee id
+            $requests = Package::with('accommodationRequests')->where('user_id', Auth::id())->paginate(5); //category here is employee id
         }
         return response()->json(['requests' => $requests]);
 
@@ -98,6 +97,7 @@ class PackageController extends Controller
     {
         //
     }
+
 
     public function store(PackageRequest $request): JsonResponse
     {

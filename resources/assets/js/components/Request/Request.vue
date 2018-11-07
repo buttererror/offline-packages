@@ -47,8 +47,6 @@
                 </div>
                 <div v-else>
                     <b-alert variant="danger" show>No Results Found</b-alert>
-
-
                 </div>
             </div>
         </div>
@@ -99,6 +97,7 @@
                 });
             },
             filterRequests() {
+                this.currentPage=1;
                 if (this.filter_data == '') {
                     this.tempRequests = this.requests;
                     this.totalRows = this.requestsData.total;
