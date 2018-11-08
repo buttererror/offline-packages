@@ -69,12 +69,16 @@
             }
 
         },
+        mounted(){
+            console.log(this.requests);
+        },
         created() {
         },
         props: [
             'requestsData', 'role', 'category'
         ],
         methods: {
+
             updateRequests() {
                 if (this.filter_data == '') {
                     axios.get(`/get/requests/${this.category}/?page=${this.currentPage}`).then((response) => {

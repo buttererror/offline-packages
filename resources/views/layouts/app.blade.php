@@ -78,6 +78,12 @@
                                                 <em>{{Auth::user()->name}}</em>
                                             </template>
 
+                                            <b-dropdown-item href="/home"
+
+                                            > New Request
+
+                                            </b-dropdown-item>
+                                            
                                             @if(Auth::user()->role->name=="operator")
                                                 <b-dropdown-item href="/requests/all"
 
