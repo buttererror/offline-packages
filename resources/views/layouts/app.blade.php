@@ -83,7 +83,7 @@
                                             > New Request
 
                                             </b-dropdown-item>
-                                            
+
                                             @if(Auth::user()->role->name=="operator")
                                                 <b-dropdown-item href="/requests/all"
 

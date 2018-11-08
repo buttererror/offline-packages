@@ -12,6 +12,8 @@
                 <div v-for="request in tempRequests">
                     <div v-show="request.id">
                         <b-card :title="request.title">
+                            Client: &nbsp  <b-btn v-b-modal.client_data variant="primary" @click="showData(request)">{{request.client.name}}</b-btn>
+
                             <p class="card-text">Start Date :{{request.start_date}}</p>
                             <p class="card-text">Adults :{{request.adults}}</p>
                             <p class="card-text">Children Count :{{request.children_count}}</p>
@@ -49,6 +51,13 @@
                     <b-alert variant="danger" show>No Results Found</b-alert>
                 </div>
             </div>
+
+            <b-modal id="client_data" size="lg" title="Client Data">
+                <p>Client Name:  {{selectedClient.name}}</p>
+                <p>Client Age:  {{selectedClient.age}}</p>
+                <p>Client email:  {{selectedClient.email}}</p>
+                <p>Client mobile:  {{selectedClient.mobile}}</p>
+            </b-modal>
         </div>
 
 
@@ -65,12 +74,13 @@
                 totalRows: this.requestsData.total,
                 currentPage: 1,
                 userRole: this.role,
-                filter_data: ''
+                filter_data: '',
+                selectedClient:''
             }
 
         },
         mounted(){
-            console.log(this.requests);
+            console.log(this.tempRequests);
         },
         created() {
         },
@@ -78,6 +88,9 @@
             'requestsData', 'role', 'category'
         ],
         methods: {
+            showData(request){
+                this.selectedClient=request.client;
+            },
 
             updateRequests() {
                 if (this.filter_data == '') {
