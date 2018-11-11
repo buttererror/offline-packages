@@ -53,7 +53,7 @@
 </template>
 
 <script>
-   import NewOrOldClient from './NewOrOldClient';
+   import SearchClients from './SearchClients';
    import SelectService from './SelectService';
    import PackageDetails from './PackageRequest/PackageDetails';
    import DestinationBase from './PackageRequest/DestinationBase';
@@ -61,7 +61,7 @@
 
    export default {
       components: {
-         NewOrOldClient,
+         SearchClients,
          SelectService,
          PackageDetails,
          DestinationBase,
@@ -70,11 +70,11 @@
       data() {
          return {
             clientDetails: {},
-            component: 'NewOrOldClient',
+            component: 'SearchClients',
             breadcrumbs: [
                {
                   step: 'searchClients',
-                  component: 'NewOrOldClient'
+                  component: 'SearchClients'
                }
             ],
             isActive: true,

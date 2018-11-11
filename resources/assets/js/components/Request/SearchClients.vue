@@ -103,7 +103,7 @@
             let $selectBtn = document.getElementsByClassName("multiselect__select")[0];
             document.getElementsByClassName("multiselect")[0].removeChild($selectBtn);
             document.getElementsByClassName("multiselect__tags")[0].classList.add("select_tags");
-            document.getElementById("select_input").nextElementSibling.children[0].classList.add("select_single");
+            // document.getElementById("select_input").nextElementSibling.children[0].classList.add("select_single");
             bus.$on('new-client-saved', (client) => {
                 this.client = client;
             });
@@ -136,7 +136,7 @@
                 bus.$emit('new-client-clicked');
             },
             nextComponent(client) {
-                console.log("here");
+                // console.log("here");
                 if (!this.disableSaveBtn) {
                     window.packageDetails.clientDetails = client;
                     this.$emit('next-component', {
@@ -146,7 +146,7 @@
                 }
             },
             validateSearchBox(eventType) {
-                console.log(this.client)
+                // console.log(this.client)
                 if (eventType === 'focus') {
                     this.client = null;
                     this.disableSaveBtn = true;
