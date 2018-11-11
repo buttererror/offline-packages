@@ -30,17 +30,24 @@ class Package extends Model
         'children' => 'collection',
         'transfer' => 'boolean'
     ];
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($package){
+            $package->title = static::buildPackageTitle();
+        });
+    }
 
     public function accommodationRequests(){
         return $this->hasMany(PackageAccommodation::class);
     }
 
     public function transferRequests(){
-        return $this->hasMany('App/TransferRequest');
+        return $this->hasMany('App\TransferRequest');
     }
 
     public function client(){
-        return $this->belongsTo('App/Client');
+        return $this->belongsTo('App\Client','client_id');
     }
 
     public function user()
@@ -74,7 +81,6 @@ class Package extends Model
         foreach ($data['destination_details'] as $destination_detail){
             $other_services=[];
             $rooms_data=[];
-
             $services= new \stdClass();
             $services->rent_car=$destination_detail['rentCar'];
             $services->car_with_driver=$destination_detail['rentCarWithDriver'];
@@ -82,14 +88,16 @@ class Package extends Model
             $services->need_tours=$destination_detail['needTours'];
             array_push($other_services,$services);
             if(array_key_exists('roomsNum',$destination_detail['hotelDetails'])){
-                for($i=0;$i<count($destination_detail['hotelDetails']['roomsNum']);$i++){
-                    $rooms=new \stdClass();
-                    $rooms->room_number=$i+1;
-                    $rooms->adults=$destination_detail['hotelDetails']['selectedAdultsNum'][$i];
-                    $rooms->children=array_key_exists($i,$destination_detail['hotelDetails']['selectedChildrenNum'])?$destination_detail['hotelDetails']['selectedChildrenNum'][$i]:'0';
-                    array_push($rooms_data,$rooms);
-
+                if($destination_detail['hotelDetails']['roomsNum']!=null){
+                    for($i=0;$i<count($destination_detail['hotelDetails']['roomsNum']);$i++){
+                        $rooms=new \stdClass();
+                        $rooms->room_number=$i+1;
+                        $rooms->adults=$destination_detail['hotelDetails']['selectedAdultsNum'][$i];
+                        $rooms->children=array_key_exists($i,$destination_detail['hotelDetails']['selectedChildrenNum'])?$destination_detail['hotelDetails']['selectedChildrenNum'][$i]:'0';
+                        array_push($rooms_data,$rooms);
+                    }
                 }
+
 
             }
 
@@ -111,8 +119,20 @@ class Package extends Model
         }
 
 
-
-
+    }
+    public static function buildPackageTitle(){
+        $rand_numbers = substr(uniqid('', true), -3);
+        $randomChars = 'SDFGHJKLPOIUYTREWQZXCVBNM';
+        $seed = str_split($randomChars);
+        $rand_chars='';
+        foreach (array_rand($seed, 3) as $k) {
+            $rand_chars .= $seed[$k];
+        }
+        $uniq = $rand_chars . $rand_numbers;
+        while(static::where('title', $uniq)->first()){
+            return static::buildPackageTitle();
+        }
+        return $uniq;
     }
 }
 

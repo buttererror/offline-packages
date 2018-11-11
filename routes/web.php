@@ -1,7 +1,7 @@
 <?php
 
 Route::get('/', function () {
-    return view('welcome');
+return redirect('/home');
 });
 Auth::routes();
 Route::get('/change_locale','HomeController@changeLocal');
@@ -24,3 +24,10 @@ Route::group([
 
 });
 
+Route::group(['middleware'=>'auth'],function(){
+    Route::get('/requests/{category}','PackageController@index');
+    Route::get('/get/requests/{category}','PackageController@getRequests');
+    Route::post('/update/request/status','PackageController@changeRequestStatus');
+    Route::post('/search/request','PackageController@searchRequest');
+
+});

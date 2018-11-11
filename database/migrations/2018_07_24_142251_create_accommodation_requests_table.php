@@ -20,7 +20,7 @@ class CreateAccommodationRequestsTable extends Migration
             $table->date('checkout');
             $table->integer('destination_id');
             $table->string('place', 500)->nullable();
-            $table->json('rooms');
+            $table->json('rooms')->nullable();
             $table->integer('stars')->nullable();
             $table->string('hotel')->nullable();
             $table->string('note',1000)->nullable();

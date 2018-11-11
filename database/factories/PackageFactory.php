@@ -13,9 +13,21 @@ $factory->define(App\Package::class, function (Faker $faker) {
     'number_of_destinations'=>rand(1,10),
     'children'=>null,
     'transfer'=>false,
-    'status'=>"s1",
+    'status'=>"new",
     'start_place'=>null,
     'note'=>null
 
+    ];
+});
+
+$factory->define(\App\PackageAccommodation::class, function (Faker $faker) {
+    return [
+    'package_id'=>rand(1,100),
+    'country_id'=>rand(1,100),
+    'city_id'=>rand(1,100),
+    'accommodation_type'=>'hotel',
+    'nights'=>rand(0,3),
+    'checkin'=> date("Y-m-d",rand(1262055681,1262055681))  ,
+    'checkout'=> date("Y-m-d",rand(1262055681,1262055681))   ,
     ];
 });

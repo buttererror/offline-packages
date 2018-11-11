@@ -77,13 +77,64 @@
                                             <template slot="button-content">
                                                 <em>{{Auth::user()->name}}</em>
                                             </template>
-                                            <b-dropdown-item  @click="logoutUser();"
+
+                                            <b-dropdown-item href="/home"
+
+                                            > New Request
+
+                                            </b-dropdown-item>
+
+                                            @if(Auth::user()->role->name=="operator")
+                                                <b-dropdown-item href="/requests/all"
+
+                                                > All Requests
+
+                                                </b-dropdown-item>
+
+                                                <b-dropdown-item href="/requests/new"
+
+                                                > New Requests
+
+                                                </b-dropdown-item>
+
+                                                <b-dropdown-item href="/requests/received"
+
+                                                > Received Requests
+
+                                                </b-dropdown-item>
+                                                <b-dropdown-item href="/requests/workingon"
+
+                                                > Working Requests
+
+                                                </b-dropdown-item>
+
+                                                <b-dropdown-item href="/requests/done"
+
+                                                > Done Requests
+
+                                                </b-dropdown-item>
+
+                                                <b-dropdown-item href="/requests/failed"
+
+                                                > Failed Requests
+
+                                                </b-dropdown-item>
+                                                @else
+                                                <b-dropdown-item href="/requests/me"
+
+                                                > My Requests
+
+                                                </b-dropdown-item>
+                                            @endif
+
+                                            <b-dropdown-item @click="logoutUser();"
 
                                             > Signout
 
                                             </b-dropdown-item>
 
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                  style="display: none;">
                                                 @csrf
                                             </form>
 
