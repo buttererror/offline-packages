@@ -60,6 +60,8 @@
    import FinalNote from './PackageRequest/FinalNote';
 
    export default {
+       // child of Home component
+       name: "Steps",
       components: {
          SearchClients,
          SelectService,

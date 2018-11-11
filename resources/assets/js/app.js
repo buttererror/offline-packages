@@ -35,7 +35,7 @@ Vue.use(BootstrapVue);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-import BaseComponent from './components/Request/BaseComponent';
+import Home from './components/Request/Home';
 import Request from './components/Request/Request';
 import Steps from './components/Request/Steps';
 
@@ -58,7 +58,7 @@ window.bus = new Vue();
 const app = new Vue({
     el: '#app',
     router,
-    components: {BaseComponent,Request},
+    components: {Home,Request},
     i18n,
     data() {
         return {
