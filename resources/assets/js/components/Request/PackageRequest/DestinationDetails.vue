@@ -238,10 +238,10 @@
 
         </div>
         <div v-if="destinationDetails.reserveAccomodation">
-            <HotelDetail :destinationNumber="cityNumber"
+            <AccommodationDetails :destinationNumber="cityNumber"
                          :accomType="destinationDetails.selectedAccomodationType"
             >
-            </HotelDetail>
+            </AccommodationDetails>
         </div>
     </div>
 
@@ -251,7 +251,7 @@
 
     import Datepicker from 'vuejs-datepicker';
     import Multiselect from 'vue-multiselect';
-    import HotelDetail from './HotelDetails';
+    import AccommodationDetails from './AccommodationDetails';
     // import HotelDatePicker from 'vue-hotel-datepicker';
     import HotelDatePicker from '../vue-datepicker/HotelDatePicker.vue';
 
@@ -264,7 +264,7 @@
         components: {
             Datepicker,
             Multiselect,
-            HotelDetail,
+            AccommodationDetails,
             HotelDatePicker
         },
         data() {
@@ -301,7 +301,7 @@
                     selectedAccomodationType: this.$t('packageDetails.typeHotel'),
                     needTours: false, // optional
                     nightsNum: 0, // readonly
-                    hotelDetails: {} // collected in one value
+                    accommodationDetails: {} // collected in one value
                 },
                 i18n_ar: {
                     night: 'الليله',
@@ -337,8 +337,8 @@
                 this.getCheckOutDate(checkOut);
             });
             this.setCheckInDate();
-            bus.$on(`destination-details-${this.cityNumber}`, (hotelDetails) => {
-                this.destinationDetails.hotelDetails = hotelDetails;
+            bus.$on(`destination-details-${this.cityNumber}`, (accommodationDetails) => {
+                this.destinationDetails.accommodationDetails = accommodationDetails;
             });
             bus.$on(`next-destination-${this.cityNumber}`, (cityIndex) => {
                 // console.log("disable", this.disable);

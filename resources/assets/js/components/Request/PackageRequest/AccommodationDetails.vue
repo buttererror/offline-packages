@@ -92,7 +92,7 @@
                         <multiselect :placeholder="$t('packageDetails.roomsNum')"
                                      tagPosition="bottom"
                                      openDirection="bottom"
-                                     v-model="hotelDetails.roomsNum"
+                                     v-model="accommodationDetails.roomsNum"
                                      :options="adultsRange"
                                      :multiple="false"
                                      @input="putRoomsNum()"
@@ -102,7 +102,7 @@
                 </div>
 
                 <div v-if="show" role="tablist">
-                    <div v-for="(index) in hotelDetails.roomsNum">
+                    <div v-for="(index) in accommodationDetails.roomsNum">
                         <b-card no-body class="mb-1 pb-0">
                             <b-card-header header-tag="header" class="p-1" role="tab">
                                 <b-btn href="#" block v-b-toggle="`room_${index}`" variant="info">
@@ -121,7 +121,7 @@
                                         <div class="col-6">
                                             <multiselect placeholder=""
                                                          tagPosition="bottom" openDirection="bottom"
-                                                         v-model="hotelDetails.selectedAdultsNum[index-1]"
+                                                         v-model="accommodationDetails.selectedAdultsNum[index-1]"
                                                          :options="sortAdults[index-1]"
                                                          :multiple="false"
                                                          @input="updateAdultsNum(index ,index - 1)"
@@ -139,7 +139,7 @@
                                         <div class="col-6">
                                             <multiselect placeholder=""
                                                          tagPosition="bottom" openDirection="bottom"
-                                                         v-model="hotelDetails.selectedChildrenNum[index-1]"
+                                                         v-model="accommodationDetails.selectedChildrenNum[index-1]"
                                                          :options="childrenOptions"
                                                          label="age"
                                                          :multiple="true"
@@ -195,7 +195,7 @@
                 <div class="col-6">
                     <multiselect placeholder=""
                                  tagPosition="bottom" openDirection="bottom"
-                                 v-model="hotelDetails.selectedRoomType"
+                                 v-model="accommodationDetails.selectedRoomType"
                                  :options="roomType"
                                  :multiple="false"
                                  @input="validateSelectedRoomType"
@@ -210,7 +210,7 @@
                 <div class="col-6">
                     <multiselect placeholder=""
                                  tagPosition="bottom" openDirection="bottom"
-                                 v-model="hotelDetails.selectedRoomView"
+                                 v-model="accommodationDetails.selectedRoomView"
                                  :options="roomView"
                                  :multiple="false"
                                  @input="validateSelectedRoomView"
@@ -225,7 +225,7 @@
                 <div class="col-6">
                     <multiselect placeholder=""
                                  tagPosition="bottom" openDirection="bottom"
-                                 v-model="hotelDetails.selectedStars"
+                                 v-model="accommodationDetails.selectedStars"
                                  :options="stars"
                                  :multiple="false"
                                  @input="validateSelectedStars"
@@ -239,7 +239,7 @@
                 > {{$t('packageDetails.hotelName')}}</label>
                 <div class="col-6">
                     <input type="text" :placeholder="$t('packageDetails.hotelName')"
-                           v-model="hotelDetails.hotelName"
+                           v-model="accommodationDetails.hotelName"
                            class="form-control"/>
                 </div>
             </div>
@@ -250,7 +250,7 @@
                 >{{$t('packageDetails.area')}}</label>
                 <div class="col-6">
                     <input type="text" :placeholder="$t('packageDetails.area')"
-                           v-model="hotelDetails.area"
+                           v-model="accommodationDetails.area"
                            class="form-control"/>
                 </div>
             </div>
@@ -265,7 +265,7 @@
             >{{$t('packageDetails.area')}}</label>
             <div class="col-6">
                 <input type="text" :placeholder="$t('packageDetails.area')"
-                       v-model="hotelDetails.area"
+                       v-model="accommodationDetails.area"
                        class="form-control"/>
             </div>
         </div>
@@ -277,7 +277,7 @@
     import Multiselect from 'vue-multiselect'
 
     export default {
-        name: "HotelDetails",
+        name: "accommodationDetails",
         props: ["destinationNumber", "accomType", "emptyOnSelected"],
         components: {
             Multiselect
@@ -323,7 +323,7 @@
                     // }
                 },
                 accommodationDetailsValidation: false,
-                hotelDetails: {
+                accommodationDetails: {
                     roomsNum: '', //number of rooms
                     selectedRoomType: '',
                     selectedRoomView: '',
@@ -357,13 +357,13 @@
             this.fillChildrenOptions();
 
             bus.$on(`next-destination-${this.destinationNumber}`, () => {
-                bus.$emit(`destination-details-${this.destinationNumber}`, this.hotelDetails);
+                bus.$emit(`destination-details-${this.destinationNumber}`, this.accommodationDetails);
             });
             bus.$on(`previous-destination-${this.destinationNumber}`, () => {
-                bus.$emit(`destination-details-${this.destinationNumber}`, this.hotelDetails);
+                bus.$emit(`destination-details-${this.destinationNumber}`, this.accommodationDetails);
             });
             bus.$on(`next-component-${this.destinationNumber}`, () => {
-                bus.$emit(`destination-details-${this.destinationNumber}`, this.hotelDetails);
+                bus.$emit(`destination-details-${this.destinationNumber}`, this.accommodationDetails);
             });
 
         },
@@ -383,16 +383,16 @@
             },
             putRoomsNum() {
                 // console.log("updating rooms number");
-                for (let i = 0; i < this.hotelDetails.roomsNum; i++) {
+                for (let i = 0; i < this.accommodationDetails.roomsNum; i++) {
                     this.sortAdults.push([]);
                 }
-                this.maxNumOfAdultsPerRoom_1 = Math.ceil(this.adultsNumber / this.hotelDetails.roomsNum);
-                this.maxNumOfAdultsPerRoom_2 = this.adultsNumber - (this.hotelDetails.roomsNum - 1);
+                this.maxNumOfAdultsPerRoom_1 = Math.ceil(this.adultsNumber / this.accommodationDetails.roomsNum);
+                this.maxNumOfAdultsPerRoom_2 = this.adultsNumber - (this.accommodationDetails.roomsNum - 1);
                 this.maxNumOfAdultsPerRoom = this.maxNumOfAdultsPerRoom_1 > this.maxNumOfAdultsPerRoom_2 ? this.maxNumOfAdultsPerRoom_1 : this.maxNumOfAdultsPerRoom_2;
                 if (this.maxNumOfAdultsPerRoom > 6) this.maxNumOfAdultsPerRoom = 6;
                 this.fillRoom(0);
                 this.disableRoomNum = true;
-                if (this.hotelDetails.roomsNum > 0) {
+                if (this.accommodationDetails.roomsNum > 0) {
                     this.show = true
                 }
                 else {
@@ -411,14 +411,14 @@
             updateAdultsNum(pastRooms, index) {
                 // console.log("updating adults Number");
                 this.adultsSelected.push(index + 1); // disable after input
-                this.remainingAdults = Math.ceil(this.remainingAdults - this.hotelDetails.selectedAdultsNum[index]);
-                this.remainingRooms = this.hotelDetails.roomsNum - pastRooms;
+                this.remainingAdults = Math.ceil(this.remainingAdults - this.accommodationDetails.selectedAdultsNum[index]);
+                this.remainingRooms = this.accommodationDetails.roomsNum - pastRooms;
                 this.maxNumOfAdultsPerRoom_1 = Math.ceil(this.remainingAdults / this.remainingRooms);
                 this.maxNumOfAdultsPerRoom_2 = this.remainingAdults - this.remainingRooms;
                 this.maxNumOfAdultsPerRoom = this.maxNumOfAdultsPerRoom_1 > this.maxNumOfAdultsPerRoom_2 ? this.maxNumOfAdultsPerRoom_1 : this.maxNumOfAdultsPerRoom_2;
                 this.maxNumOfAdultsPerRoom = this.remainingAdults - (this.remainingRooms - 1);
                 if (this.maxNumOfAdultsPerRoom > 6) this.maxNumOfAdultsPerRoom = 6;
-                this.adultsNumberChosen += this.hotelDetails.selectedAdultsNum[index];
+                this.adultsNumberChosen += this.accommodationDetails.selectedAdultsNum[index];
                 this.fillRoom(index + 1);
                 this.validateAdultsNum();
                 this.processValidationBeforeSend();
@@ -444,7 +444,7 @@
             },
             validateSelectedRoomType() {
                 // console.log("validating selectedRoomType");
-                if (this.hotelDetails.selectedRoomType) {
+                if (this.accommodationDetails.selectedRoomType) {
                     this.validation.hotel.selectedRoomType = true;
                 } else {
                     this.validation.hotel.selectedRoomType = false;
@@ -455,7 +455,7 @@
             },
             validateSelectedRoomView() {
                 // console.log("validating selectedRoomView");
-                if (this.hotelDetails.selectedRoomView) {
+                if (this.accommodationDetails.selectedRoomView) {
                     this.validation.hotel.selectedRoomView = true;
                 } else {
                     this.validation.hotel.selectedRoomView = false;
@@ -467,7 +467,7 @@
             },
             validateSelectedStars() {
                 // console.log("validating selectedStars");
-                if (this.hotelDetails.selectedStars) {
+                if (this.accommodationDetails.selectedStars) {
                     this.validation.hotel.selectedStars = true;
                 } else {
                     this.validation.hotel.selectedStars = false;
@@ -478,7 +478,7 @@
             },
             // validateHotelName() {
             //     // console.log("validating hotelName");
-            //     if (this.hotelDetails.hotelName) {
+            //     if (this.accommodationDetails.hotelName) {
             //         this.validation.hotel.hotelName = true;
             //     } else {
             //         this.validation.hotel.hotelName = false;
@@ -490,7 +490,7 @@
             // },
             // validateHotelArea() {
             //     // console.log("validating hotelArea");
-            //     if (this.hotelDetails.area) {
+            //     if (this.accommodationDetails.area) {
             //         this.validation.hotel.area = true;
             //     } else {
             //         this.validation.hotel.area = false;
@@ -502,8 +502,8 @@
             // },
             // validateApartmentArea() {
             //     // console.log("validating apartment area");
-            //     // console.log("apartmentArea", this.hotelDetails.area);
-            //     if (this.hotelDetails.area) {
+            //     // console.log("apartmentArea", this.accommodationDetails.area);
+            //     if (this.accommodationDetails.area) {
             //         this.validation.apartment.area = true;
             //     } else {
             //         this.validation.apartment.area = false;
@@ -564,14 +564,14 @@
                 this.disableRoomNum = false;
                 this.adultsSelected = [];
                 this.show = false;
-                this.hotelDetails.selectedAdultsNum = [];
+                this.accommodationDetails.selectedAdultsNum = [];
                 this.sortAdults = [];
                 this.remainingAdults = this.adultsNumber;
                 this.adultsNumberChosen = 0;
                 this.childrenNumberChosen = 0;
 
-                this.hotelDetails.selectedChildrenNum = [];
-                this.hotelDetails.roomsNum = '';
+                this.accommodationDetails.selectedChildrenNum = [];
+                this.accommodationDetails.roomsNum = '';
                 this.fillChildrenOptions();
                 this.validateOnHotelDetails();
             },
@@ -588,12 +588,12 @@
                 this.sendValidationToDestination();
             },
             emptyOnAccommodationType() {
-                // console.log("empty inside hotelDetails component");
-                this.hotelDetails.selectedRoomType = '';
-                this.hotelDetails.selectedRoomView = '';
-                this.hotelDetails.selectedStars = '';
-                this.hotelDetails.hotelName = '';
-                this.hotelDetails.area = '';
+                // console.log("empty inside accommodationDetails component");
+                this.accommodationDetails.selectedRoomType = '';
+                this.accommodationDetails.selectedRoomView = '';
+                this.accommodationDetails.selectedStars = '';
+                this.accommodationDetails.hotelName = '';
+                this.accommodationDetails.area = '';
                 this.editRoomsData();
             }
         }
