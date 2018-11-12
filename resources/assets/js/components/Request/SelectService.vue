@@ -80,7 +80,7 @@
                 });
             },
             previousComponent() {
-                this.$emit('previous-component', "NewOrOldClient");
+                this.$emit('previous-component', "SearchClients");
             }
         }
     }

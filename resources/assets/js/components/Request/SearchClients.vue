@@ -13,8 +13,9 @@
             "next":"التالى",
             "class": {
                 "footerDir": "text-left"
-            }
-        },
+            },
+            "dir":"rtl"
+    },
 
         "en": {
             "client": {
@@ -27,83 +28,90 @@
             "next":"next",
             "class": {
                 "footerDir": "text-right"
-            }
+            },
+            "dir":"ltr"
         }
     }
 </i18n>
 
 <template>
-    <div id="searchClients">
-        <div class="card" v-if="show">
-            <div class="card-header bg-primary text-white">
-                <h4 class="card-title text-center">
-                    {{ $t("client.search") }}
-                </h4>
-            </div>
+    <div>
+        <div id="searchClients">
+            <div class="card" v-if="show">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title text-center">
+                        {{ $t("client.search") }}
+                    </h4>
+                </div>
 
-            <div class="card-body">
-                <h2 class="text-center">
-                    {{ $t("client.choose") }}
+                <div class="card-body">
+                    <h2 class="text-center">
+                        {{ $t("client.choose") }}
 
-                </h2>
-                <div class="row mt-4">
-                    <div class="offset-3"></div>
-                    <div class="col-6">
+                    </h2>
+                    <div class="row mt-4">
+                        <div class="offset-3"></div>
+                        <div class="col-6">
 
-                        <multiselect v-model="client" :options="clients" label="name"
-                                     tagPosition="bottom" openDirection="bottom"
-                                     placeholder="" id="select_input"
-                                     @focus.native.capture="validateSearchBox('focus')"
-                                     @blur.native.capture="validateSearchBox"
-                                     @search-change="getClient"
-                                     @input="validateSearchBox"
-                                     @remove="validateSearchBox"
-                                     @keyup.native.capture.enter="nextComponent(client)"
+                            <multiselect v-model="client" :options="clients" label="name"
+                                         tagPosition="bottom" openDirection="bottom"
+                                         placeholder="" id="select_input"
+                                         @focus.native.capture="validateSearchBox('focus')"
+                                         @blur.native.capture="validateSearchBox"
+                                         @search-change="getClient"
+                                         @input="validateSearchBox"
+                                         @remove="validateSearchBox"
+                                         @keyup.native.capture.enter="nextComponent(client)"
 
-                                     :class="{'select': searchBoxState === 'normal',
+                                         :class="{'select': searchBoxState === 'normal',
                                      'is-valid': searchBoxState === 'valid'}"
 
-                        >
+                            >
 
 
-                        </multiselect>
+                            </multiselect>
+                        </div>
+                    </div>
+                    <div class="row mt-4 text-center">
+                        <div class="col-12">
+                            {{ $t("client.newData") }}
+                            <a href="#" @click.prevent="handleNewClientClicked">
+                                {{ $t("client.here") }}
+
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="row mt-4 text-center">
-                    <div class="col-12">
-                        {{ $t("client.newData") }}
-                        <a href="#" @click.prevent="handleNewClientClicked">
-                            {{ $t("client.here") }}
 
-                        </a>
-                    </div>
+                <div class="card-footer" :class="$t('class.footerDir')">
+                    <button class="btn btn-primary" @click.prevent="nextComponent(client)"
+                            :class="{'disabled': disableSaveBtn}"
+                    >{{$t("next")}}
+                    </button>
                 </div>
-            </div>
 
-            <div class="card-footer" :class="$t('class.footerDir')">
-                <button class="btn btn-primary" @click.prevent="nextComponent(client)"
-                        :class="{'disabled': disableSaveBtn}"
-                >{{$t("next")}}
-                </button>
             </div>
-
         </div>
+        <modal-popup :dir="$t('dir')"></modal-popup>
     </div>
+
 </template>
 
 <script>
     import Multiselect from 'vue-multiselect';
+    import ModalPopup from './ModalPopup';
     export default {
         name: 'AutocompleteTrigger',
         components: {
-            Multiselect
+            Multiselect,
+            ModalPopup
         },
         mounted() {
             // document.getElementById("select_input").autofocus = true;
             let $selectBtn = document.getElementsByClassName("multiselect__select")[0];
             document.getElementsByClassName("multiselect")[0].removeChild($selectBtn);
             document.getElementsByClassName("multiselect__tags")[0].classList.add("select_tags");
-            document.getElementById("select_input").nextElementSibling.children[0].classList.add("select_single");
+            // document.getElementById("select_input").nextElementSibling.children[0].classList.add("select_single");
             bus.$on('new-client-saved', (client) => {
                 this.client = client;
             });
@@ -136,7 +144,7 @@
                 bus.$emit('new-client-clicked');
             },
             nextComponent(client) {
-                console.log("here");
+                // console.log("here");
                 if (!this.disableSaveBtn) {
                     window.packageDetails.clientDetails = client;
                     this.$emit('next-component', {
@@ -146,7 +154,7 @@
                 }
             },
             validateSearchBox(eventType) {
-                console.log(this.client)
+                // console.log(this.client)
                 if (eventType === 'focus') {
                     this.client = null;
                     this.disableSaveBtn = true;

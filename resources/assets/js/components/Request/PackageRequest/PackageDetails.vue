@@ -7,7 +7,7 @@
     "endPlace":"مكان النهاية",
     "startEndJourney":"بداية الرحلة",
     "countries":"البلاد",
-    "placesNum":"عدد المدن",
+    "citiesNumber":"عدد المدن",
     "transfer":"الانتقالات",
     "childrenNum":"عدد الاطفال",
     "adultsNum":"عدد البالغين",
@@ -38,7 +38,7 @@
     "endPlace":"Drop off Place",
     "startEndJourney":"Start of Journey",
     "countries":"Countries",
-    "placesNum":"Number of Cities",
+    "citiesNumber":"Number of Cities",
     "transfer":"Transfer",
     "childrenNum":"Children Number",
     "adultsNum":"Adults Number",
@@ -138,11 +138,11 @@
                 <div class="form-group row">
                     <label class="col-form-label col-form-label-lg col-3"
                            :class="$t('labelClass')"
-                    >{{$t('packageDetails.placesNum')}}</label>
+                    >{{$t('packageDetails.citiesNumber')}}</label>
                     <div class="col-6">
-                        <input type="number" :placeholder="$t('packageDetails.placesNum')" min="0"
+                        <input type="number" :placeholder="$t('packageDetails.citiesNumber')" min="0"
                                class="form-control"
-                               v-model="packageMainDetails.placesNum"
+                               v-model="packageMainDetails.citiesNumber"
                                @input="validatePlacesNum"
                         />
                     </div>
@@ -267,7 +267,7 @@
                     // tripEndAt: false,
                     selectedCountries: false,
                     adultsNum: false,
-                    placesNum: false,
+                    citiesNumber: false,
                     childrenNumber: true,
                     childrenAges: true
                 },
@@ -277,7 +277,7 @@
                     tripStartAt: null,
                     // tripEndAt: null,
                     selectedCountries: [],
-                    placesNum: null,
+                    citiesNumber: null,
                     transfer: false,
                     adultsNum: null,
                     childrenNumber: 0,
@@ -350,10 +350,10 @@
 
             },
             validatePlacesNum() {
-                // console.log(this.packageMainDetails.placesNum);
-                if (Number(this.packageMainDetails.placesNum)) {
-                    this.validation.placesNum = true;
-                } else this.validation.placesNum = false;
+                // console.log(this.packageMainDetails.citiesNumber);
+                if (Number(this.packageMainDetails.citiesNumber)) {
+                    this.validation.citiesNumber = true;
+                } else this.validation.citiesNumber = false;
                 this.activateNxtBtn();
             },
             validateChildrenAge() {

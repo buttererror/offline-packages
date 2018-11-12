@@ -4,7 +4,7 @@
     "ar":{
     "packageDetails":{
     "countries":"البلاد",
-    "placesNum":"عدد المدن",
+    "citiesNumber":"عدد المدن",
     "transfer":"الانتقالات",
     "childrenNum":"عدد الاطفال",
     "adultsNum":"عدد البالغين",
@@ -26,7 +26,7 @@
     "en": {
     "packageDetails":{
     "countries":"Countries",
-    "placesNum":"Number of Cities",
+    "citiesNumber":"Number of Cities",
     "childrenNum":"Children Number",
     "adultsNum":"Adults Number",
     "childrenMaxNum":"Children maximum number",
@@ -55,7 +55,7 @@
                 <h5 class="card-subtitle text-center">{{$t('destination')}} #{{cityNumber}}</h5>
             </div>
             <div class="card-body">
-                <div v-for="destinationNumber in placesNum">
+                <div v-for="destinationNumber in citiesNumber">
                     <keep-alive>
                         <DestinationDetails v-if="destinationNumber === cityNumber"
                                             :cityNumber="destinationNumber" :cities="cities"
@@ -74,7 +74,7 @@
                 >{{$t('prevcity')}}</a>
                 <a href="#" @click.prevent="nextDestination"
                    class="btn btn-link btn-outline-primary m-4" :class="{
-               'disabled': placesNum === cityNumber || placesNum === 1}"
+               'disabled': citiesNumber === cityNumber || citiesNumber === 1}"
                 >{{$t('nextcity')}}</a>
             </div>
             <div class="card-footer d-flex flex-row-reverse justify-content-between">
@@ -102,13 +102,14 @@
                 cityNumber: 1,
                 cities: [],
                 selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
-                placesNum: Number(window.packageDetails.packageMainDetails.placesNum),
+                citiesNumber: Number(window.packageDetails.packageMainDetails.citiesNumber),
                 destinationsDetails: [],
                 date: new Date(),
                 destinationsValidation: [],
                 activateNextBtn: false,
                 updateListening: null,
                 startDate: window.packageDetails.packageMainDetails.tripStartAt,
+                // array of arrays, every array contains the start and the end date of every city
                 citiesStartDates: [],
                 rangesDatesCheckList: [],
                 disableRangeDate: false
@@ -129,12 +130,15 @@
                 // console.log("destinations Validation", this.destinationsValidation);
             });
             let selectedCountriesIds = [];
+            // collect the selected countries ids to request the belonged cities
             this.selectedCountries.forEach(function (element) {
                 selectedCountriesIds.push(element.id)
             });
+            // get the all the cities of the selected countries
             axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
                 this.cities = response.data.cities;
             });
+            // next-start-date emitted at every checkOutDate changes
             bus.$on("next-start-date", (rangeDate) => {
                 // console.log("on next destination:", this.cityNumber, startDate);
                 this.startDate = rangeDate.checkOut; // next city start date
@@ -176,6 +180,7 @@
                 console.log("going back");
                 let previousCityNumber = this.cityNumber - 1;
                 bus.$emit(`previous-destination-${this.cityNumber}`, previousCityNumber);
+                // bug : ~ 1
                 this.startDate = this.citiesStartDates[previousCityNumber][0]; // previous city start date
                 // console.log("when back", this.startDate);
                 this.cityNumber--;
@@ -202,7 +207,7 @@
                 this.$emit('previous-component', "PackageDetails");
             },
             activateNxtBtn() {
-                if (this.placesNum === this.destinationsValidation.length) {
+                if (this.citiesNumber === this.destinationsValidation.length) {
                     for (let i = 0; i < this.destinationsValidation.length; i++) {
                         if (!this.destinationsValidation[i]) {
                             this.activateNextBtn = false;
