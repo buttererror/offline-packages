@@ -12,3 +12,178 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+
+
+//variable
+$brand-primary: #0b409c;
+$brand-secondary: #ffe867;
+$brand-default:#10316B;
+//mixin
+@mixin subtitle{
+  display: inline-block;
+  font-weight:bold;
+  align-items: flex-start;
+}
+@mixin header{
+  background-color: $brand-primary;
+  margin: 0;
+  padding: 20px;
+  color: white;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+//card style
+.card{
+  padding:0;
+  box-shadow: 0 2px 20px 0 rgba(0,0,0,0.05);
+  transition: box-shadow .3s ease-out, transform .3s ease-out, opacity .2s ease-out;
+  transition-delay: .1s;
+  border-radius: 4px;
+  transform: translateZ(0);
+  &:hover{
+    opacity: 1 !important;
+    box-shadow: rgba(45,45,45,0.05) 0px 2px 2px, rgba(49,49,49,0.05) 0px 4px 4px, rgba(42,42,42,0.05) 0px 8px 8px, rgba(32,32,32,0.05) 0px 16px 16px, rgba(49,49,49,0.05) 0px 32px 32px, rgba(35,35,35,0.05) 0px 64px 64px;
+    transform: translate(0, -4px);
+  }
+  ul{
+    padding:0;
+    margin:0;
+  }
+   .card-body{
+        padding:0;
+        .client-name{
+          //padding:12px;
+        }
+        .card-title {
+            @include header;
+          font-size:24px;
+          border-radius: 4px 4px 0 0;
+          a{
+            text-decoration: none;
+            color: $brand-secondary;
+          }
+          .client-name{
+            color: white;
+            font-size: 16px;
+          }
+        }
+        .body-content{
+          .card-text{
+            font-size:15px;
+            display: flex;
+            padding: 12px;
+            border-bottom: 1px solid gainsboro;
+            &:last-child{
+              border: none;
+            }
+            &:nth-child(even){
+              background-color: #f2f7ff;
+            }
+            span{
+              @include subtitle;
+            }
+            ul{
+              display: inline-block;
+              padding: 0;
+            }
+          }
+          li{
+            list-style-type: none;
+          }
+        }
+        .btn-group{
+          display: block;
+          padding:12px;
+          overflow: hidden;
+          border-radius: 0 0 4px 4px;
+          background-color: $brand-default;
+          .btn{
+            float: right;
+          }
+        }
+     }
+}
+
+//modal style
+.modal{
+  .modal-header{
+    @include header;
+    .close{
+      color: white;
+    }
+    .modal-title{
+      color:$brand-secondary;
+    }
+  }
+  ul{
+    padding:0;
+    margin:0;
+    li{
+      list-style-type: none;
+    }
+    .modal-text{
+      font-size:15px;
+      display: flex;
+      padding: 12px;
+      border-bottom: 1px solid gainsboro;
+      &:last-child{
+        border: none;
+      }
+      &:nth-child(even){
+        background-color: #f2f7ff;
+      }
+    }
+    span{
+      font-size: 16px;
+      text-transform: capitalize;
+      @include subtitle;
+    }
+  }
+  .modal-body{
+    padding:0;
+  }
+  .modal-footer{
+    background-color: $brand-default;
+  }
+}
+
+//search style
+.sticky-search{
+  position: sticky;
+  top: 0;
+  padding: 23px;
+  background: $brand-primary,;
+  -webkit-box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.05);
+  /* text-align: center; */
+  font-size: 21px;
+  color: white;
+  border-radius: 0 0 4px 4px;
+}
+
+//go to top button
+.goTop {
+  border-radius: 5px;
+  background-color: rgb(1,14,27);
+  background-color: rgba(1, 14, 27, .7);
+  position: fixed;
+  width: 45px;
+  height: 45px;
+  display: block;
+  right: 15px;
+  bottom: 15px;
+  border: none;
+  cursor: pointer;
+
+  .fas {
+    color: white;
+    font-size: 22px;
+  }
+  &:hover {
+    opacity: 1;
+    background-color: rgb(1,14,27);
+    background-color: rgba(1, 14, 27, .9);
+  }
+}
