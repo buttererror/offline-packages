@@ -142,10 +142,9 @@
                 this.selectedClient=request.client;
             },
             showDestination(destionation){
-                     this.selectedDestination =destionation;
+                    this.selectedDestination =destionation;
                     this.distination_city_name=this.selectedDestination.city.name;
                     this.destination_country_name=this.selectedDestination.country.en_short_name;
-                    console.log(destionation);
             },
             updateRequests() {
                 if (this.filter_data == '') {
