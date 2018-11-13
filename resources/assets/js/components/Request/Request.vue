@@ -1,41 +1,63 @@
 <template>
     <div class="container">
+        <b-link  class="js-top goTop" href='#app' ><i class="fas fa-angle-left"></i></b-link>
         <div class="row justify-content-center">
-            <div class="form-group">
-                Search
-                <b-form-input class="mb-2 mr-sm-2 mb-sm-0" placeholder="Search" @input="filterRequests"
-                              v-model="filter_data"></b-form-input>
+            <div class="form-group ">
+                <div class="sticky-search">
+                    Search
+                    <b-form-input class="mb-2 mr-sm-2 mb-sm-0" placeholder="Search" @input="filterRequests"
+                                  v-model="filter_data"></b-form-input>
+                </div>
             </div>
             <br>
 
             <div class="col-md-8">
                 <div v-for="request in tempRequests">
                     <div v-show="request.id">
-                        <b-card :title="request.title">
-                            Client: &nbsp  <b-btn v-b-modal.client_data variant="primary" @click="showData(request)">{{request.client.name}}</b-btn>
-
-                            <p class="card-text">Start Date :{{request.start_date}}</p>
-                            <p class="card-text">Adults :{{request.adults}}</p>
-                            <p class="card-text">Children Count :{{request.children_count}}</p>
-                            <p class="card-text">Number of Destinations :{{request.number_of_destinations}}</p>
-                            <p class="card-text">Children :{{request.children}}</p>
-                            <p class="card-text">Status :{{request.status}}</p>
-                            <div v-if='role==="operator" && request.status==="new"'>
-                                <b-button variant="primary" @click="updateRequestStatus(request,'received')">Receive
-                                    Request
-                                </b-button>
+                        <b-card  class="request-card">
+                            <div class="card-title">
+                                {{request.title}}
+                                <div class="client-name">
+                                    Client: &nbsp
+                                    <b-link v-b-modal.client_data variant="primary" @click="showData(request)">{{request.client.name}}</b-link>
+                                </div>
                             </div>
-                            <div v-if='role==="operator" && request.status==="received"'>
-                                <b-button variant="warning" @click="updateRequestStatus(request,'workingon')">
-                                    Working on
-                                    it
-                                </b-button>
+                            <div class="body-content">
+                                <ul>
+                                    <li class="card-text"><span  class="col-md-4">Start Date </span>{{request.start_date}}</li>
+                                    <li class="card-text"><span  class="col-md-4">Adults </span>{{request.adults}}</li>
+                                    <li class="card-text"><span  class="col-md-4">Children Count </span>{{request.children_count}}</li>
+                                    <li class="card-text"><span  class="col-md-4">Number of Destinations </span>{{request.number_of_destinations}}</li>
+                                    <li class="card-text"><span  class="col-md-4">Children </span>{{request.children}}</li>
+                                    <li class="card-text"><span  class="col-md-4">Status </span>{{request.status}}</li>
+                                    <li class="card-text" >
+                                        <span  class="col-md-4"> City  Name:</span>
+                                        <ul>
+                                            <li v-for="destination in request.accommodation_requests">
+                                                <b-link v-b-modal.destination_data variant="primary" @click="showDestination(destination)">{{destination.city.name}}</b-link>
+                                            </li>
+                                        </ul>
+                                   </li>
+                                </ul>
                             </div>
-                            <div v-if='role==="operator" && request.status==="workingon"'>
-                                <b-button variant="primary" @click="updateRequestStatus(request,'done')">Done
-                                </b-button>
-                                <b-button variant="danger" @click="updateRequestStatus(request,'failed')">Failed
-                                </b-button>
+                            <div class="btn-group">
+                                <div v-if='role==="operator" && request.status==="new"'>
+                                    <b-button variant="default" @click="updateRequestStatus(request,'received')">Receive
+                                        Request
+                                    </b-button>
+                                </div>
+                                <div v-if='role==="operator" && request.status==="received"'>
+                                    <b-button variant="warning" @click="updateRequestStatus(request,'workingon')">
+                                        Working on
+                                        it
+                                    </b-button>
+                                </div>
+                                <div v-if='role==="operator" && request.status==="workingon"'>
+                                    <b-button variant="primary" @click="updateRequestStatus(request,'done')">Done
+                                    </b-button>
+                                    <b-button variant="danger" @click="updateRequestStatus(request,'failed')">Failed
+                                    </b-button>
+                                </div>
                             </div>
                         </b-card>
                     </div>
@@ -43,8 +65,8 @@
                 </div>
                 <br>
                 <div v-if="tempRequests.length>0">
-                    <b-pagination size="lg" :total-rows="totalRows" v-model="currentPage" :per-page="5"
-                                  @input="updateRequests">
+                    <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="5"
+                                  @input="updateRequests"  align="center">
                     </b-pagination>
                 </div>
                 <div v-else>
@@ -52,18 +74,33 @@
                 </div>
             </div>
 
-            <b-modal id="client_data" size="lg" title="Client Data">
-                <p>Client Name:  {{selectedClient.name}}</p>
-                <p>Client Age:  {{selectedClient.age}}</p>
-                <p>Client email:  {{selectedClient.email}}</p>
-                <p>Client mobile:  {{selectedClient.mobile}}</p>
+            <b-modal id="client_data" size="lg" :title="'Client Name: '+selectedClient.name">
+                <!--<div><span class="col-md-3">Client Name:  </span>{{selectedClient.name}}</div>-->
+                <ul>
+                    <li class="modal-text"><span  class="col-md-3">Client Age: </span> {{selectedClient.age}}</li>
+                    <li class="modal-text"><span  class="col-md-3">Client email:</span>{{selectedClient.email}}</li>
+                    <li class="modal-text"><span  class="col-md-3">Client mobile: </span> {{selectedClient.mobile}}</li>
+                </ul>
             </b-modal>
+
+            <b-modal id="destination_data" size="lg" title="destination Data">
+                    <!--<div><span  class="col-md-3">chick in: </span> {{destination.chickin}}</div>-->
+                <ul>
+                    <li class="modal-text"><span class="col-md-3">chick in:</span>{{selectedDestination.checkin}}</li>
+                    <li class="modal-text"><span class="col-md-3">chick out:</span>{{selectedDestination.checkout}}</li>
+                    <li class="modal-text"><span class="col-md-3">city name:</span>{{distination_city_name}}</li>
+                    <li class="modal-text"><span class="col-md-3">number of nights:</span>{{selectedDestination.nights}}</li>
+                    <li class="modal-text"><span class="col-md-3">country name:</span>{{destination_country_name}}</li>
+                    <!--<li class="modal-text"><span class="col-md-3">chick in:</span>{{selectedDestination.}}</li>-->
+                </ul>
+
+            </b-modal>
+
         </div>
 
 
     </div>
 </template>
-
 <script>
     export default {
         name: "Request",
@@ -75,7 +112,10 @@
                 currentPage: 1,
                 userRole: this.role,
                 filter_data: '',
-                selectedClient:''
+                selectedClient:'',
+                selectedDestination:'',
+                distination_city_name:'',
+                destination_country_name:''
             }
 
         },
@@ -89,9 +129,14 @@
         ],
         methods: {
             showData(request){
+                console.log(request)
                 this.selectedClient=request.client;
             },
-
+            showDestination(destionation){
+                    this.selectedDestination =destionation;
+                    this.distination_city_name=this.selectedDestination.city.name;
+                    this.destination_country_name=this.selectedDestination.country.en_short_name;
+            },
             updateRequests() {
                 if (this.filter_data == '') {
                     axios.get(`/get/requests/${this.category}/?page=${this.currentPage}`).then((response) => {
@@ -127,17 +172,13 @@
                     }).then(response => {
                         this.tempRequests = response.data.requests.data;
                         this.totalRows = response.data.requests.total;
-
                     });
                 }
-
-
-            }
+            },
         }
-
     }
 </script>
 
-<style scoped>
+<style  lang="scss" >
 
 </style>

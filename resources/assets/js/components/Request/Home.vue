@@ -8,7 +8,6 @@
         }
     }
 </i18n>
-
 <template>
     <div class="container">
         <div class="row justify-content-center">
