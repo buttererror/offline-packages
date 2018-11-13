@@ -105,7 +105,8 @@
             <label class="col-form-label col-form-label-lg col-3" :class="$t('labelDir')"
             >{{$t('packageDetails.startEndJourney')}}
             </label>
-            <div class="col-6 bg-white text-center d-flex flex-column justify-content-center" style="height: 48px" v-if="disable">{{$t("rangeDateMessage")}}</div>
+            <div class="col-6 bg-white text-center d-flex flex-column justify-content-center"
+                 style="height: 48px" v-if="disableDatePicker">{{$t("rangeDateMessage")}}</div>
             <div class="col-6" v-else>
 
                 <HotelDatePicker :startDate="startRangeDate"
@@ -259,7 +260,12 @@
 
     export default {
         name: "DestinationDetails",
-        props: ["cities", "cityNumber", "disableBefore", "disable"],
+        props: {
+            cities: Array,
+            cityNumber: Number,
+            disableDatesBefore: Date,
+            disableDatePicker: Boolean
+        },
         components: {
             Datepicker,
             Multiselect,
@@ -279,7 +285,7 @@
                 tripStartAt: window.packageDetails.packageMainDetails.tripStartAt,
                 adultsNum: window.packageDetails.packageMainDetails.adultsNum,
                 childrenNum: window.packageDetails.packageMainDetails.childrenNum,
-                startRangeDate: this.disableBefore,
+                startRangeDate: this.disableDatesBefore,
                 nextStartDate: null,
                 validation: {
                     city: false,
@@ -365,7 +371,7 @@
 
         methods: {
             setCheckInDate() {
-                this.destinationDetails.checkInDate = this.disableBefore;
+                this.destinationDetails.checkInDate = this.disableDatesBefore;
                 this.validateCheckInDate();
             },
             getNights(checkIn, checkOut) {
@@ -491,6 +497,7 @@
                 bus.$emit(`empty-accommodation-fields-${this.cityNumber}`);
             },
             clearRangeSelection() {
+                // HDP~1
                 bus.$emit(`clear-selection-${this.cityNumber}`); // listen in hotelDatePicker
                 this.destinationDetails.checkInDate = null;
                 this.destinationDetails.checkOutDate = null;
@@ -501,10 +508,8 @@
             },
             setStartDate(date) {
                 this.setCheckInDate(); // set checkInDate with the new value
+                // HDP~2
                 bus.$emit(`set-checkIn-${this.cityNumber}`, date);
-            },
-            setEndDate(date) {
-                bus.$emit(`set-checkOut-${this.cityNumber}`, date);
             },
             accommodationTypeToEnglish() {
                 if(this.destinationDetails.selectedAccomodationType === "فندق"){
@@ -517,7 +522,7 @@
         watch: {
             "destinationDetails.checkOutDate"(newValue) { // trigger when the start date changes
                 bus.$emit("next-start-date", {
-                    startDate: this.disableBefore,
+                    startDate: this.disableDatesBefore,
                     checkOut: this.nextStartDate
                 });
                 // bug: this $emit i'm changing its location to fix the bug

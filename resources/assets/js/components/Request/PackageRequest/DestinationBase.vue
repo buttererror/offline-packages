@@ -18,8 +18,8 @@
     "no":"لا",
     "destination":"مكان",
     "destinations_details":"تفاصيل الاماكن",
-    "nextcity":"المدينه القادمة",
-    "prevcity":"المدينة السابقة",
+    "nextCity":"المدينه القادمة",
+    "prevCity":"المدينة السابقة",
     "buttonDir":"text-left"
     },
 
@@ -39,8 +39,8 @@
     "no":"no",
     "destination":"Destination",
     "destinations_details":"Destinations Details",
-    "nextcity":"Next City",
-    "prevcity":"Previous City",
+    "nextCity":"Next City",
+    "prevCity":"Previous City",
     "buttonDir":"text-right"
     }
     }
@@ -57,10 +57,16 @@
             <div class="card-body">
                 <div v-for="destinationNumber in citiesNumber">
                     <keep-alive>
+                        <!-- for every destination in the loop
+                        cityNumber: Number, unique for every destination
+                        cities: Array, constant
+                        disableDatesBefore: Date, changes
+                        disableDatePicker: Boolean, changes
+                        -->
                         <DestinationDetails v-if="destinationNumber === cityNumber"
                                             :cityNumber="destinationNumber" :cities="cities"
-                                            :disableBefore="startDate"
-                                            :disable="disableRangeDate"
+                                            :disableDatesBefore="startDate"
+                                            :disableDatePicker="disableRangeDate"
                         >
                         </DestinationDetails>
                     </keep-alive>
@@ -69,20 +75,24 @@
 
             <div class="text-center" style="user-select: none">
                 <a href="#" @click.prevent="previousDestination"
-                   class="btn btn-link btn-outline-primary m-4" :class="{
-               'disabled': cityNumber === 1}"
-                >{{$t('prevcity')}}</a>
+                   class="btn btn-link btn-outline-primary m-4"
+                   :class="{'disabled': cityNumber === 1}">
+                    {{$t('prevCity')}}
+                </a>
                 <a href="#" @click.prevent="nextDestination"
-                   class="btn btn-link btn-outline-primary m-4" :class="{
-               'disabled': citiesNumber === cityNumber || citiesNumber === 1}"
-                >{{$t('nextcity')}}</a>
+                   class="btn btn-link btn-outline-primary m-4"
+                   :class="{'disabled': citiesNumber === cityNumber || citiesNumber === 1}">
+                    {{$t('nextCity')}}
+                </a>
             </div>
             <div class="card-footer d-flex flex-row-reverse justify-content-between">
                 <button class="btn btn-primary" @click.prevent="nextComponent"
-                        :class="{'disabled': !activateNextBtn}"
-                >{{$t('next')}}
+                        :class="{'disabled': !activateNextBtn}">
+                    {{$t('next')}}
                 </button>
-                <button class="btn btn-primary" @click.prevent="previousComponent">{{$t('back')}}</button>
+                <button class="btn btn-primary" @click.prevent="previousComponent">
+                    {{$t('back')}}
+                </button>
             </div>
         </div>
     </div>
@@ -93,10 +103,7 @@
 
     export default {
         name: "DestinationBase",
-        props: ["data"],
-        components: {
-            DestinationDetails,
-        },
+        components: {DestinationDetails},
         data() {
             return {
                 cityNumber: 1,
@@ -112,32 +119,32 @@
                 // array of arrays, every array contains the start and the end date of every city
                 citiesStartDates: [],
                 rangesDatesCheckList: [],
-                disableRangeDate: false
+                disableRangeDate: false,
+                selectedCountriesIds: []
             }
         },
         mounted() {
             window.packageDetails.destinationsDetails = [];
+            // collect the selected countries ids to request the belonged cities
+            this.selectedCountries.forEach((element) => {
+                this.selectedCountriesIds.push(element.id)
+            });
+            // get the all the cities of the selected countries
+            axios.post('/api/cities', {
+                'country_ids': this.selectedCountriesIds,
+                'top_destination': 1
+            }).then(response => {
+                this.cities = response.data.cities;
+            });
+
             bus.$on(`per-destination-validation`, (destinationValidation) => {
-                // console.log("per destination validation", destinationValidation);
-                // console.log("index", this.cityNumber -1);
                 this.destinationsValidation[this.cityNumber - 1] = destinationValidation;
             });
             bus.$on("any-input", () => {
                 this.activateNxtBtn();
-                // console.log("destinations Validation", this.destinationsValidation);
-            });
-            let selectedCountriesIds = [];
-            // collect the selected countries ids to request the belonged cities
-            this.selectedCountries.forEach(function (element) {
-                selectedCountriesIds.push(element.id)
-            });
-            // get the all the cities of the selected countries
-            axios.post('/api/cities', {'country_ids': selectedCountriesIds, 'top_destination': 1}).then(response => {
-                this.cities = response.data.cities;
             });
             // next-start-date emitted at every checkOutDate changes
             bus.$on("next-start-date", (rangeDate) => {
-                // console.log("on next destination:", this.cityNumber, startDate);
                 this.startDate = rangeDate.checkOut; // next city start date
                 this.citiesStartDates[this.cityNumber] = [];
                 this.citiesStartDates[this.cityNumber][0] = rangeDate.startDate;
@@ -145,22 +152,20 @@
             });
             bus.$on("validate-range-picker", (mark) => {
                 this.rangesDatesCheckList[this.cityNumber - 1] = mark;
-                console.log("rangesDatesCheckList", this.rangesDatesCheckList);
             });
             bus.$on("clear-selection", () => {
                 // set next destination validation with false
                 let nextCityIndex = this.cityNumber;
-                for(let i = nextCityIndex; i < this.destinationsValidation.length; i++){
+                for (let i = nextCityIndex; i < this.destinationsValidation.length; i++) {
                     this.destinationsValidation[i] = false;
                 }
             });
         },
         methods: {
             multipleRangePickersValidation(length) {
-                if(!length) return this.disableRangeDate = false;
-                for(let i = 0; i < length; i++){
-                    // console.log("inside for", this.rangesDatesCheckList[i]);
-                    if(!this.rangesDatesCheckList[i]){
+                if (!length) return this.disableRangeDate = false;
+                for (let i = 0; i < length; i++) {
+                    if (!this.rangesDatesCheckList[i]) {
                         this.disableRangeDate = true;
                         return;
                     }
@@ -168,25 +173,15 @@
                 this.disableRangeDate = false;
             },
             nextDestination() {
-                // console.log("ranges check", this.rangesDatesCheckList);
                 bus.$emit(`next-destination-${this.cityNumber}`, this.cityNumber - 1);
                 this.multipleRangePickersValidation(this.cityNumber);
                 this.cityNumber++;
             },
             previousDestination() {
-                console.log("going back");
-                let previousCityNumber = this.cityNumber - 1;
-                bus.$emit(`previous-destination-${this.cityNumber}`, previousCityNumber);
+                bus.$emit(`previous-destination-${this.cityNumber}`, this.previousCityNumber);
                 // bug : ~ 1
-                this.startDate = this.citiesStartDates[previousCityNumber][0]; // previous city start date
-                // console.log("when back", this.startDate);
+                this.startDate = this.citiesStartDates[this.previousCityNumber][0]; // previous city start date
                 this.cityNumber--;
-                // console.log("___");
-                // console.log("previous");
-                // console.log("cityNumber", this.cityNumber);
-                // console.log("ranges check", this.rangesDatesCheckList);
-                // console.log("ranges length", this.rangesDatesCheckList.length);
-                // console.log("_____");
                 this.multipleRangePickersValidation(this.cityNumber - 1);
             },
             nextComponent() {
@@ -196,8 +191,6 @@
                         component: 'FinalNote',
                         step: 'finalize'
                     });
-
-                    // console.log("package", window.packageDetails);
                 }
             },
             previousComponent() {
@@ -213,6 +206,11 @@
                         this.activateNextBtn = true;
                     }
                 }
+            }
+        },
+        computed: {
+            previousCityNumber() {
+                return this.cityNumber - 1;
             }
         }
     }
