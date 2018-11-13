@@ -22,7 +22,6 @@
 <script>
     import Steps from './Steps';
     export default {
-        // root component
         name: "Home",
         components: {
             Steps

@@ -122,9 +122,6 @@
                 // console.log("index", this.cityNumber -1);
                 this.destinationsValidation[this.cityNumber - 1] = destinationValidation;
             });
-            bus.$on('go-back', (component) => {
-                this.$emit('selected-component', component);
-            });
             bus.$on("any-input", () => {
                 this.activateNxtBtn();
                 // console.log("destinations Validation", this.destinationsValidation);

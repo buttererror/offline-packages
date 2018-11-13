@@ -238,7 +238,6 @@
     import {en, ar} from 'vuejs-datepicker/dist/locale';
     import Multiselect from 'vue-multiselect';
     import DestinationDetails from './DestinationDetails';
-    import HotelDatePicker from 'vue-hotel-datepicker';
 
 
     export default {
@@ -246,8 +245,7 @@
         components: {
             Datepicker,
             Multiselect,
-            DestinationDetails,
-            HotelDatePicker
+            DestinationDetails
         },
         data() {
             return {
@@ -300,12 +298,8 @@
                 //     'month-names': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 // }
             }
-        }
-        ,
+        },
         mounted() {
-            bus.$on('go-back', (component) => {
-                this.$emit('selected-component', component);
-            });
             axios.get('/api/countries').then(response => {
                 this.countries = response.data;
             });
