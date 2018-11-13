@@ -14,7 +14,7 @@
             <div class="col-md-8">
                 <div v-for="request in tempRequests">
                     <div v-show="request.id">
-                        <b-card  >
+                        <b-card  class="request-card">
                             <div class="card-title">
                                 {{request.title}}
                                 <div class="client-name">
@@ -88,11 +88,10 @@
                 <ul>
                     <li class="modal-text"><span class="col-md-3">chick in:</span>{{selectedDestination.checkin}}</li>
                     <li class="modal-text"><span class="col-md-3">chick out:</span>{{selectedDestination.checkout}}</li>
-                    <li class="modal-text"><span class="col-md-3">city name:</span>{{selectedDestination.city}}</li>
-                    <!--<li class="modal-text"><span class="col-md-3">city name:</span>{{selectedDestination.city.name}}</li>-->
+                    <li class="modal-text"><span class="col-md-3">city name:</span>{{distination_city_name}}</li>
                     <li class="modal-text"><span class="col-md-3">number of nights:</span>{{selectedDestination.nights}}</li>
-                    <li class="modal-text"><span class="col-md-3">chick in:</span>{{selectedDestination.country.en_short_name}}</li>
-                    <li class="modal-text"><span class="col-md-3">chick in:</span>{{selectedDestination.checkin}}</li>
+                    <li class="modal-text"><span class="col-md-3">country name:</span>{{destination_country_name}}</li>
+                    <!--<li class="modal-text"><span class="col-md-3">chick in:</span>{{selectedDestination.}}</li>-->
                 </ul>
 
             </b-modal>
@@ -114,7 +113,9 @@
                 userRole: this.role,
                 filter_data: '',
                 selectedClient:'',
-                selectedDestination:''
+                selectedDestination:'',
+                distination_city_name:'',
+                destination_country_name:''
             }
 
         },
@@ -133,7 +134,9 @@
             },
             showDestination(destionation){
                      this.selectedDestination =destionation;
-                     console.log(this.selectedDestination);
+                    this.distination_city_name=this.selectedDestination.city.name;
+                    this.destination_country_name=this.selectedDestination.country.en_short_name;
+                    console.log(destionation);
             },
             updateRequests() {
                 if (this.filter_data == '') {
