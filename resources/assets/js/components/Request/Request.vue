@@ -89,8 +89,17 @@
                     <li class="modal-text"><span class="col-md-3">chick in:</span>{{selectedDestination.checkin}}</li>
                     <li class="modal-text"><span class="col-md-3">chick out:</span>{{selectedDestination.checkout}}</li>
                     <li class="modal-text"><span class="col-md-3">city name:</span>{{distination_city_name}}</li>
-                    <li class="modal-text"><span class="col-md-3">number of nights:</span>{{selectedDestination.nights}}</li>
                     <li class="modal-text"><span class="col-md-3">country name:</span>{{destination_country_name}}</li>
+                    <li class="modal-text"><span class="col-md-3">number of nights:</span>{{selectedDestination.nights}}</li>
+                    <li class="modal-text" v-if="selectedDestination.accommodation_type!=null">
+                        <span class="col-md-3" >
+                                  accommodation_type:
+                        </span>
+                        {{selectedDestination.accommodation_type}}
+                    </li>
+                    <li class="modal-text" v-if="selectedDestination.accommodation_type=='hotel'">
+
+                    </li>
                     <!--<li class="modal-text"><span class="col-md-3">chick in:</span>{{selectedDestination.}}</li>-->
                 </ul>
 
