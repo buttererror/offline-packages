@@ -134,9 +134,6 @@
             value: {
                 type: String
             },
-            cityNumber: {
-                type: Number
-            },
             startingDateValue: {
                 default: null,
                 type: Date
@@ -251,7 +248,7 @@
                 }
             },
             checkIn(newDate) {
-                bus.$emit(`checkInChanged-${this.cityNumber}`, newDate)
+                this.$emit("checkInChanged", newDate)
             },
             checkOut(newDate) {
                 if (this.checkOut !== null && this.checkOut !== null) {
@@ -263,7 +260,7 @@
                     this.isOpen = false;
                 }
 
-                bus.$emit(`checkOutChanged-${this.cityNumber}`, newDate)
+                this.$emit("checkOutChanged", newDate)
             },
 
         },
@@ -465,13 +462,16 @@
         },
 
         mounted() {
-            bus.$on(`clear-selection-${this.cityNumber}`, () => {
+            bus.$on("clear-selection", () => {
                 // HDP@1
                 this.clearSelection();
             });
-            bus.$on(`set-checkIn-${this.cityNumber}`, (date) => {
+            bus.$on("set-checkIn", (date) => {
                 // HDP@2
                 this.setCheckIn(date);
+            });
+            bus.$on("set-checkOut", (date) => {
+                this.setCheckOut(date);
             });
             document.addEventListener('touchstart', this.handleTouchStart, false);
             document.addEventListener('touchmove', this.handleTouchMove, false);

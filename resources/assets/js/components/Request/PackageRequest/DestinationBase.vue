@@ -55,22 +55,20 @@
                 <h5 class="card-subtitle text-center">{{$t('destination')}} #{{cityNumber}}</h5>
             </div>
             <div class="card-body">
-                <div v-for="destinationNumber in citiesNumber">
-                    <keep-alive>
+                <!--<div v-for="destinationNumber in citiesNumber">-->
+                    <!--<keep-alive>-->
                         <!-- for every destination in the loop
                         cityNumber: Number, unique for every destination
                         cities: Array, constant
                         disableDatesBefore: Date, changes
                         disableDatePicker: Boolean, changes
                         -->
-                        <DestinationDetails v-if="destinationNumber === cityNumber"
-                                            :cityNumber="destinationNumber" :cities="cities"
-                                            :disableDatesBefore="startDate"
+                        <DestinationDetails :cityNumber="cityNumber" :cities="cities"
                                             :disableDatePicker="disableRangeDate"
                         >
                         </DestinationDetails>
-                    </keep-alive>
-                </div>
+                    <!--</keep-alive>-->
+                <!--</div>-->
             </div>
 
             <div class="text-center" style="user-select: none">
@@ -115,16 +113,12 @@
                 destinationsValidation: [],
                 activateNextBtn: false,
                 updateListening: null,
-                startDate: window.packageDetails.packageMainDetails.tripStartAt,
-                // array of arrays, every array contains the start and the end date of every city
-                citiesStartDates: [],
                 rangesDatesCheckList: [],
                 disableRangeDate: false,
                 selectedCountriesIds: []
             }
         },
         mounted() {
-            window.packageDetails.destinationsDetails = [];
             // collect the selected countries ids to request the belonged cities
             this.selectedCountries.forEach((element) => {
                 this.selectedCountriesIds.push(element.id)
@@ -143,22 +137,8 @@
             bus.$on("any-input", () => {
                 this.activateNxtBtn();
             });
-            // next-start-date emitted at every checkOutDate changes
-            bus.$on("next-start-date", (rangeDate) => {
-                this.startDate = rangeDate.checkOut; // next city start date
-                this.citiesStartDates[this.cityNumber] = [];
-                this.citiesStartDates[this.cityNumber][0] = rangeDate.startDate;
-                this.citiesStartDates[this.cityNumber][1] = rangeDate.checkOut;
-            });
             bus.$on("validate-range-picker", (mark) => {
                 this.rangesDatesCheckList[this.cityNumber - 1] = mark;
-            });
-            bus.$on("clear-selection", () => {
-                // set next destination validation with false
-                let nextCityIndex = this.cityNumber;
-                for (let i = nextCityIndex; i < this.destinationsValidation.length; i++) {
-                    this.destinationsValidation[i] = false;
-                }
             });
         },
         methods: {
@@ -173,14 +153,13 @@
                 this.disableRangeDate = false;
             },
             nextDestination() {
-                bus.$emit(`next-destination-${this.cityNumber}`, this.cityNumber - 1);
+                bus.$emit("next-destination");
                 this.multipleRangePickersValidation(this.cityNumber);
                 this.cityNumber++;
             },
             previousDestination() {
-                bus.$emit(`previous-destination-${this.cityNumber}`, this.previousCityNumber);
-                // bug : ~ 1
-                this.startDate = this.citiesStartDates[this.previousCityNumber][0]; // previous city start date
+                bus.$emit("previous-destination");
+                // fixed : ~ 1
                 this.cityNumber--;
                 this.multipleRangePickersValidation(this.cityNumber - 1);
             },

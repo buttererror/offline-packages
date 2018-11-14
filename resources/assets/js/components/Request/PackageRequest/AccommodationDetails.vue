@@ -278,7 +278,7 @@
 
     export default {
         name: "accommodationDetails",
-        props: ["destinationNumber", "accomType", "emptyOnSelected"],
+        props: ["cityNumber", "accomType", "emptyOnSelected"],
         components: {
             Multiselect
         },
@@ -343,7 +343,7 @@
                 this.sendValidationToDestination();
                 // console.log("children 0", this.validation.hotel.selectedChildrenNum);
             }
-            bus.$on(`empty-accommodation-fields-${this.destinationNumber}`, () => {
+            bus.$on(`empty-accommodation-fields-${this.cityNumber}`, () => {
                 this.emptyOnAccommodationType();
             });
             this.remainingAdults = this.adultsNumber;
@@ -356,14 +356,19 @@
             // childrenOptions = [{age: 12, id: 1}, ....]
             this.fillChildrenOptions();
 
-            bus.$on(`next-destination-${this.destinationNumber}`, () => {
-                bus.$emit(`destination-details-${this.destinationNumber}`, this.accommodationDetails);
+            bus.$on("next-destination", () => {
+                window.packageDetails.destinationsDetails[this.cityNumber].destinationsDetails =
+                    this.destinationDetails;
+                // bus.$emit(`destination-details-${this.cityNumber}`, this.accommodationDetails);
             });
-            bus.$on(`previous-destination-${this.destinationNumber}`, () => {
-                bus.$emit(`destination-details-${this.destinationNumber}`, this.accommodationDetails);
+            bus.$on("previous-destination", () => {
+                window.packageDetails.destinationsDetails[this.cityNumber].destinationsDetails =
+                    this.destinationDetails;
+
+                // bus.$emit(`destination-details-${this.cityNumber}`, this.accommodationDetails);
             });
-            bus.$on(`next-component-${this.destinationNumber}`, () => {
-                bus.$emit(`destination-details-${this.destinationNumber}`, this.accommodationDetails);
+            bus.$on(`next-component-${this.cityNumber}`, () => {
+                bus.$emit(`destination-details-${this.cityNumber}`, this.accommodationDetails);
             });
 
         },
@@ -535,12 +540,12 @@
                 }
             },
             sendValidationToDestination() {
-                bus.$emit(`hotel-validation-dest-${this.destinationNumber}`,
+                bus.$emit(`hotel-validation-dest-${this.cityNumber}`,
                     this.accommodationDetailsValidation);
                 this.sendValidationToBaseOnInput();
             },
             sendValidationToBaseOnInput() {
-                bus.$emit(`send-validation-destination-from-nested-inputs-${this.destinationNumber}`);
+                bus.$emit(`send-validation-destination-from-nested-inputs-${this.cityNumber}`);
             },
             updateChildrenNum(value) {
                 this.childrenOptions.splice(this.childrenOptions.indexOf(value), 1);

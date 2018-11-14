@@ -124,6 +124,7 @@ const app = new Vue({
 });
 
 window.packageDetails = {};
+window.packageDetails.destinationsDetails = [];
 
 
 import 'vue-multiselect/dist/vue-multiselect.min.css'
