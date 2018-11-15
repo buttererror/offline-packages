@@ -64,7 +64,6 @@
                         disableDatePicker: Boolean, changes
                         -->
                         <DestinationDetails :cityNumber="cityNumber" :cities="cities"
-                                            :disableDatePicker="disableRangeDate"
                         >
                         </DestinationDetails>
                     <!--</keep-alive>-->
@@ -113,8 +112,8 @@
                 destinationsValidation: [],
                 activateNextBtn: false,
                 updateListening: null,
-                rangesDatesCheckList: [],
-                disableRangeDate: false,
+                // rangesDatesCheckList: [],
+                // disableRangeDate: false,
                 selectedCountriesIds: []
             }
         },
@@ -137,31 +136,31 @@
             bus.$on("any-input", () => {
                 this.activateNxtBtn();
             });
-            bus.$on("validate-range-picker", (mark) => {
-                this.rangesDatesCheckList[this.cityNumber - 1] = mark;
-            });
+            // bus.$on("validate-range-picker", (mark) => {
+            //     this.rangesDatesCheckList[this.cityNumber - 1] = mark;
+            // });
         },
         methods: {
-            multipleRangePickersValidation(length) {
-                if (!length) return this.disableRangeDate = false;
-                for (let i = 0; i < length; i++) {
-                    if (!this.rangesDatesCheckList[i]) {
-                        this.disableRangeDate = true;
-                        return;
-                    }
-                }
-                this.disableRangeDate = false;
-            },
+            // multipleRangePickersValidation(length) {
+            //     if (!length) return this.disableRangeDate = false;
+            //     for (let i = 0; i < length; i++) {
+            //         if (!this.rangesDatesCheckList[i]) {
+            //             this.disableRangeDate = true;
+            //             return;
+            //         }
+            //     }
+            //     this.disableRangeDate = false;
+            // },
             nextDestination() {
                 bus.$emit("next-destination");
-                this.multipleRangePickersValidation(this.cityNumber);
+                // this.multipleRangePickersValidation(this.cityNumber);
                 this.cityNumber++;
             },
             previousDestination() {
                 bus.$emit("previous-destination");
                 // fixed : ~ 1
                 this.cityNumber--;
-                this.multipleRangePickersValidation(this.cityNumber - 1);
+                // this.multipleRangePickersValidation(this.cityNumber - 1);
             },
             nextComponent() {
                 if (this.activateNextBtn) {

@@ -110,7 +110,7 @@
             </div>
             <div class="col-6" v-else>
 
-                <HotelDatePicker :startDate="startRangeDate"
+                <HotelDatePicker :startDate="disableDatesBefore"
                                  :minNights="1"
                                  format="DD/MM/YYYY"
                                  :hoveringTooltip="getNights"
@@ -265,8 +265,7 @@
         name: "DestinationDetails",
         props: {
             cities: Array,
-            cityNumber: Number,
-            disableDatePicker: Boolean
+            cityNumber: Number
         },
         components: {
             Datepicker,
@@ -289,6 +288,8 @@
                 childrenNum: window.packageDetails.packageMainDetails.childrenNum,
                 nextStartDate: null,
                 startRangeDate: window.packageDetails.packageMainDetails.tripStartAt,
+                disableDatesBefore: window.packageDetails.packageMainDetails.tripStartAt,
+                disableDatePicker: false,
                 validation: {
                     city: false,
                     checkInDate: false,
@@ -336,7 +337,7 @@
                 this.accommodationTypeToEnglish();
                 window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
                 // TODO: bug in range date picker validation
-                this.validateRangePicker();
+                // this.validateRangePicker();
             });
             bus.$on(`next-component-${this.cityNumber}`, (cityIndex) => {
                 this.accommodationTypeToEnglish();
@@ -370,6 +371,13 @@
                     this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
                 } else {
                     this.destinationDetails.nightsNum = 0;
+                }
+                if (!checkOut) {
+                    // empty the next destinations array
+                    for (let i = this.cityNumber + 1; i < window.packageDetails.destinationsDetails.length; i++) {
+                        window.packageDetails.destinationsDetails[i].checkInDate = null;
+                        window.packageDetails.destinationsDetails[i].checkOutDate = null;
+                    }
                 }
                 this.validateCheckOutDate();
             },
@@ -443,15 +451,15 @@
                 this.processValidationData();
                 this.sendValidationToBase();
             },
-            validateRangePicker() {
-                if (!this.destinationDetails.checkOutDate) {
-                    bus.$emit("validate-range-picker", false);
-                } else {
-                    bus.$emit("validate-range-picker", true);
-                }
-                this.processValidationData();
-                this.sendValidationToBase();
-            },
+            // validateRangePicker() {
+            //     if (!this.destinationDetails.checkOutDate) {
+            //         bus.$emit("validate-range-picker", false);
+            //     } else {
+            //         bus.$emit("validate-range-picker", true);
+            //     }
+            //     this.processValidationData();
+            //     this.sendValidationToBase();
+            // },
             processValidationData() {
                 // process the data and get one property .. true or false for the whole destination
                 for (let check in this.validation) {
@@ -487,11 +495,26 @@
             },
             setStartDate(date) {
                 this.validateCheckInDate();
-                // HDP~2
-                bus.$emit("set-checkIn", date);
+                if (date) {
+                    date = new Date(date);
+                    this.startRangeDate = date;
+                    this.clearRangeSelection(); // this set checkIn and checkOut with null, call both validation
+                    // HDP~2
+                    bus.$emit("set-checkIn", date);
+                    this.destinationDetails.checkInDate = date;
+                    return;
+                }
+                this.destinationDetails.checkInDate = date;
+                this.startRangeDate = date;
+
             },
             setEndDate(date) {
                 this.validateCheckOutDate(date);
+                if (!date) {
+                    this.destinationDetails.checkOutDate = date;
+                    return;
+                }
+                date = new Date(date);
                 bus.$emit("set-checkOut", date);
             },
             accommodationTypeToEnglish() {
@@ -500,46 +523,69 @@
                 } else if (this.destinationDetails.selectedAccomodationType === "شقة") {
                     this.destinationDetails.selectedAccomodationType = "Apartment";
                 }
+            },
+            setDestinationDetailsDataToDefault() {
+                // set every property to its default value
+                for (let property in this.destinationDetails) {
+                    if (typeof this.destinationDetails[property] === "number") {
+                        this.destinationDetails[property] = 0;
+                    } else if (typeof this.destinationDetails[property] === "object") {
+                        this.destinationDetails[property] = null;
+                    } else if (typeof this.destinationDetails[property] === "boolean") {
+                        this.destinationDetails[property] = false;
+                    } else if (typeof this.destinationDetails[property] === "string") {
+                        this.destinationDetails[property] = '';
+                        if (property === "selectedAccomodationType") {
+                            this.destinationDetails[property] = this.$t('packageDetails.typeHotel');
+                        }
+                    }
+                }
             }
         },
         watch: {
-            cityNumber(newCityNumber, pastCityNumber) {
-                if (!window.packageDetails.destinationsDetails[newCityNumber]) {
-                    // set every property to its default value
-                    for (let property in this.destinationDetails) {
-                        if (typeof this.destinationDetails[property] === "number") {
-                            this.destinationDetails[property] = 0;
-                        } else if (typeof this.destinationDetails[property] === "object") {
-                            this.destinationDetails[property] = null;
-                        } else if (typeof this.destinationDetails[property] === "boolean") {
-                            this.destinationDetails[property] = false;
-                        } else if (typeof this.destinationDetails[property] === "string") {
-                            this.destinationDetails[property] = '';
-                            if (property === "selectedAccomodationType") {
-                                this.destinationDetails[property] = this.$t('packageDetails.typeHotel');
-                            }
+            cityNumber(currentCityNumber, pastCityNumber) {
+                // the case of : first time to pass on the destination
+                if (!window.packageDetails.destinationsDetails[currentCityNumber]) {
+                    this.setDestinationDetailsDataToDefault();
+                    let pastCheckOutDate = window.packageDetails.destinationsDetails[pastCityNumber].checkOutDate;
+                    if (!pastCheckOutDate) { // disable datePicker if !checkOut on the past destination
+                        this.disableDatePicker = true;
+                        return;
+                    }
+                    this.disableDatesBefore = new Date(pastCheckOutDate);
+                    this.setStartDate(pastCheckOutDate);
+                } else { // the case of : not the first time to pass on the destination
+                    this.destinationDetails = window.packageDetails.destinationsDetails[currentCityNumber];
+                    let currentCheckInDate = this.destinationDetails.checkInDate;
+                    let currentCheckOutDate = this.destinationDetails.checkOutDate;
+                    let beforeCurrentCityNumber = currentCityNumber - 1;
+                    if (beforeCurrentCityNumber) {
+                        var beforeCurrentCheckOutDate = window.packageDetails.destinationsDetails[beforeCurrentCityNumber].checkOutDate;
+                    }
+                    if (pastCityNumber > currentCityNumber) {
+                        if (beforeCurrentCityNumber === 0) {
+                            this.disableDatePicker = false;
+                            this.disableDatesBefore = window.packageDetails.packageMainDetails.tripStartAt;
+                            this.setStartDate(currentCheckInDate);
+                            this.setEndDate(currentCheckOutDate);
+                            return;
                         }
-                        let checkOutDate = new Date(window.packageDetails.destinationsDetails[pastCityNumber].checkOutDate);
-                        this.destinationDetails.checkInDate = checkOutDate;
-                        this.startRangeDate = checkOutDate;
-                        this.clearRangeSelection(); // this set checkIn and checkOut with null, call both validation
-                        this.setStartDate(checkOutDate); // this call checkIn validation
-                    }
-                } else {
-                    // bug : this part is buggy
-                    this.destinationDetails = window.packageDetails.destinationsDetails[newCityNumber];
-                    let checkInDate = this.destinationDetails.checkInDate;
-                    let checkOutDate = this.destinationDetails.checkOutDate;
-                    if (!checkInDate && newCityNumber === 1) {
-                        this.startRangeDate = window.packageDetails.packageMainDetails.tripStartAt;
-                        this.destinationDetails.checkInDate = window.packageDetails.packageMainDetails.tripStartAt;
-                    } else if (!checkInDate) {
-                        this.startRangeDate = new Date(this.destinationDetails.checkInDate);
-                    }
-                    this.clearRangeSelection();
-                    this.setStartDate(new Date(checkInDate));
-                    if (checkOutDate) {
-                        this.setEndDate(new Date(checkOutDate));
+                        this.disableDatePicker = !currentCheckInDate;
+                        this.disableDatesBefore = beforeCurrentCheckOutDate;
+                        this.setStartDate(currentCheckInDate);
+                        this.setEndDate(currentCheckOutDate);
+                    } else {
+                        this.disableDatePicker = false;
+                        if (beforeCurrentCheckOutDate && !this.destinationDetails.checkOutDate) {
+                            // if the last checkout does not change
+                            this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
+                            this.setStartDate(beforeCurrentCheckOutDate);
+                            this.setEndDate(null);
+                        } else { // hide the datePicker
+                            this.disableDatePicker = true;
+                            this.setStartDate(currentCheckInDate);
+                            this.setEndDate(currentCheckOutDate);
+                        }
                     }
                 }
             },
