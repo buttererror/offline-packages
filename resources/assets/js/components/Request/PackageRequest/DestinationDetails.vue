@@ -372,14 +372,18 @@
                 } else {
                     this.destinationDetails.nightsNum = 0;
                 }
+                this.emptyNextDates(checkOut);
+                console.log(window.packageDetails.destinationsDetails);
+                this.validateCheckOutDate();
+            },
+            emptyNextDates(checkOut) {
                 if (!checkOut) {
-                    // empty the next destinations array
+                    // empty the next destinations dates if the current date changes
                     for (let i = this.cityNumber + 1; i < window.packageDetails.destinationsDetails.length; i++) {
                         window.packageDetails.destinationsDetails[i].checkInDate = null;
                         window.packageDetails.destinationsDetails[i].checkOutDate = null;
                     }
                 }
-                this.validateCheckOutDate();
             },
             setArentedCar(car) {
                 this.destinationDetails.rentCar = car.value;
@@ -549,9 +553,10 @@
                     this.setDestinationDetailsDataToDefault();
                     let pastCheckOutDate = window.packageDetails.destinationsDetails[pastCityNumber].checkOutDate;
                     if (!pastCheckOutDate) { // disable datePicker if !checkOut on the past destination
-                        this.disableDatePicker = true;
+                        this.disableDatePicker = true; // hide datePicker
                         return;
                     }
+                    this.disableDatePicker = false; // show datePicker
                     this.disableDatesBefore = new Date(pastCheckOutDate);
                     this.setStartDate(pastCheckOutDate);
                 } else { // the case of : not the first time to pass on the destination
@@ -562,7 +567,7 @@
                     if (beforeCurrentCityNumber) {
                         var beforeCurrentCheckOutDate = window.packageDetails.destinationsDetails[beforeCurrentCityNumber].checkOutDate;
                     }
-                    if (pastCityNumber > currentCityNumber) {
+                    if (pastCityNumber > currentCityNumber) { // down
                         if (beforeCurrentCityNumber === 0) {
                             this.disableDatePicker = false;
                             this.disableDatesBefore = window.packageDetails.packageMainDetails.tripStartAt;
@@ -570,21 +575,36 @@
                             this.setEndDate(currentCheckOutDate);
                             return;
                         }
-                        this.disableDatePicker = !currentCheckInDate;
-                        this.disableDatesBefore = beforeCurrentCheckOutDate;
-                        this.setStartDate(currentCheckInDate);
-                        this.setEndDate(currentCheckOutDate);
-                    } else {
-                        this.disableDatePicker = false;
-                        if (beforeCurrentCheckOutDate && !this.destinationDetails.checkOutDate) {
-                            // if the last checkout does not change
+                        if(currentCheckInDate){ // currentCheckInDate existed
+                            this.disableDatePicker = false; // show
                             this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
-                            this.setStartDate(beforeCurrentCheckOutDate);
-                            this.setEndDate(null);
-                        } else { // hide the datePicker
-                            this.disableDatePicker = true;
                             this.setStartDate(currentCheckInDate);
                             this.setEndDate(currentCheckOutDate);
+                        }else{ // currentCheckInDate not existed
+                            if(beforeCurrentCheckOutDate){ // set
+                                this.disableDatePicker = false; // show
+                                this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
+                                this.setStartDate(beforeCurrentCheckOutDate);
+                                this.setEndDate(null);
+                            }else{ // unset
+                                this.disableDatePicker = true; // hide
+                            }
+                        }
+                    } else { // up
+                        if (this.destinationDetails.checkInDate) { // currentCheckInDate existed
+                            this.disableDatePicker = false; // show datePicker
+                            this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
+                            this.setStartDate(currentCheckInDate);
+                            this.setEndDate(currentCheckOutDate);
+                        } else { // currentCheckInDate not existed
+                            if(beforeCurrentCheckOutDate){ // set
+                                this.disableDatePicker = false; // show datePicker
+                                this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
+                                this.setStartDate(beforeCurrentCheckOutDate);
+                                this.setEndDate(null);
+                            }else{ // unset
+                                this.disableDatePicker = true; // hide datePicker
+                            }
                         }
                     }
                 }

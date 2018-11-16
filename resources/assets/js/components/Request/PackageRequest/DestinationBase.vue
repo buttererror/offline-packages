@@ -55,19 +55,9 @@
                 <h5 class="card-subtitle text-center">{{$t('destination')}} #{{cityNumber}}</h5>
             </div>
             <div class="card-body">
-                <!--<div v-for="destinationNumber in citiesNumber">-->
-                    <!--<keep-alive>-->
-                        <!-- for every destination in the loop
-                        cityNumber: Number, unique for every destination
-                        cities: Array, constant
-                        disableDatesBefore: Date, changes
-                        disableDatePicker: Boolean, changes
-                        -->
                         <DestinationDetails :cityNumber="cityNumber" :cities="cities"
                         >
                         </DestinationDetails>
-                    <!--</keep-alive>-->
-                <!--</div>-->
             </div>
 
             <div class="text-center" style="user-select: none">
@@ -112,8 +102,6 @@
                 destinationsValidation: [],
                 activateNextBtn: false,
                 updateListening: null,
-                // rangesDatesCheckList: [],
-                // disableRangeDate: false,
                 selectedCountriesIds: []
             }
         },
@@ -136,31 +124,16 @@
             bus.$on("any-input", () => {
                 this.activateNxtBtn();
             });
-            // bus.$on("validate-range-picker", (mark) => {
-            //     this.rangesDatesCheckList[this.cityNumber - 1] = mark;
-            // });
         },
         methods: {
-            // multipleRangePickersValidation(length) {
-            //     if (!length) return this.disableRangeDate = false;
-            //     for (let i = 0; i < length; i++) {
-            //         if (!this.rangesDatesCheckList[i]) {
-            //             this.disableRangeDate = true;
-            //             return;
-            //         }
-            //     }
-            //     this.disableRangeDate = false;
-            // },
             nextDestination() {
                 bus.$emit("next-destination");
-                // this.multipleRangePickersValidation(this.cityNumber);
                 this.cityNumber++;
             },
             previousDestination() {
                 bus.$emit("previous-destination");
                 // fixed : ~ 1
                 this.cityNumber--;
-                // this.multipleRangePickersValidation(this.cityNumber - 1);
             },
             nextComponent() {
                 if (this.activateNextBtn) {
