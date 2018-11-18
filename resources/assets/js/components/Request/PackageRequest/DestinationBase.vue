@@ -180,7 +180,9 @@
             previousDestination() {
                 bus.$emit(`previous-destination-${this.cityNumber}`, this.previousCityNumber);
                 // bug : ~ 1
-                this.startDate = this.citiesStartDates[this.previousCityNumber][0]; // previous city start date
+                if(this.citiesStartDates[this.previousCityNumber]){
+                    this.startDate = this.citiesStartDates[this.previousCityNumber][0]; // previous city start date
+                }
                 this.cityNumber--;
                 this.multipleRangePickersValidation(this.cityNumber - 1);
             },
