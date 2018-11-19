@@ -94,7 +94,6 @@
                     :group-select="false"
                     :multiple="false"
                     :searchable="true"
-                    @input="validateCity"
                 >
 
                 </multiselect>
@@ -181,7 +180,7 @@
                 <div class="col-6">
                     <multiselect placeholder=""
                                  v-model="destinationDetails.selectedCarLevel"
-                                 :options="carLevel" @input="validateCarLevel"
+                                 :options="carLevel"
                                  tagPosition="bottom" openDirection="bottom"
                                  :preserveSearch="true" :showNoResults="false" selectLabel=""
                     >
@@ -253,7 +252,6 @@
 
 <script>
 
-    import Datepicker from 'vuejs-datepicker';
     import Multiselect from 'vue-multiselect';
     import AccommodationDetails from './AccommodationDetails';
     import HotelDatePicker from '../vue-datepicker/HotelDatePicker.vue';
@@ -268,7 +266,6 @@
             cityNumber: Number
         },
         components: {
-            Datepicker,
             Multiselect,
             AccommodationDetails,
             HotelDatePicker
@@ -290,14 +287,6 @@
                 startRangeDate: window.packageDetails.packageMainDetails.tripStartAt,
                 disableDatesBefore: window.packageDetails.packageMainDetails.tripStartAt,
                 disableDatePicker: false,
-                validation: {
-                    city: false,
-                    checkInDate: false,
-                    checkOutDate: false,
-                    selectedCarLevel: true,
-                    accommodationDetailsValidation: true,
-                },
-                destinationDetailsValidation: false,
                 destinationDetails: {
                     checkInDate: window.packageDetails.packageMainDetails.tripStartAt,
                     checkOutDate: null,
@@ -331,28 +320,13 @@
         },
         mounted() {
             bus.$on("previous-destination", () => {
+                // save the data on previous destination pressed
                 window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
             });
             bus.$on("next-destination", () => {
-                this.accommodationTypeToEnglish();
+                // save the data on next destination pressed
+                this.saveAccommodationTypeInEnglish();
                 window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
-                // TODO: bug in range date picker validation
-                // this.validateRangePicker();
-            });
-            bus.$on(`next-component-${this.cityNumber}`, (cityIndex) => {
-                this.accommodationTypeToEnglish();
-                window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
-            });
-
-            bus.$on(`hotel-validation-dest-${this.cityNumber}`, (validation) => {
-                if (this.destinationDetails.selectedAccomodationType === this.$t('packageDetails.typeHotel')) {
-                    this.validation.accommodationDetailsValidation = validation;
-                }
-                this.validateWholeAccommodationDetails();
-            });
-            // trigger this event from inside hotel component to send data on input
-            bus.$on(`send-validation-destination-from-nested-inputs-${this.cityNumber}`, () => {
-                this.sendValidationToBase();
             });
         },
 
@@ -362,7 +336,6 @@
             },
             getCheckInDate(checkIn) {
                 this.destinationDetails.checkInDate = checkIn;
-                this.validateCheckInDate();
             },
             getCheckOutDate(checkOut) {
                 this.destinationDetails.checkOutDate = checkOut;
@@ -374,7 +347,6 @@
                 }
                 this.emptyNextDates(checkOut);
                 console.log(window.packageDetails.destinationsDetails);
-                this.validateCheckOutDate();
             },
             emptyNextDates(checkOut) {
                 if (!checkOut) {
@@ -392,7 +364,6 @@
                     this.destinationDetails.rentCarWithDriver = false;
                     this.destinationDetails.selectedCarLevel = '';
                 }
-                this.validateCarLevel();
             },
             setAcarWithAdriver(driver) {
                 this.destinationDetails.rentCarWithDriver = driver.value;
@@ -405,105 +376,20 @@
                 this.destinationDetails.reserveAccomodation = accommodationNeed.value;
                 this.validateReserveAccommodation();
             },
-            validateCity() {
-                if (this.destinationDetails.selectedCity) {
-                    this.validation.city = true;
-                } else {
-                    this.validation.city = false;
-                }
-                this.processValidationData();
-                this.sendValidationToBase();
-
-            },
-            validateCheckInDate() {
-                if (this.destinationDetails.checkInDate) this.validation.checkInDate = true;
-                else this.validation.checkInDate = false;
-                this.processValidationData();
-                this.sendValidationToBase();
-
-            },
-            validateCheckOutDate() {
-                if (this.destinationDetails.checkOutDate) this.validation.checkOutDate = true;
-                else this.validation.checkOutDate = false;
-                this.processValidationData();
-                this.sendValidationToBase();
-
-            },
-
-            validateCarLevel() {
-                if (this.destinationDetails.selectedCarLevel || !this.destinationDetails.rentCar) {
-                    this.validation.selectedCarLevel = true;
-                } else {
-                    this.validation.selectedCarLevel = false;
-                }
-                this.processValidationData();
-                this.sendValidationToBase();
-
-            },
-            validateReserveAccommodation() {
-                if (this.destinationDetails.reserveAccomodation &&
-                    this.$t('packageDetails.typeHotel') === this.destinationDetails.selectedAccomodationType) {
-                    this.validation.accommodationDetailsValidation = false;
-                } else {
-                    this.validation.accommodationDetailsValidation = true;
-                }
-                this.processValidationData();
-                this.sendValidationToBase();
-            },
-            validateWholeAccommodationDetails() {
-                // the false or the true that comes from the hotel component
-                this.processValidationData();
-                this.sendValidationToBase();
-            },
-            // validateRangePicker() {
-            //     if (!this.destinationDetails.checkOutDate) {
-            //         bus.$emit("validate-range-picker", false);
-            //     } else {
-            //         bus.$emit("validate-range-picker", true);
-            //     }
-            //     this.processValidationData();
-            //     this.sendValidationToBase();
-            // },
-            processValidationData() {
-                // process the data and get one property .. true or false for the whole destination
-                for (let check in this.validation) {
-                    if (!this.validation[check]) {
-                        this.destinationDetailsValidation = false;
-                        return;
-                    }
-                    this.destinationDetailsValidation = true;
-                }
-            },
-            sendValidationToBase() {
-                // send data to destination base
-                bus.$emit(`per-destination-validation`,
-                    this.destinationDetailsValidation);
-                bus.$emit("any-input");
-            },
             emptyOnAccommodationType() {
-                if (this.destinationDetails.selectedAccomodationType === this.$t('packageDetails.typeHotel')) {
-                    this.validation.accommodationDetailsValidation = false;
-                } else {
-                    this.validation.accommodationDetailsValidation = true;
-                }
-                this.processValidationData();
-                this.sendValidationToBase();
-                bus.$emit(`empty-accommodation-fields-${this.cityNumber}`);
+                bus.$emit("empty-accommodation-fields");
             },
             clearRangeSelection() {
-                // HDP~1
                 bus.$emit("clear-selection"); // listen in hotelDatePicker
                 this.destinationDetails.checkInDate = null;
                 this.destinationDetails.checkOutDate = null;
                 this.destinationDetails.nightsNum = 0;
             },
             setStartDate(date) {
-                this.validateCheckInDate();
                 if (date) {
                     date = new Date(date);
                     this.startRangeDate = date;
                     this.clearRangeSelection(); // this set checkIn and checkOut with null, call both validation
-                    // HDP~2
                     bus.$emit("set-checkIn", date);
                     this.destinationDetails.checkInDate = date;
                     return;
@@ -513,7 +399,6 @@
 
             },
             setEndDate(date) {
-                this.validateCheckOutDate(date);
                 if (!date) {
                     this.destinationDetails.checkOutDate = date;
                     return;
@@ -521,7 +406,8 @@
                 date = new Date(date);
                 bus.$emit("set-checkOut", date);
             },
-            accommodationTypeToEnglish() {
+            saveAccommodationTypeInEnglish() {
+                // save the accommodation type data in English when the language is Arabic
                 if (this.destinationDetails.selectedAccomodationType === "فندق") {
                     this.destinationDetails.selectedAccomodationType = "Hotel";
                 } else if (this.destinationDetails.selectedAccomodationType === "شقة") {
@@ -575,18 +461,18 @@
                             this.setEndDate(currentCheckOutDate);
                             return;
                         }
-                        if(currentCheckInDate){ // currentCheckInDate existed
+                        if (currentCheckInDate) { // currentCheckInDate existed
                             this.disableDatePicker = false; // show
                             this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
                             this.setStartDate(currentCheckInDate);
                             this.setEndDate(currentCheckOutDate);
-                        }else{ // currentCheckInDate not existed
-                            if(beforeCurrentCheckOutDate){ // set
+                        } else { // currentCheckInDate not existed
+                            if (beforeCurrentCheckOutDate) { // set
                                 this.disableDatePicker = false; // show
                                 this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
                                 this.setStartDate(beforeCurrentCheckOutDate);
                                 this.setEndDate(null);
-                            }else{ // unset
+                            } else { // unset
                                 this.disableDatePicker = true; // hide
                             }
                         }
@@ -597,12 +483,12 @@
                             this.setStartDate(currentCheckInDate);
                             this.setEndDate(currentCheckOutDate);
                         } else { // currentCheckInDate not existed
-                            if(beforeCurrentCheckOutDate){ // set
+                            if (beforeCurrentCheckOutDate) { // set
                                 this.disableDatePicker = false; // show datePicker
                                 this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
                                 this.setStartDate(beforeCurrentCheckOutDate);
                                 this.setEndDate(null);
-                            }else{ // unset
+                            } else { // unset
                                 this.disableDatePicker = true; // hide datePicker
                             }
                         }

@@ -221,9 +221,8 @@
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-between" :dir="$t('labelDir')">
-                <button class="btn btn-primary" @click.prevent="nextComponent"
-                        :class="{'disabled': !activateNextBtn}"
-                >{{$t('next')}}
+                <button class="btn btn-primary" @click.prevent="nextComponent">
+                    {{$t('next')}}
                 </button>
                 <button class="btn btn-primary" @click.prevent="previousComponent">{{$t('back')}}</button>
             </div>
@@ -255,7 +254,6 @@
                     {id: '', en_short_name: ''}
                 ],
                 staticChildrenAges: ["< 1", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                activateNextBtn: false,
                 maxChildrenNum: null,
                 maxChildrenPerRoom: 4,
                 validation: {
@@ -305,34 +303,22 @@
             });
         },
         methods: {
-            activateNxtBtn() {
-                for (let check in this.validation) {
-                    if (!this.validation[check]) {
-                        this.activateNextBtn = false;
-                        return;
-                    }
-                    this.activateNextBtn = true;
-                }
-            },
             validateStartPlace() {
                 if (this.packageMainDetails.startPlace) {
                     this.validation.startPlace = true;
                 } else this.validation.startPlace = false;
                 // console.log(this.validation.startPlace);
-                this.activateNxtBtn();
 
             },
             validateEndPlace() {
                 if (this.packageMainDetails.endPlace) {
                     this.validation.endPlace = true;
                 } else this.validation.endPlace = false;
-                this.activateNxtBtn();
             },
             validateCountries() {
                 if (this.packageMainDetails.selectedCountries.length) {
                     this.validation.selectedCountries = true;
                 } else this.validation.selectedCountries = false;
-                this.activateNxtBtn();
             },
             validateAdultsNum() {
                 this.maxChildrenNum = this.packageMainDetails.adultsNum * this.maxChildrenPerRoom;
@@ -340,7 +326,6 @@
                 if (this.packageMainDetails.adultsNum) {
                     this.validation.adultsNum = true;
                 } else this.validation.adultsNum = false;
-                this.activateNxtBtn();
 
             },
             validatePlacesNum() {
@@ -348,12 +333,8 @@
                 if (Number(this.packageMainDetails.citiesNumber)) {
                     this.validation.citiesNumber = true;
                 } else this.validation.citiesNumber = false;
-                this.activateNxtBtn();
             },
             validateChildrenAge() {
-                // console.log("validating children ages");
-                // console.log("childrenNumber", this.packageMainDetails.childrenNumber);
-                // console.log("childrenAges", this.packageMainDetails.childrenAges);
                 if (this.packageMainDetails.childrenNumber === this.packageMainDetails.childrenAges.length) {
                     for (let i = 0; i < this.packageMainDetails.childrenAges.length; i++) {
                         if (!this.packageMainDetails.childrenAges[i]) {
@@ -367,7 +348,6 @@
                 } else if (this.packageMainDetails.childrenNumber > this.packageMainDetails.childrenAges.length) {
                     this.validation.childrenAges = false;
                 }
-                this.activateNxtBtn();
             },
             validateChildrenNum() {
                 // validate the max children number allowed
@@ -385,7 +365,6 @@
                     this.validateChildrenAge();
                     return;
                 }
-                this.activateNxtBtn();
             },
             removeChildrenAges() { // remove from childrenAges until it's equal to childrenNumber
                 while (this.packageMainDetails.childrenAges.length !== this.packageMainDetails.childrenNumber) {
@@ -399,29 +378,17 @@
                 if (this.packageMainDetails.tripStartAt) {
                     this.validation.tripStartAt = true;
                     // set the time to 0, fixing nightsNum
-                    this.packageMainDetails.tripStartAt.setHours(0,0,0,0);
+                    this.packageMainDetails.tripStartAt.setHours(0, 0, 0, 0);
                 } else {
                     this.validation.tripStartAt = false;
                 }
-                this.activateNxtBtn();
             },
-            // getCheckOutDate(checkOut) {
-            //     this.packageMainDetails.tripEndAt = checkOut;
-            //     if (this.packageMainDetails.tripStartAt) {
-            //         this.validation.tripEndAt = true;
-            //     } else {
-            //         this.validation.tripEndAt = false;
-            //     }
-            //     this.activateNxtBtn();
-            // },
             nextComponent() {
-                if (this.activateNextBtn) {
-                    window.packageDetails.packageMainDetails = this.packageMainDetails;
-                    this.$emit('next-component', {
-                        component: 'DestinationBase',
-                        step: 'destinationDetails'
-                    });
-                }
+                window.packageDetails.packageMainDetails = this.packageMainDetails;
+                this.$emit('next-component', {
+                    component: 'DestinationBase',
+                    step: 'destinationDetails'
+                });
             },
             previousComponent() {
                 this.$emit('previous-component', "SelectService");

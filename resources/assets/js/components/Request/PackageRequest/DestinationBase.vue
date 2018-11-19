@@ -55,9 +55,9 @@
                 <h5 class="card-subtitle text-center">{{$t('destination')}} #{{cityNumber}}</h5>
             </div>
             <div class="card-body">
-                        <DestinationDetails :cityNumber="cityNumber" :cities="cities"
-                        >
-                        </DestinationDetails>
+                <DestinationDetails :cityNumber="cityNumber" :cities="cities"
+                >
+                </DestinationDetails>
             </div>
 
             <div class="text-center" style="user-select: none">
@@ -73,8 +73,7 @@
                 </a>
             </div>
             <div class="card-footer d-flex flex-row-reverse justify-content-between">
-                <button class="btn btn-primary" @click.prevent="nextComponent"
-                        :class="{'disabled': !activateNextBtn}">
+                <button class="btn btn-primary" @click.prevent="nextComponent">
                     {{$t('next')}}
                 </button>
                 <button class="btn btn-primary" @click.prevent="previousComponent">
@@ -97,11 +96,6 @@
                 cities: [],
                 selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
                 citiesNumber: Number(window.packageDetails.packageMainDetails.citiesNumber),
-                destinationsDetails: [],
-                date: new Date(),
-                destinationsValidation: [],
-                activateNextBtn: false,
-                updateListening: null,
                 selectedCountriesIds: []
             }
         },
@@ -117,13 +111,6 @@
             }).then(response => {
                 this.cities = response.data.cities;
             });
-
-            bus.$on(`per-destination-validation`, (destinationValidation) => {
-                this.destinationsValidation[this.cityNumber - 1] = destinationValidation;
-            });
-            bus.$on("any-input", () => {
-                this.activateNxtBtn();
-            });
         },
         methods: {
             nextDestination() {
@@ -136,32 +123,14 @@
                 this.cityNumber--;
             },
             nextComponent() {
-                if (this.activateNextBtn) {
-                    bus.$emit(`next-component-${this.cityNumber}`, this.cityNumber - 1);
-                    this.$emit('next-component', {
-                        component: 'FinalNote',
-                        step: 'finalize'
-                    });
-                }
+                // this event for the breadcurmbs
+                this.$emit('next-component', {
+                    component: 'FinalNote',
+                    step: 'finalize'
+                });
             },
             previousComponent() {
                 this.$emit('previous-component', "PackageDetails");
-            },
-            activateNxtBtn() {
-                if (this.citiesNumber === this.destinationsValidation.length) {
-                    for (let i = 0; i < this.destinationsValidation.length; i++) {
-                        if (!this.destinationsValidation[i]) {
-                            this.activateNextBtn = false;
-                            break;
-                        }
-                        this.activateNextBtn = true;
-                    }
-                }
-            }
-        },
-        computed: {
-            previousCityNumber() {
-                return this.cityNumber - 1;
             }
         }
     }

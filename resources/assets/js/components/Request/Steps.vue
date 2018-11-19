@@ -42,6 +42,8 @@
 
             </component>
         </keep-alive>
+        <!-- DestinationBase component is put outside keep-alive because this component
+        depends on the previous component data like cities and citiesNumber -->
         <component v-if="component === 'DestinationBase'" @next-component="nextComponent"
                    @previous-component="previousComponent" v-bind:is="component">
 
