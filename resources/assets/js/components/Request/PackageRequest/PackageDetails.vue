@@ -80,7 +80,11 @@
                         <input type="text" :placeholder="$t('packageDetails.startPlace')"
                                v-model="packageMainDetails.startPlace"
                                @input="validateStartPlace"
-                               class="form-control"/>
+                               class="form-control"
+                               :class="{'is-invalid': validation.startPlace}"/>
+                        <div class="invalid-feedback" v-if="validation.startPlace">
+                            Please fill the form above.
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -169,13 +173,6 @@
                     <label class="col-form-label col-form-label-lg col-3"
                            :class="$t('labelClass')"
                     >{{$t('packageDetails.adultsNum')}}</label>
-                    <!--<div class="col-3 d-flex align-items-center justify-content-end text-right-->
-                    <!--rounded"-->
-                    <!--style="background-color: rgba(91,192,222, .8);"-->
-                    <!--v-if="packageMainDetails.adultsNum">-->
-                    <!--{{$t('packageDetails.childrenMaxNum')}} {{maxChildrenNum}}-->
-                    <!--</div>-->
-                    <!--<div v-else class="col-3"></div>-->
                     <div class="col-6 d-flex align-items-center">
                         <input type="number" :placeholder="$t('packageDetails.adultsNum')"
                                class="form-control"
@@ -256,6 +253,7 @@
                 staticChildrenAges: ["< 1", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 maxChildrenNum: null,
                 maxChildrenPerRoom: 4,
+                hasErrors: false,
                 validation: {
                     startPlace: false,
                     endPlace: false,
@@ -304,9 +302,9 @@
         },
         methods: {
             validateStartPlace() {
-                if (this.packageMainDetails.startPlace) {
-                    this.validation.startPlace = true;
-                } else this.validation.startPlace = false;
+                // if (this.packageMainDetails.startPlace) {
+                //     this.validation.startPlace = true;
+                // } else this.validation.startPlace = false;
                 // console.log(this.validation.startPlace);
 
             },
@@ -363,7 +361,6 @@
                     this.validation.childrenAges = true;
                 } else {
                     this.validateChildrenAge();
-                    return;
                 }
             },
             removeChildrenAges() { // remove from childrenAges until it's equal to childrenNumber
@@ -384,6 +381,16 @@
                 }
             },
             nextComponent() {
+                this.hasErrors = false;
+                for(let property in this.packageMainDetails){
+                    if(!this.packageMainDetails[property]){
+                        this.validation[property] = true;
+                        this.hasErrors = true;
+                    }else {
+                        this.validation[property] = false;
+                    }
+                }
+                if(this.hasErrors) return;
                 window.packageDetails.packageMainDetails = this.packageMainDetails;
                 this.$emit('next-component', {
                     component: 'DestinationBase',
