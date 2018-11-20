@@ -15,6 +15,9 @@
     "childAge":"عمر الطفل"
 
     },
+    "field" : {
+    "required" : "هذا الحقل مطلوب"
+    },
     "header":"تفاصيل الباقة",
     "next":"التالى",
     "back":"السابق",
@@ -44,6 +47,9 @@
     "adultsNum":"Adults Number",
     "childrenMaxNum":"Children maximum number",
     "childAge":"Child Age"
+    },
+    "field" : {
+    "required" : "This field is required"
     },
     "header":"Package Details",
     "next":"Next",
@@ -78,12 +84,13 @@
                     >{{$t('packageDetails.startPlace')}}</label>
                     <div class="col-6">
                         <input type="text" :placeholder="$t('packageDetails.startPlace')"
+                               @input="anyInput('startPlace')"
                                v-model="packageMainDetails.startPlace"
-                               @input="validateStartPlace"
                                class="form-control"
-                               :class="{'is-invalid': validation.startPlace}"/>
-                        <div class="invalid-feedback" v-if="validation.startPlace">
-                            Please fill the form above.
+                               :class="{'is-invalid': validation.startPlace.message}">
+                        <div class="invalid-feedback" :class="$t('labelClass')"
+                             v-if="validation.startPlace.message">
+                            {{validation.startPlace.message}}
                         </div>
                     </div>
                 </div>
@@ -94,8 +101,13 @@
                     <div class="col-6">
                         <input type="text" :placeholder="$t('packageDetails.endPlace')"
                                v-model="packageMainDetails.endPlace"
-                               @input="validateEndPlace"
-                               class="form-control"/>
+                               @input="anyInput('endPlace')"
+                               :class="{'is-invalid': validation.endPlace.message}"
+                               class="form-control">
+                        <div class="invalid-feedback" :class="$t('labelClass')"
+                             v-if="validation.endPlace.message">
+                            {{validation.endPlace.message}}
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -103,13 +115,19 @@
                            :class="$t('labelClass')"
                     >{{$t('packageDetails.startEndJourney')}}</label>
                     <div class="col-6">
-                        <datepicker @input="validateTripStartAt"
+                        <datepicker
+                                    @input="anyInput('tripStartAt')"
                                     v-model="packageMainDetails.tripStartAt"
                                     :disabledDates="disabledDates"
                                     :bootstrap-styling="true"
+                                    :input-class="{'is-invalid': validation.tripStartAt.message}"
                                     calendar-class="h5 w-100"
-                                    :language="ar"
-                        >
+                                    :language="ar">
+                              <div slot="afterDateInput" :class="$t('labelClass')"
+                                   class="animated-placeholder invalid-feedback d-block"
+                                   v-if="validation.tripStartAt.message">
+                                  {{validation.tripStartAt.message}}
+                              </div>
 
 
                         </datepicker>
@@ -122,6 +140,7 @@
                     >{{$t('packageDetails.countries')}}</label>
                     <div class="col-6">
                         <multiselect
+                            @input="anyInput('selectedCountries')"
                             v-model="packageMainDetails.selectedCountries"
                             :placeholder="$t('packageDetails.countries')"
                             tagPosition="bottom"
@@ -133,9 +152,14 @@
                             :hide-selected="true"
                             :loading="isLoading"
                             @search-change="countryFind"
-                            @input="validateCountries"
-
+                            :class="{'is-invalid': validation.selectedCountries.message}"
+                            :max="maxCountriesNum"
                         ></multiselect>
+                        <div class="invalid-feedback d-block" :class="$t('labelClass')"
+                             v-if="validation.selectedCountries.message">
+                            {{validation.selectedCountries.message}}
+                        </div>
+
                     </div>
                 </div>
 
@@ -146,9 +170,15 @@
                     <div class="col-6">
                         <input type="number" :placeholder="$t('packageDetails.citiesNumber')" min="0"
                                class="form-control"
+                               @input="anyInput('citiesNumber')"
                                v-model="packageMainDetails.citiesNumber"
-                               @input="validatePlacesNum"
-                        />
+                               :class="{'is-invalid': validation.citiesNumber.message}"
+                        >
+                        <div class="invalid-feedback" :class="$t('labelClass')"
+                             v-if="validation.citiesNumber.message">
+                            {{validation.citiesNumber.message}}
+                        </div>
+
                     </div>
                 </div>
 
@@ -173,10 +203,17 @@
                     <label class="col-form-label col-form-label-lg col-3"
                            :class="$t('labelClass')"
                     >{{$t('packageDetails.adultsNum')}}</label>
-                    <div class="col-6 d-flex align-items-center">
+                    <div class="col-6">
                         <input type="number" :placeholder="$t('packageDetails.adultsNum')"
                                class="form-control"
-                               v-model="packageMainDetails.adultsNum" min="1" @input="validateAdultsNum"/>
+                               @input="anyInput('adultsNum')"
+                               v-model="packageMainDetails.adultsNum" min="1"
+                               :class="{'is-invalid': validation.adultsNum.message}">
+                        <div class="invalid-feedback d-block" :class="$t('labelClass')"
+                             v-if="validation.adultsNum.message">
+                            {{validation.adultsNum.message}}
+                        </div>
+
                     </div>
                 </div>
                 <div class="form-group row">
@@ -188,29 +225,41 @@
                                :placeholder="$t('packageDetails.childrenNum')"
                                v-model="packageMainDetails.childrenNumber"
                                class="form-control" min="0"
+                               :class="{'is-invalid': validation.childrenNumber.message}"
                                @input="updateChildAge"
-                        />
+                        >
+                        <div class="invalid-feedback" :class="$t('labelClass')"
+                             v-if="validation.childrenNumber.message">
+                            {{validation.childrenNumber.message}}
+                        </div>
+
                     </div>
                 </div>
 
-                <div v-if="show">
+                <div v-if="packageMainDetails.childrenNumber > 0">
 
                     <div v-for="(num, key) in packageMainDetails.childrenNumber">
                         <div class="form-group row">
                             <label class="col-form-label col-form-label-lg col-3"
                                    :class="$t('labelClass')"
                             >
-                                {{$t('packageDetails.childAge')}}
+                                {{$t('packageDetails.childAge')}} # {{num}}
                             </label>
                             <div class="col-6">
                                 <multiselect :placeholder="$t('packageDetails.childAge')"
                                              v-model="packageMainDetails.childrenAges[key]"
                                              :options="staticChildrenAges"
                                              tagPosition="top"
-                                             @input="validateChildrenAge"
+                                             @input="anyAgeInput(key)"
+                                             :class="{'is-invalid': validation.childrenAges[key].message}"
                                 >
 
                                 </multiselect>
+                                <div class="invalid-feedback d-block" :class="$t('labelClass')"
+                                     v-if="validation.childrenAges[key].message">
+                                    {{validation.childrenAges[key].message}}
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -245,31 +294,51 @@
         },
         data() {
             return {
-                show: false,
                 isLoading: false,
-                countries: [
-                    {id: '', en_short_name: ''}
-                ],
+                countries: [],
                 staticChildrenAges: ["< 1", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                maxChildrenNum: null,
+                maxChildrenNum: 0,
+                maxChildrenNumLimit: 20,
                 maxChildrenPerRoom: 4,
+                maxAdultsNum: 20,
+                maxCitiesNum: 20,
+                maxCountriesNum: 20,
                 hasErrors: false,
                 validation: {
-                    startPlace: false,
-                    endPlace: false,
-                    tripStartAt: false,
-                    // tripEndAt: false,
-                    selectedCountries: false,
-                    adultsNum: false,
-                    citiesNumber: false,
-                    childrenNumber: true,
-                    childrenAges: true
+                    startPlace: {
+                        message: null,
+                        required: true
+                    },
+                    endPlace: {
+                        message: null,
+                        required: true
+                    },
+                    tripStartAt: {
+                        message: null,
+                        required: true
+                    },
+                    selectedCountries: {
+                        message: null,
+                        required: true
+                    },
+                    adultsNum: {
+                        message: null,
+                        required: true
+                    },
+                    citiesNumber: {
+                        message: null,
+                        required: true
+                    },
+                    childrenNumber: {
+                        message: null,
+                        required: false,
+                    },
+                    childrenAges: [],
                 },
                 packageMainDetails: {
                     startPlace: '',
                     endPlace: '',
                     tripStartAt: null,
-                    // tripEndAt: null,
                     selectedCountries: [],
                     citiesNumber: null,
                     transfer: false,
@@ -301,96 +370,40 @@
             });
         },
         methods: {
-            validateStartPlace() {
-                // if (this.packageMainDetails.startPlace) {
-                //     this.validation.startPlace = true;
-                // } else this.validation.startPlace = false;
-                // console.log(this.validation.startPlace);
-
-            },
-            validateEndPlace() {
-                if (this.packageMainDetails.endPlace) {
-                    this.validation.endPlace = true;
-                } else this.validation.endPlace = false;
-            },
-            validateCountries() {
-                if (this.packageMainDetails.selectedCountries.length) {
-                    this.validation.selectedCountries = true;
-                } else this.validation.selectedCountries = false;
-            },
-            validateAdultsNum() {
-                this.maxChildrenNum = this.packageMainDetails.adultsNum * this.maxChildrenPerRoom;
-                this.validateChildrenNum();
-                if (this.packageMainDetails.adultsNum) {
-                    this.validation.adultsNum = true;
-                } else this.validation.adultsNum = false;
-
-            },
-            validatePlacesNum() {
-                // console.log(this.packageMainDetails.citiesNumber);
-                if (Number(this.packageMainDetails.citiesNumber)) {
-                    this.validation.citiesNumber = true;
-                } else this.validation.citiesNumber = false;
-            },
-            validateChildrenAge() {
-                if (this.packageMainDetails.childrenNumber === this.packageMainDetails.childrenAges.length) {
-                    for (let i = 0; i < this.packageMainDetails.childrenAges.length; i++) {
-                        if (!this.packageMainDetails.childrenAges[i]) {
-                            this.validation.childrenAges = false;
-                            break;
-                        }
-                        this.validation.childrenAges = true;
-                    }
-                } else if (this.packageMainDetails.childrenNumber < this.packageMainDetails.childrenAges.length) {
-                    this.removeChildrenAges();
-                } else if (this.packageMainDetails.childrenNumber > this.packageMainDetails.childrenAges.length) {
-                    this.validation.childrenAges = false;
-                }
-            },
-            validateChildrenNum() {
-                // validate the max children number allowed
-                if (Number(this.packageMainDetails.childrenNumber) <= Number(this.maxChildrenNum)) {
-                    this.validation.childrenNumber = true;
-                } else {
-                    this.validation.childrenNumber = false;
-                }
-                //
-                if (Number(this.packageMainDetails.childrenNumber) === 0) {
-                    this.removeChildrenAges();
-                    this.validation.childrenNumber = true;
-                    this.validation.childrenAges = true;
-                } else {
-                    this.validateChildrenAge();
-                }
-            },
-            removeChildrenAges() { // remove from childrenAges until it's equal to childrenNumber
-                while (this.packageMainDetails.childrenAges.length !== this.packageMainDetails.childrenNumber) {
-                    this.packageMainDetails.childrenAges.pop();
-                }
-            },
             setTransferRequest(transfer) {
                 this.packageMainDetails.transfer = transfer.value;
             },
-            validateTripStartAt() {
-                if (this.packageMainDetails.tripStartAt) {
-                    this.validation.tripStartAt = true;
-                    // set the time to 0, fixing nightsNum
-                    this.packageMainDetails.tripStartAt.setHours(0, 0, 0, 0);
-                } else {
-                    this.validation.tripStartAt = false;
-                }
-            },
             nextComponent() {
                 this.hasErrors = false;
-                for(let property in this.packageMainDetails){
-                    if(!this.packageMainDetails[property]){
-                        this.validation[property] = true;
+                // Validate required fields
+                for (let property in this.validation) {
+                    // in case of children ages
+                    if(property == 'childrenAges'){
+                        for(let i = 0; i < this.packageMainDetails.childrenAges.length; i++){
+                            if(!this.packageMainDetails.childrenAges[i]){
+                                this.hasErrors = true;
+                                this.validation.childrenAges[i].message = this.$t('field.required');
+                            }
+                        }
+                        continue;
+                    }
+                    // in case of selected countries
+                    if(property == 'selectedCountries' && this.packageMainDetails.selectedCountries.length == 0){
+                        this.validation.selectedCountries.message = this.$t('field.required');
                         this.hasErrors = true;
-                    }else {
-                        this.validation[property] = false;
+                        continue;
+                    }
+                    if (this.validation[property].required && !this.packageMainDetails[property]) {
+                        this.validation[property].message = this.$t('field.required');
+                        this.hasErrors = true;
+                    } else {
+                        this.validation[property].message = null;
                     }
                 }
-                if(this.hasErrors) return;
+                // validate children ages fields
+                if(this.hasErrors){
+                    return;
+                }
                 window.packageDetails.packageMainDetails = this.packageMainDetails;
                 this.$emit('next-component', {
                     component: 'DestinationBase',
@@ -402,12 +415,19 @@
             },
             updateChildAge() {
                 this.packageMainDetails.childrenNumber = parseInt(this.packageMainDetails.childrenNumber);
-                this.validateChildrenNum();
-                if (this.packageMainDetails.childrenNumber > 0) {
-                    this.show = true
-                } else {
-                    this.show = false
+                if(!this.packageMainDetails.childrenNumber){
+                    this.packageMainDetails.childrenNumber = 0;
                 }
+                if(this.packageMainDetails.childrenNumber > this.maxChildrenNum){
+                    this.packageMainDetails.childrenNumber = this.maxChildrenNum;
+                }
+                for(let i = 0; i < this.packageMainDetails.childrenNumber; i++){
+                    this.validation.childrenAges.push({
+                        message: null,
+                        required: true,
+                    })
+                }
+                this.packageMainDetails.childrenAges = new Array(this.packageMainDetails.childrenNumber);
             }
             ,
             countryFind(query) {
@@ -417,8 +437,13 @@
                     this.isLoading = false
 
                 });
+            },
+            anyInput(prop){
+                this.validation[prop].message = null;
+            },
+            anyAgeInput(index){
+                this.validation.childrenAges[index].message = null;
             }
-            ,
         },
         computed: {
             ar: function () {
@@ -434,10 +459,48 @@
                 date.setDate(new Date().getDate() - 1);
                 return {to: date};
             }
+        },
+        watch: {
+            'packageMainDetails.citiesNumber' () {
+                this.packageMainDetails.citiesNumber = parseInt(this.packageMainDetails.citiesNumber );
+                if(!this.packageMainDetails.citiesNumber || this.packageMainDetails.citiesNumber < 1){
+                    this.packageMainDetails.citiesNumber = 1;
+                }else if(this.packageMainDetails.citiesNumber > this.maxCitiesNum){
+                    this.packageMainDetails.citiesNumber = this.maxCitiesNum;
+                }
+
+            },
+            'packageMainDetails.adultsNum' () {
+                this.packageMainDetails.adultsNum = parseInt(this.packageMainDetails.adultsNum );
+                if(!this.packageMainDetails.adultsNum || this.packageMainDetails.adultsNum < 1){
+                    this.packageMainDetails.adultsNum = 1;
+                }else if(this.packageMainDetails.adultsNum > this.maxAdultsNum){
+                    this.packageMainDetails.adultsNum = this.maxAdultsNum;
+                }
+                this.maxChildrenNum = this.maxChildrenPerRoom * this.packageMainDetails.adultsNum;
+                if(this.maxChildrenNum > this.maxChildrenNumLimit){
+                    this.maxChildrenNum = this.maxChildrenNumLimit;
+                }
+            }
         }
     }
 </script>
 
 <style scoped>
+    .is-valid {
+        border: 1px solid #28a745;
+        border-radius: 5px;
+    }
+    .is-valid:focus {
+        border: 1px solid #28a745 !important;
+        border-radius: 5px;
+    }
+    .is-invalid {
+        border: 1px solid #dc3545;
+        border-radius: 5px;
+    }
+    .is-invalid:focus {
+        border: 1px solid #dc3545 !important;
+    }
 
 </style>
