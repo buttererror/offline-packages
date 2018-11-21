@@ -105,7 +105,8 @@
             <label class="col-form-label col-form-label-lg col-3" :class="$t('labelDir')"
             >{{$t('packageDetails.startEndJourney')}}
             </label>
-            <div class="col-6 bg-white text-center d-flex flex-column justify-content-center" style="height: 48px" v-if="disable">{{$t("rangeDateMessage")}}</div>
+            <div class="col-6 bg-white text-center d-flex flex-column justify-content-center"
+                 style="height: 48px" v-if="disableDatePicker">{{$t("rangeDateMessage")}}</div>
             <div class="col-6" v-else>
 
                 <HotelDatePicker :startDate="startRangeDate"
@@ -252,7 +253,6 @@
     import Datepicker from 'vuejs-datepicker';
     import Multiselect from 'vue-multiselect';
     import AccommodationDetails from './AccommodationDetails';
-    // import HotelDatePicker from 'vue-hotel-datepicker';
     import HotelDatePicker from '../vue-datepicker/HotelDatePicker.vue';
 
 
@@ -260,7 +260,12 @@
 
     export default {
         name: "DestinationDetails",
-        props: ["cities", "cityNumber", "disableBefore", "disable"],
+        props: {
+            cities: Array,
+            cityNumber: Number,
+            disableDatesBefore: Date,
+            disableDatePicker: Boolean
+        },
         components: {
             Datepicker,
             Multiselect,
@@ -280,7 +285,7 @@
                 tripStartAt: window.packageDetails.packageMainDetails.tripStartAt,
                 adultsNum: window.packageDetails.packageMainDetails.adultsNum,
                 childrenNum: window.packageDetails.packageMainDetails.childrenNum,
-                startRangeDate: this.disableBefore,
+                startRangeDate: this.disableDatesBefore,
                 nextStartDate: null,
                 validation: {
                     city: false,
@@ -323,7 +328,6 @@
         },
         mounted() {
             bus.$on(`clear-and-set-${this.cityNumber}`, (newValue) => {
-                console.log("clearing clearing");
                 this.startRangeDate = newValue;
                 this.clearRangeSelection(); // this set checkIn and checkOut with null, call both validation
                 this.ValidateOnClearSelection();
@@ -341,12 +345,8 @@
                 this.destinationDetails.accommodationDetails = accommodationDetails;
             });
             bus.$on(`next-destination-${this.cityNumber}`, (cityIndex) => {
-                // console.log("disable", this.disable);
                 this.accommodationTypeToEnglish();
                 window.packageDetails.destinationsDetails[cityIndex] = this.destinationDetails;
-                // console.log("nextStartDate", this.nextStartDate);
-                // console.log("checkInDate", this.destinationDetails.checkInDate);
-                // console.log("before send to base", {checkIn: this.destinationDetails.checkInDate, checkOut: this.nextStartDate})
                 // TODO: bug in range date picker validation
                 this.validateRangePicker();
             });
@@ -371,27 +371,17 @@
 
         methods: {
             setCheckInDate() {
-                console.log("setting new checkin date with disableBefore", this.disableBefore);
-                this.destinationDetails.checkInDate = this.disableBefore;
+                this.destinationDetails.checkInDate = this.disableDatesBefore;
                 this.validateCheckInDate();
             },
             getNights(checkIn, checkOut) {
                 return (new Date(checkOut) - new Date(checkIn)) / (1000 * 3600 * 24);
             },
             getCheckInDate(checkIn) {
-                // console.log("------------------------");
-                // console.log("changing checkIn");
-                // console.log("checkIn", checkIn);
-                // console.log("this.checkIn", this.checkIn);
-                // console.log("------------------------");
                 this.destinationDetails.checkInDate = checkIn;
                 this.validateCheckInDate();
             },
             getCheckOutDate(checkOut) {
-                console.log("------------------------");
-                console.log("changing checkOut");
-                console.log("checkIn", this.destinationDetails.checkInDate);
-                console.log("checkout", checkOut);
                 this.destinationDetails.checkOutDate = checkOut;
                 if (checkOut || !this.destinationDetails.checkInDate && !checkOut) {
                     this.nextStartDate = checkOut;
@@ -399,8 +389,6 @@
                 } else {
                     this.destinationDetails.nightsNum = 0;
                 }
-                // console.log("nightsNum", this.destinationDetails.nightsNum);
-                // console.log("------------------------");
                 this.validateCheckOutDate();
             },
             setArentedCar(car) {
@@ -424,7 +412,6 @@
                 this.validateReserveAccommodation();
             },
             validateCity() {
-                // console.log("validating city")
                 if (this.destinationDetails.selectedCity) {
                     this.validation.city = true;
                 } else {
@@ -435,7 +422,6 @@
 
             },
             validateCheckInDate() {
-                // console.log("checking in");
                 if (this.destinationDetails.checkInDate) this.validation.checkInDate = true;
                 else this.validation.checkInDate = false;
                 this.processValidationData();
@@ -488,7 +474,6 @@
                 // process the data and get one property .. true or false for the whole destination
                 for (let check in this.validation) {
                     if (!this.validation[check]) {
-                        // console.log("check", check);
                         this.destinationDetailsValidation = false;
                         return;
                     }
@@ -497,7 +482,6 @@
             },
             sendValidationToBase() {
                 // send data to destination base
-                // console.log("inDestinationDetails cityNumber", this.cityNumber);
                 bus.$emit(`per-destination-validation`,
                     this.destinationDetailsValidation);
                 bus.$emit("any-input");
@@ -513,26 +497,19 @@
                 bus.$emit(`empty-accommodation-fields-${this.cityNumber}`);
             },
             clearRangeSelection() {
-                // console.log("----------");
-                // console.log("clear-selection");
+                // HDP~1
                 bus.$emit(`clear-selection-${this.cityNumber}`); // listen in hotelDatePicker
                 this.destinationDetails.checkInDate = null;
                 this.destinationDetails.checkOutDate = null;
                 this.destinationDetails.nightsNum = 0;
-                // console.log("checkInDate, checkOutDate ~ data");
-                // console.log(this.destinationDetails.checkInDate, this.destinationDetails.checkOutDate);
-                // console.log("----------");
             },
             ValidateOnClearSelection(){
                 bus.$emit("clear-selection");
             },
             setStartDate(date) {
                 this.setCheckInDate(); // set checkInDate with the new value
+                // HDP~2
                 bus.$emit(`set-checkIn-${this.cityNumber}`, date);
-            },
-            setEndDate(date) {
-                // console.log("setting checkOut");
-                bus.$emit(`set-checkOut-${this.cityNumber}`, date);
             },
             accommodationTypeToEnglish() {
                 if(this.destinationDetails.selectedAccomodationType === "فندق"){
@@ -544,10 +521,8 @@
         },
         watch: {
             "destinationDetails.checkOutDate"(newValue) { // trigger when the start date changes
-                console.log("setting new value");
-                console.log("cityNumber", this.cityNumber);
                 bus.$emit("next-start-date", {
-                    startDate: this.disableBefore,
+                    startDate: this.disableDatesBefore,
                     checkOut: this.nextStartDate
                 });
                 // bug: this $emit i'm changing its location to fix the bug

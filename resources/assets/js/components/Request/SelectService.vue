@@ -67,11 +67,6 @@
 
             }
         },
-        mounted() {
-            bus.$on('go-back', (component) => {
-                this.$emit('selected-component', component);
-            });
-        },
         methods: {
             nextComponent() {
                 this.$emit('next-component', {

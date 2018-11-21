@@ -43,11 +43,6 @@
                 noteText: ''
             }
         },
-        mounted() {
-            bus.$on('go-back', (component) => {
-                this.$emit('selected-component', component);
-            });
-        },
         methods: {
             savePackage() {
                 axios.post('/api/package', {
