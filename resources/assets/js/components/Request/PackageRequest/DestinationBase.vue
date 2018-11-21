@@ -52,7 +52,7 @@
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h4 class="card-title text-center">{{$t('destinations_details')}}</h4>
-                <h5 class="card-subtitle text-center">{{$t('destination')}} #{{cityNumber}}</h5>
+                <h5 class="card-subtitle text-center">{{$t('destination')}} #{{cityNumber + 1}}</h5>
             </div>
             <div class="card-body">
                 <DestinationDetails :cityNumber="cityNumber" :cities="cities"
@@ -61,19 +61,18 @@
             </div>
 
             <div class="text-center" style="user-select: none">
-                <a href="#" @click.prevent="previousDestination"
-                   class="btn btn-link btn-outline-primary m-4"
-                   :class="{'disabled': cityNumber === 1}">
+                <button @click.prevent="previousDestination"
+                   class="btn btn-link btn-outline-primary m-4" :disabled="cityNumber === 0">
                     {{$t('prevCity')}}
-                </a>
-                <a href="#" @click.prevent="nextDestination"
+                </button>
+                <button @click.prevent="nextDestination"
                    class="btn btn-link btn-outline-primary m-4"
-                   :class="{'disabled': citiesNumber === cityNumber || citiesNumber === 1}">
+                   :disabled="citiesNumber === cityNumber || citiesNumber === 0">
                     {{$t('nextCity')}}
-                </a>
+                </button>
             </div>
             <div class="card-footer d-flex flex-row-reverse justify-content-between">
-                <button class="btn btn-primary" @click.prevent="nextComponent">
+                <button class="btn btn-primary" @click.prevent="nextComponent" :disabled="citiesNumber !== cityNumber">
                     {{$t('next')}}
                 </button>
                 <button class="btn btn-primary" @click.prevent="previousComponent">
@@ -92,11 +91,11 @@
         components: {DestinationDetails},
         data() {
             return {
-                cityNumber: 1,
+                cityNumber: 0,
                 cities: [],
                 selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
                 citiesNumber: Number(window.packageDetails.packageMainDetails.citiesNumber),
-                selectedCountriesIds: []
+                selectedCountriesIds: [],
             }
         },
         mounted() {
@@ -114,15 +113,25 @@
         },
         methods: {
             nextDestination() {
+                this.$root.$data.hasErrors = false;
+                // Validate required fields
+                bus.$emit("validate-destination-details");
+                // validate children ages fields
+                if(this.$root.$data.hasErrors){
+                    return;
+                }
+
                 bus.$emit("next-destination");
                 this.cityNumber++;
             },
             previousDestination() {
-                bus.$emit("previous-destination");
                 // fixed : ~ 1
                 this.cityNumber--;
+                bus.$emit("previous-destination");
             },
             nextComponent() {
+                // save the data of the final destination
+                bus.$emit("next-destination");
                 // this event for the breadcurmbs
                 this.$emit('next-component', {
                     component: 'FinalNote',

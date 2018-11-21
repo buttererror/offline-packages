@@ -34,7 +34,9 @@
     "yes":"نعم",
     "no":"لا",
     "labelDir":"text-right",
-    "rangeDateMessage":"برجاء استكمال التواريخ السابقة"
+    "field": {
+    "required": "هذا الحقل مطلوب"
+    }
     },
 
     "en": {
@@ -69,7 +71,10 @@
     "yes":"yes",
     "no":"no",
     "labelDir":"text-left",
-    "rangeDateMessage":"Please, complete the previous dates"
+    "field": {
+    "required": "This field is required"
+    }
+
 
     }
     }
@@ -94,9 +99,15 @@
                     :group-select="false"
                     :multiple="false"
                     :searchable="true"
+                    :class="{'is-invalid': validation.selectedCity.message}"
                 >
 
                 </multiselect>
+                <div class="invalid-feedback d-block" :class="$t('labelDir')"
+                     v-if="validation.selectedCity.message">
+                    {{validation.selectedCity.message}}
+                </div>
+
             </div>
         </div>
 
@@ -104,10 +115,7 @@
             <label class="col-form-label col-form-label-lg col-3" :class="$t('labelDir')"
             >{{$t('packageDetails.startEndJourney')}}
             </label>
-            <div class="col-6 bg-white text-center d-flex flex-column justify-content-center"
-                 style="height: 48px" v-if="disableDatePicker">{{$t("rangeDateMessage")}}
-            </div>
-            <div class="col-6" v-else>
+            <div class="col-6">
 
                 <HotelDatePicker :startDate="disableDatesBefore"
                                  :minNights="1"
@@ -116,13 +124,27 @@
                                  :i18n="hotelPickerLang"
                                  :showYear="true"
                                  :startingDateValue="startRangeDate"
+                                 :endingDateValue="endRangeDate"
                                  dir="ltr" :cityNumber="cityNumber"
                                  @checkInChanged="getCheckInDate"
                                  @checkOutChanged="getCheckOutDate"
+                                 :class="{'is-invalid': validation.checkInDate.message || validation.checkOutDate.message}"
                 >
 
 
                 </HotelDatePicker>
+                <div class="d-flex justify-content-around">
+                    <div class="invalid-feedback d-block" :class="$t('labelDir')"
+                         v-if="validation.checkInDate.message">
+                        {{validation.checkInDate.message}}
+                    </div>
+                    <div class="invalid-feedback d-block" :class="$t('labelDir')"
+                         v-if="validation.checkOutDate.message">
+                        {{validation.checkOutDate.message}}
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
@@ -135,7 +157,7 @@
                 <input type="text" placeholder=""
                        class="form-control" :class="$t('labelDir')" readonly
                        v-model="destinationDetails.nightsNum"
-                />
+                >
             </div>
         </div>
 
@@ -154,7 +176,7 @@
 
             </div>
         </div>
-        <div v-if="show">
+        <div v-if="destinationDetails.rentCar">
             <div class="form-group row">
                 <label class="col-form-label col-form-label-lg col-3 text-nowrap"
                        :class="$t('labelDir')">{{$t('packageDetails.withDriver')}}</label>
@@ -183,8 +205,14 @@
                                  :options="carLevel"
                                  tagPosition="bottom" openDirection="bottom"
                                  :preserveSearch="true" :showNoResults="false" selectLabel=""
+                                 :class="{'is-invalid': validation.selectedCarLevel.message}"
                     >
                     </multiselect>
+                    <div class="invalid-feedback d-block" :class="$t('labelDir')"
+                         v-if="validation.selectedCarLevel.message">
+                        {{validation.selectedCarLevel.message}}
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -222,7 +250,7 @@
                 />
             </div>
         </div>
-        <div class="form-group row" v-if="showAccomodationType">
+        <div class="form-group row" v-if="destinationDetails.reserveAccomodation">
 
             <label class="col-form-label col-form-label-lg col-3" :class="$t('labelDir')"
             >{{$t('packageDetails.accomodationType')}}
@@ -234,9 +262,15 @@
                              :options="accomodationType" @input="emptyOnAccommodationType"
                              tagPosition="bottom" openDirection="bottom"
                              :preserveSearch="true" :showNoResults="false" selectLabel=""
+                             :class="{'is-invalid': validation.selectedAccomodationType.message}"
                 >
 
                 </multiselect>
+                <div class="invalid-feedback d-block" :class="$t('labelDir')"
+                     v-if="validation.selectedAccomodationType.message">
+                    {{validation.selectedAccomodationType.message}}
+                </div>
+
             </div>
 
         </div>
@@ -274,8 +308,6 @@
             return {
                 ar,
                 en,
-                show: false,
-                showAccomodationType: false,
                 carLevel: ['standard', 'premium'],
                 accomodationType: [
                     this.$t('packageDetails.typeHotel'),
@@ -283,20 +315,54 @@
                 ],
                 adultsNum: window.packageDetails.packageMainDetails.adultsNum,
                 childrenNum: window.packageDetails.packageMainDetails.childrenNum,
-                nextStartDate: null,
-                startRangeDate: window.packageDetails.packageMainDetails.tripStartAt,
-                disableDatesBefore: window.packageDetails.packageMainDetails.tripStartAt,
-                disableDatePicker: false,
+                validation: {
+                    selectedCity: {
+                        message: null,
+                        required: true
+                    },
+                    checkInDate: {
+                        message: null,
+                        required: true
+                    },
+                    checkOutDate: {
+                        message: null,
+                        required: true
+                    },
+                    rentCar: {
+                        message: null,
+                        required: false
+                    },
+                    rentCarWithDriver: {
+                        message: null,
+                        required: false
+                    },
+                    selectedCarLevel: {
+                        message: null,
+                        required: false
+                    },
+                    needTours: {
+                        message: null,
+                        required: false
+                    },
+                    reserveAccomodation: {
+                        message: null,
+                        required: false
+                    },
+                    selectedAccomodationType: {
+                        message: null,
+                        required: false
+                    }
+                },
                 destinationDetails: {
+                    selectedCity: null,
                     checkInDate: window.packageDetails.packageMainDetails.tripStartAt,
                     checkOutDate: null,
-                    selectedCity: null,
                     rentCar: false, // optional
                     rentCarWithDriver: false, // optional
-                    reserveAccomodation: false, // optional but has mandatory
                     selectedCarLevel: '', // mandatory if optional selected
-                    selectedAccomodationType: this.$t('packageDetails.typeHotel'),
                     needTours: false, // optional
+                    reserveAccomodation: false, // optional but has mandatory
+                    selectedAccomodationType: this.$t('packageDetails.typeHotel'),
                     nightsNum: 0, // readonly
                     accommodationDetails: null // collected in one value
                 },
@@ -319,14 +385,34 @@
             }
         },
         mounted() {
-            bus.$on("previous-destination", () => {
-                // save the data on previous destination pressed
-                window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
-            });
+            if (window.packageDetails.destinationsDetails[0]) {
+                this.destinationDetails = JSON.parse(JSON.stringify(window.packageDetails.destinationsDetails[0]));
+            }
             bus.$on("next-destination", () => {
                 // save the data on next destination pressed
                 this.saveAccommodationTypeInEnglish();
                 window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
+            });
+            bus.$on("previous-destination", () => {
+                // set the validation messages to null because the previous is already validated
+                for (let property in this.validation) {
+                    this.validation.selectedCarLevel.required = this.rentCar;
+                    this.validation.selectedAccomodationType.required = this.reserveAccomodation;
+                    this.validation[property].message = null;
+                    this.$root.$data.hasErrors = false;
+                }
+            });
+            bus.$on("validate-destination-details", () => {
+                // validate destination details on next destination
+                for (let property in this.validation) {
+                    if (this.validation[property].required && !this.destinationDetails[property]) {
+                        this.validation[property].message = this.$t('field.required');
+                        this.$root.$data.hasErrors = true;
+                    } else {
+                        this.validation[property].message = null;
+                    }
+                }
+
             });
         },
 
@@ -340,13 +426,11 @@
             getCheckOutDate(checkOut) {
                 this.destinationDetails.checkOutDate = checkOut;
                 if (checkOut || !this.destinationDetails.checkInDate && !checkOut) {
-                    this.nextStartDate = checkOut;
                     this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
                 } else {
                     this.destinationDetails.nightsNum = 0;
                 }
                 this.emptyNextDates(checkOut);
-                console.log(window.packageDetails.destinationsDetails);
             },
             emptyNextDates(checkOut) {
                 if (!checkOut) {
@@ -359,7 +443,7 @@
             },
             setArentedCar(car) {
                 this.destinationDetails.rentCar = car.value;
-                this.show = car.value;
+                this.validation.selectedCarLevel.required = car.value;
                 if (!this.destinationDetails.rentCar) {
                     this.destinationDetails.rentCarWithDriver = false;
                     this.destinationDetails.selectedCarLevel = '';
@@ -372,30 +456,24 @@
                 this.needTours = tours.value;
             },
             updateAccomodationType(accommodationNeed) {
-                this.showAccomodationType = accommodationNeed.value;
                 this.destinationDetails.reserveAccomodation = accommodationNeed.value;
-                this.validateReserveAccommodation();
+                // set the validation required prop of accommodation type with true
+                this.validation.selectedAccomodationType.required = accommodationNeed.value;
             },
             emptyOnAccommodationType() {
                 bus.$emit("empty-accommodation-fields");
             },
             clearRangeSelection() {
                 bus.$emit("clear-selection"); // listen in hotelDatePicker
-                this.destinationDetails.checkInDate = null;
-                this.destinationDetails.checkOutDate = null;
-                this.destinationDetails.nightsNum = 0;
+                // this.destinationDetails.checkInDate = null;
+                // this.destinationDetails.checkOutDate = null;
+                // this.destinationDetails.nightsNum = 0;
             },
             setStartDate(date) {
-                if (date) {
-                    date = new Date(date);
-                    this.startRangeDate = date;
-                    this.clearRangeSelection(); // this set checkIn and checkOut with null, call both validation
-                    bus.$emit("set-checkIn", date);
-                    this.destinationDetails.checkInDate = date;
-                    return;
-                }
+                date = new Date(date);
+                this.clearRangeSelection(); // this set checkIn and checkOut with null, call both validation
+                bus.$emit("set-checkIn", date);
                 this.destinationDetails.checkInDate = date;
-                this.startRangeDate = date;
 
             },
             setEndDate(date) {
@@ -437,65 +515,14 @@
                 // the case of : first time to pass on the destination
                 if (!window.packageDetails.destinationsDetails[currentCityNumber]) {
                     this.setDestinationDetailsDataToDefault();
-                    let pastCheckOutDate = window.packageDetails.destinationsDetails[pastCityNumber].checkOutDate;
-                    if (!pastCheckOutDate) { // disable datePicker if !checkOut on the past destination
-                        this.disableDatePicker = true; // hide datePicker
-                        return;
-                    }
-                    this.disableDatePicker = false; // show datePicker
-                    this.disableDatesBefore = new Date(pastCheckOutDate);
-                    this.setStartDate(pastCheckOutDate);
+                    this.destinationDetails.checkInDate = window.packageDetails.destinationsDetails[pastCityNumber].checkOutDate;
+                    this.setStartDate(this.destinationDetails.checkInDate);
                 } else { // the case of : not the first time to pass on the destination
-                    this.destinationDetails = window.packageDetails.destinationsDetails[currentCityNumber];
-                    let currentCheckInDate = this.destinationDetails.checkInDate;
-                    let currentCheckOutDate = this.destinationDetails.checkOutDate;
-                    let beforeCurrentCityNumber = currentCityNumber - 1;
-                    if (beforeCurrentCityNumber) {
-                        var beforeCurrentCheckOutDate = window.packageDetails.destinationsDetails[beforeCurrentCityNumber].checkOutDate;
-                    }
-                    if (pastCityNumber > currentCityNumber) { // down
-                        if (beforeCurrentCityNumber === 0) {
-                            this.disableDatePicker = false;
-                            this.disableDatesBefore = window.packageDetails.packageMainDetails.tripStartAt;
-                            this.setStartDate(currentCheckInDate);
-                            this.setEndDate(currentCheckOutDate);
-                            return;
-                        }
-                        if (currentCheckInDate) { // currentCheckInDate existed
-                            this.disableDatePicker = false; // show
-                            this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
-                            this.setStartDate(currentCheckInDate);
-                            this.setEndDate(currentCheckOutDate);
-                        } else { // currentCheckInDate not existed
-                            if (beforeCurrentCheckOutDate) { // set
-                                this.disableDatePicker = false; // show
-                                this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
-                                this.setStartDate(beforeCurrentCheckOutDate);
-                                this.setEndDate(null);
-                            } else { // unset
-                                this.disableDatePicker = true; // hide
-                            }
-                        }
-                    } else { // up
-                        if (this.destinationDetails.checkInDate) { // currentCheckInDate existed
-                            this.disableDatePicker = false; // show datePicker
-                            this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
-                            this.setStartDate(currentCheckInDate);
-                            this.setEndDate(currentCheckOutDate);
-                        } else { // currentCheckInDate not existed
-                            if (beforeCurrentCheckOutDate) { // set
-                                this.disableDatePicker = false; // show datePicker
-                                this.disableDatesBefore = new Date(beforeCurrentCheckOutDate);
-                                this.setStartDate(beforeCurrentCheckOutDate);
-                                this.setEndDate(null);
-                            } else { // unset
-                                this.disableDatePicker = true; // hide datePicker
-                            }
-                        }
-                    }
+                    this.destinationDetails = JSON.parse(JSON.stringify(window.packageDetails.destinationsDetails[currentCityNumber]));
+                    this.setStartDate(this.destinationDetails.checkInDate);
+                    this.setEndDate(this.destinationDetails.checkOutDate);
                 }
-            },
-            deep: true
+            }
         },
         computed: {
             hotelPickerLang: function () {
@@ -504,6 +531,29 @@
                 }
                 else {
                     return this.i18n_en
+                }
+            },
+            startRangeDate() {
+                if (!window.packageDetails.destinationsDetails[this.cityNumber] && this.cityNumber === 0) {
+                    return window.packageDetails.packageMainDetails.tripStartAt;
+                } else if (window.packageDetails.destinationsDetails[this.cityNumber] && this.cityNumber === 0) {
+                    return new Date(window.packageDetails.destinationsDetails[this.cityNumber].checkInDate);
+                }
+                return new Date(window.packageDetails.destinationsDetails[this.cityNumber - 1].checkOutDate);
+            },
+            endRangeDate() {
+                if (window.packageDetails.destinationsDetails[this.cityNumber]) {
+                    if (window.packageDetails.destinationsDetails[this.cityNumber].checkOutDate) {
+                        return new Date(window.packageDetails.destinationsDetails[this.cityNumber].checkOutDate);
+                    }
+                }
+                return null;
+            },
+            disableDatesBefore() {
+                if (this.cityNumber === 0) {
+                    return window.packageDetails.packageMainDetails.tripStartAt;
+                } else {
+                    return new Date(window.packageDetails.destinationsDetails[this.cityNumber - 1].checkOutDate);
                 }
             }
         }

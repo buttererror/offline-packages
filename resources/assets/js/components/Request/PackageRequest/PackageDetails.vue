@@ -345,23 +345,7 @@
                     adultsNum: null,
                     childrenNumber: 0,
                     childrenAges: [],
-                },
-                // i18n_ar: {
-                //     night: 'الليله',
-                //     nights: 'الليالى',
-                //     'day-names': ['الاحد', 'الاثنين', 'الثلاثاء', 'الاربعاء', 'الخميس', 'الجمعة', 'السبت'],
-                //     'check-in': 'بداية الرحلة',
-                //     'check-out': 'نهاية الرحلة',
-                //     'month-names': ['يناير', 'فبراير', 'مارس', 'ابريل', 'مايو', 'يونيو', 'يوليو', 'اغسطس', 'سبتمبر', 'اكتوبر', 'نوفمبر', 'ديسمبر'],
-                // },
-                // i18n_en: {
-                //     night: 'Night',
-                //     nights: 'Nights',
-                //     'day-names': ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
-                //     'check-in': 'Check-in',
-                //     'check-out': 'Check-Out',
-                //     'month-names': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                // }
+                }
             }
         },
         mounted() {
@@ -482,6 +466,9 @@
                 if(this.maxChildrenNum > this.maxChildrenNumLimit){
                     this.maxChildrenNum = this.maxChildrenNumLimit;
                 }
+            },
+            'packageMainDetails.tripStartAt'() {
+                this.packageMainDetails.tripStartAt.setHours(0, 0, 0, 0);
             }
         }
     }

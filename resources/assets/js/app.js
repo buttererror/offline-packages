@@ -69,7 +69,8 @@ const app = new Vue({
                 name: '',
                 password: '',
                 csrf_token: ''
-            }
+            },
+            hasErrors: false
         }
     },
     mounted() {
