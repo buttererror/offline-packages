@@ -379,8 +379,8 @@
                 for (let property in this.validation) {
                     // in case of children ages
                     if(property == 'childrenAges'){
-                        for(let i = 0; i < this.packageMainDetails.childrenAges.length; i++){
-                            if(!this.packageMainDetails.childrenAges[i]){
+                        for(let i = 0; i < this.validation.childrenAges.length; i++){
+                            if(this.packageMainDetails.childrenAges.length <= i || !this.packageMainDetails.childrenAges[i]){
                                 this.hasErrors = true;
                                 this.validation.childrenAges[i].message = this.$t('field.required');
                             }
@@ -421,13 +421,14 @@
                 if(this.packageMainDetails.childrenNumber > this.maxChildrenNum){
                     this.packageMainDetails.childrenNumber = this.maxChildrenNum;
                 }
+                this.validation.childrenAges = [];
                 for(let i = 0; i < this.packageMainDetails.childrenNumber; i++){
                     this.validation.childrenAges.push({
                         message: null,
                         required: true,
                     })
                 }
-                this.packageMainDetails.childrenAges = new Array(this.packageMainDetails.childrenNumber);
+                // this.packageMainDetails.childrenAges = new Array(this.packageMainDetails.childrenNumber);
             }
             ,
             countryFind(query) {
