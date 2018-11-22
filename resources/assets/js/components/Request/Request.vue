@@ -85,12 +85,38 @@
 
             <b-modal id="destination_data" size="lg" title="destination Data">
                     <!--<div><span  class="col-md-3">chick in: </span> {{destination.chickin}}</div>-->
-                <ul>
+                <ul class="title">
                     <li class="modal-text"><span class="col-md-3">chick in:</span>{{selectedDestination.checkin}}</li>
                     <li class="modal-text"><span class="col-md-3">chick out:</span>{{selectedDestination.checkout}}</li>
-                    <li class="modal-text"><span class="col-md-3">city name:</span>{{distination_city_name}}</li>
-                    <li class="modal-text"><span class="col-md-3">number of nights:</span>{{selectedDestination.nights}}</li>
+                    <li class="modal-text"><span class="col-md-3">city name:</span>{{destination_city_name}}</li>
                     <li class="modal-text"><span class="col-md-3">country name:</span>{{destination_country_name}}</li>
+                    <li class="modal-text"><span class="col-md-3">number of nights:</span>{{selectedDestination.nights}}</li>
+                    <li class="modal-text" v-if="selectedDestination.accommodation_type!=null">
+                        <span class="col-md-3" >
+                                  accommodation_type:
+                        </span>
+                        {{selectedDestination.accommodation_type}}
+                    </li>
+                    <li class="modal-text"> <span class="col-md-3">Rooms Number:</span>  {{destination_rooms.length}}</li>
+                    <li  class="rooms-detail " v-if="selectedDestination.accommodation_type=='hotel'">
+                        <template  v-if="destination_rooms&&destination_rooms.length>0">
+                            <ul v-for="destination_room in destination_rooms">
+                                <li  class="modal-text ">
+                                    <div class="col-md-4">
+                                        <span >room_number :</span > {{destination_room.room_number}}
+                                    </div>
+                                     <div class="col-md-4">
+                                         <span >adults :</span> {{destination_room.adults}}
+                                     </div>
+                                 <div class="col-md-4">
+                                     <span >children :</span>
+                                     <span v-for="child  in destination_room.children ">{{child.age}}</span>
+                                 </div>
+                                </li>
+                            </ul>
+                        </template>
+
+                    </li>
                     <!--<li class="modal-text"><span class="col-md-3">chick in:</span>{{selectedDestination.}}</li>-->
                 </ul>
 
@@ -114,7 +140,8 @@
                 filter_data: '',
                 selectedClient:'',
                 selectedDestination:'',
-                distination_city_name:'',
+                destination_city_name:'',
+                destination_rooms:'',
                 destination_country_name:''
             }
 
@@ -132,9 +159,18 @@
                 console.log(request)
                 this.selectedClient=request.client;
             },
-            showDestination(destionation){
-                    this.selectedDestination =destionation;
-                    this.distination_city_name=this.selectedDestination.city.name;
+            showDestination(destination){
+                    this.selectedDestination =destination;
+                    this.destination_rooms=JSON.parse(destination.rooms);
+
+//                   for(let r=0;r<this.destination_rooms.length;r++){
+//                       console.log (this.destination_rooms[r].children);
+//                       for(let c=0;c<this.destination_rooms[r].children.length;c++){
+//
+//                       }
+//
+//                   }
+                    this.destination_city_name=this.selectedDestination.city.name;
                     this.destination_country_name=this.selectedDestination.country.en_short_name;
             },
             updateRequests() {

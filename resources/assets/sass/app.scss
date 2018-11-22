@@ -107,7 +107,16 @@ html{
 }
 
 //modal style
-.modal{
+#destination_data,#client_data{
+  ul{
+    padding: 0;
+  }
+  .room-item{
+    margin-left: 70px;
+  }
+  .rooms-detail{
+    background-color:  #f2f7ff;
+  }
   .modal-header{
     @include header;
     .close{
@@ -117,28 +126,32 @@ html{
       color:$brand-secondary;
     }
   }
-  ul{
+  .title{
     padding:0;
     margin:0;
+    width:100%;
+    display: block;
     li{
       list-style-type: none;
     }
-    .modal-text{
-      font-size:15px;
-      display: flex;
-      padding: 12px;
-      border-bottom: 1px solid gainsboro;
-      &:last-child{
-        border: none;
-      }
-      &:nth-child(even){
-        background-color: #f2f7ff;
-      }
-    }
+
     span{
       font-size: 16px;
       text-transform: capitalize;
       @include subtitle;
+    }
+  }
+  .modal-text{
+    font-size:15px;
+    display: flex;
+    padding: 12px;
+    border-bottom: 1px solid gainsboro;
+    .room-no{
+      padding: 0 14px;
+    }
+
+    &:nth-child(even){
+      background-color: #f2f7ff;
     }
   }
   .modal-body{

@@ -360,34 +360,34 @@
             nextComponent() {
                 this.hasErrors = false;
                 // Validate required fields
-                for (let property in this.validation) {
-                    // in case of children ages
-                    if(property == 'childrenAges'){
-                        for(let i = 0; i < this.validation.childrenAges.length; i++){
-                            if(this.packageMainDetails.childrenAges.length <= i || !this.packageMainDetails.childrenAges[i]){
-                                this.hasErrors = true;
-                                this.validation.childrenAges[i].message = this.$t('field.required');
-                            }
-                        }
-                        continue;
-                    }
-                    // in case of selected countries
-                    if(property == 'selectedCountries' && this.packageMainDetails.selectedCountries.length == 0){
-                        this.validation.selectedCountries.message = this.$t('field.required');
-                        this.hasErrors = true;
-                        continue;
-                    }
-                    if (this.validation[property].required && !this.packageMainDetails[property]) {
-                        this.validation[property].message = this.$t('field.required');
-                        this.hasErrors = true;
-                    } else {
-                        this.validation[property].message = null;
-                    }
-                }
-                // validate children ages fields
-                if(this.hasErrors){
-                    return;
-                }
+                // for (let property in this.validation) {
+                //     // in case of children ages
+                //     if(property == 'childrenAges'){
+                //         for(let i = 0; i < this.validation.childrenAges.length; i++){
+                //             if(this.packageMainDetails.childrenAges.length <= i || !this.packageMainDetails.childrenAges[i]){
+                //                 this.hasErrors = true;
+                //                 this.validation.childrenAges[i].message = this.$t('field.required');
+                //             }
+                //         }
+                //         continue;
+                //     }
+                //     // in case of selected countries
+                //     if(property == 'selectedCountries' && this.packageMainDetails.selectedCountries.length == 0){
+                //         this.validation.selectedCountries.message = this.$t('field.required');
+                //         this.hasErrors = true;
+                //         continue;
+                //     }
+                //     if (this.validation[property].required && !this.packageMainDetails[property]) {
+                //         this.validation[property].message = this.$t('field.required');
+                //         this.hasErrors = true;
+                //     } else {
+                //         this.validation[property].message = null;
+                //     }
+                // }
+                // // validate children ages fields
+                // if(this.hasErrors){
+                //     return;
+                // }
                 window.packageDetails.packageMainDetails = this.packageMainDetails;
                 this.$emit('next-component', {
                     component: 'DestinationBase',
