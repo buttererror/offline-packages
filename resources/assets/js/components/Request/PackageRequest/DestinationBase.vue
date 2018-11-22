@@ -67,7 +67,7 @@
                 </button>
                 <button @click.prevent="nextDestination"
                    class="btn btn-link btn-outline-primary m-4"
-                   :disabled="citiesNumber === cityNumber || citiesNumber === 0">
+                   :disabled="citiesNumber === cityNumber + 1 || citiesNumber === 0">
                     {{$t('nextCity')}}
                 </button>
             </div>
@@ -114,14 +114,9 @@
             bus.$on('destination-is-valid', () => {
                 this.cityNumber++;
             });
-            this.$on("base", () => {
-                console.log("in base");
-            });
         },
         methods: {
             nextDestination() {
-                this.$emit("base");
-                console.log("next destination");
                 bus.$emit("validate-destination-details");
             },
             previousDestination() {

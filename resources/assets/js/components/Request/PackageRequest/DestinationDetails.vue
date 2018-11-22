@@ -103,7 +103,6 @@
                 >
 
                 </multiselect>
-                {{validation.selectedCity}}
                 <div class="invalid-feedback d-block" :class="$t('labelDir')"
                      v-if="validation.selectedCity.message">
                     {{validation.selectedCity.message}}
@@ -307,7 +306,6 @@
         },
         data() {
             return {
-                requiredMsg : null,
                 ar,
                 en,
                 carLevel: ['standard', 'premium'],
@@ -317,6 +315,7 @@
                 ],
                 adultsNum: window.packageDetails.packageMainDetails.adultsNum,
                 childrenNum: window.packageDetails.packageMainDetails.childrenNum,
+                hasErrors: false,
                 validation: {
                     selectedCity: {
                         message: null,
@@ -387,8 +386,6 @@
             }
         },
         mounted() {
-            this.requiredMsg = this.$t('field.required');
-            console.log(this.requiredMsg);
             if (window.packageDetails.destinationsDetails[0]) {
                 this.destinationDetails = JSON.parse(JSON.stringify(window.packageDetails.destinationsDetails[0]));
             }
@@ -400,32 +397,27 @@
                     this.validation[property].message = null;
                 }
             });
-            if(window.addedValidateDestinationHandler){
-                return;
-            }
-            window.addedValidateDestinationHandler = true;
             bus.$on("validate-destination-details", () => {
-                let hasErrors = false;
+                this.hasErrors = false;
                 // validate destination details on next destination
                 for (let property in this.validation) {
                     if (this.validation[property].required && !this.destinationDetails[property]) {
-                        console.log("message", this.requiredMsg);
-                        console.log(property);
-                        this.validation[property].message = this.requiredMsg;
-                        hasErrors = true;
+                        this.validation[property].message = this.$t('field.required');
+                        this.hasErrors = true;
                     } else {
                         this.validation[property].message = null;
                     }
                 }
-                if(!hasErrors){
+                if(!this.hasErrors){
                     this.saveAccommodationTypeInEnglish();
                     window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
-                    console.log('EMITTED');
                     bus.$emit('destination-is-valid');
                 }
             });
         },
-
+        destroyed(){
+            bus.$off('validate-destination-details');
+        },
         methods: {
             getNights(checkIn, checkOut) {
                 return (new Date(checkOut) - new Date(checkIn)) / (1000 * 3600 * 24);
