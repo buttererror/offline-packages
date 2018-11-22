@@ -103,6 +103,7 @@
                 >
 
                 </multiselect>
+                {{validation.selectedCity}}
                 <div class="invalid-feedback d-block" :class="$t('labelDir')"
                      v-if="validation.selectedCity.message">
                     {{validation.selectedCity.message}}
@@ -306,6 +307,7 @@
         },
         data() {
             return {
+                requiredMsg : null,
                 ar,
                 en,
                 carLevel: ['standard', 'premium'],
@@ -385,34 +387,42 @@
             }
         },
         mounted() {
+            this.requiredMsg = this.$t('field.required');
+            console.log(this.requiredMsg);
             if (window.packageDetails.destinationsDetails[0]) {
                 this.destinationDetails = JSON.parse(JSON.stringify(window.packageDetails.destinationsDetails[0]));
             }
-            bus.$on("next-destination", () => {
-                // save the data on next destination pressed
-                this.saveAccommodationTypeInEnglish();
-                window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
-            });
             bus.$on("previous-destination", () => {
                 // set the validation messages to null because the previous is already validated
                 for (let property in this.validation) {
                     this.validation.selectedCarLevel.required = this.rentCar;
                     this.validation.selectedAccomodationType.required = this.reserveAccomodation;
                     this.validation[property].message = null;
-                    this.$root.$data.hasErrors = false;
                 }
             });
+            if(window.addedValidateDestinationHandler){
+                return;
+            }
+            window.addedValidateDestinationHandler = true;
             bus.$on("validate-destination-details", () => {
+                let hasErrors = false;
                 // validate destination details on next destination
                 for (let property in this.validation) {
                     if (this.validation[property].required && !this.destinationDetails[property]) {
-                        this.validation[property].message = this.$t('field.required');
-                        this.$root.$data.hasErrors = true;
+                        console.log("message", this.requiredMsg);
+                        console.log(property);
+                        this.validation[property].message = this.requiredMsg;
+                        hasErrors = true;
                     } else {
                         this.validation[property].message = null;
                     }
                 }
-
+                if(!hasErrors){
+                    this.saveAccommodationTypeInEnglish();
+                    window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
+                    console.log('EMITTED');
+                    bus.$emit('destination-is-valid');
+                }
             });
         },
 

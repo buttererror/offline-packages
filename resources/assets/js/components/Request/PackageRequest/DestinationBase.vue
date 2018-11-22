@@ -110,19 +110,19 @@
             }).then(response => {
                 this.cities = response.data.cities;
             });
+            // next destination
+            bus.$on('destination-is-valid', () => {
+                this.cityNumber++;
+            });
+            this.$on("base", () => {
+                console.log("in base");
+            });
         },
         methods: {
             nextDestination() {
-                this.$root.$data.hasErrors = false;
-                // Validate required fields
+                this.$emit("base");
+                console.log("next destination");
                 bus.$emit("validate-destination-details");
-                // validate children ages fields
-                if(this.$root.$data.hasErrors){
-                    return;
-                }
-
-                bus.$emit("next-destination");
-                this.cityNumber++;
             },
             previousDestination() {
                 // fixed : ~ 1
@@ -130,8 +130,8 @@
                 bus.$emit("previous-destination");
             },
             nextComponent() {
-                // save the data of the final destination
-                bus.$emit("next-destination");
+                // validate and save the data of the final destination
+                bus.$emit("validate-destination-details");
                 // this event for the breadcurmbs
                 this.$emit('next-component', {
                     component: 'FinalNote',
