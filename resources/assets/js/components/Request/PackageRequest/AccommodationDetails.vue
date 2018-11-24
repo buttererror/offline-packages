@@ -172,7 +172,7 @@
                         <b-alert show variant="info d-flex justify-content-around rounded-0"
                                  style="margin-bottom: 0">
                             <div class="h6 text-danger d-inline-block">
-                                 {{$t('packageDetails.adults')}} : ({{adultsNumberChosen}})<br>
+                                {{$t('packageDetails.adults')}} : ({{adultsNumberChosen}})<br>
                                 {{$t('packageDetails.children')}} : ({{childrenNumberChosen}})
                             </div>
                             <div class="h6 text-success d-inline-block">
@@ -275,7 +275,12 @@
 
     export default {
         name: "accommodationDetails",
-        props: ["cityNumber", "accomType"],
+        props: {
+            cityNumber: Number,
+            accomType: String,
+            validation: Object,
+            reserveAccomodation: Boolean
+        },
         components: {
             Multiselect
         },
@@ -304,30 +309,6 @@
                 maxRooms: 0,
                 maxPerRoom: 6,
                 maxChildrenPerRoom: 4,
-                validation: {
-                    roomsNum: {
-                        message: null,
-                        required: true
-                    },
-                    selectedRoomType: {
-                        message: null,
-                        required: true
-                    },
-                    selectedStars: {
-                        message: null,
-                        required: true
-                    },
-                    selectedAdultsNum: [],
-                    selectedChildrenNum: [],
-                    hotelName: {
-                        message: null,
-                        required: false
-                    },
-                    area: {
-                        message: null,
-                        required: false
-                    }
-                },
                 accommodationDetails: {
                     roomsNum: '', //number of rooms
                     selectedRoomType: '',
@@ -341,6 +322,7 @@
             }
         },
         mounted() {
+            bus.$emit("reserve-accommodation", this.accommodationDetails);
             bus.$on("empty-accommodation-fields", () => {
                 this.emptyOnAccommodationType();
             });
@@ -376,7 +358,7 @@
                 if (this.accomType === "Apartment" || this.accomType === "شقة") {
                     this.editRoomsData();
                 }
-            }
+            },
         },
         methods: {
             fillChildrenOptions() {
@@ -424,7 +406,7 @@
             removeChildrenOption(option) {
                 this.childrenOptions.push(option);
                 this.childrenNumberChosen--;
-                },
+            },
             editRoomsData() {
                 this.disableRoomNum = false;
                 this.adultsSelected = [];
@@ -447,6 +429,9 @@
                 this.accommodationDetails.area = '';
                 this.editRoomsData();
             }
+        },
+        destroyed() {
+            bus.$emit("reserve-accommodation", null);
         }
 
     }

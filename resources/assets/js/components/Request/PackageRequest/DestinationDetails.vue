@@ -275,8 +275,9 @@
 
         </div>
         <div v-if="destinationDetails.reserveAccomodation">
-            <AccommodationDetails :cityNumber="cityNumber"
+            <AccommodationDetails :cityNumber="cityNumber" :reserveAccomodation="destinationDetails.reserveAccomodation"
                                   :accomType="destinationDetails.selectedAccomodationType"
+                                  :validation="validation.accommodationDetails"
             >
             </AccommodationDetails>
         </div>
@@ -291,7 +292,7 @@
     import HotelDatePicker from '../vue-datepicker/HotelDatePicker.vue';
 
 
-    import {en, ar} from 'vuejs-datepicker/dist/locale'
+    import {ar, en} from 'vuejs-datepicker/dist/locale'
 
     export default {
         name: "DestinationDetails",
@@ -354,8 +355,28 @@
                         required: false
                     },
                     accommodationDetails: {
-                        message: null,
-                        required: false
+                        roomsNum: {
+                            message: null,
+                            required: true
+                        },
+                        selectedRoomType: {
+                            message: null,
+                            required: true
+                        },
+                        selectedStars: {
+                            message: null,
+                            required: true
+                        },
+                        selectedAdultsNum: [],
+                        selectedChildrenNum: [],
+                        hotelName: {
+                            message: null,
+                            required: false
+                        },
+                        area: {
+                            message: null,
+                            required: false
+                        }
                     }
                 },
                 destinationDetails: {
@@ -393,6 +414,9 @@
             if (window.packageDetails.destinationsDetails[0]) {
                 this.destinationDetails = JSON.parse(JSON.stringify(window.packageDetails.destinationsDetails[0]));
             }
+            bus.$on("reserve-accommodation", (accommodationDetails) => {
+                this.destinationDetails.accommodationDetails =  accommodationDetails;
+            });
             bus.$on("previous-destination", () => {
                 // set the validation messages to null because the previous is already validated
                 for (let property in this.validation) {
@@ -405,6 +429,17 @@
                 this.hasErrors = false;
                 // validate destination details on next destination
                 for (let property in this.validation) {
+                    if (property === "accommodationDetails" && this.destinationDetails.accommodationDetails) {
+                        for (let prop in this.validation.accommodationDetails) {
+                            if (this.validation.accommodationDetails[prop].required && !this.destinationDetails.accommodationDetails[prop]) {
+                                this.validation.accommodationDetails[prop].message = this.$t('field.required');
+                                this.hasErrors = true;
+                            }else{
+                                this.validation.accommodationDetails[prop].message = null;
+                            }
+                        }
+                        continue;
+                    }
                     if (this.validation[property].required && !this.destinationDetails[property]) {
                         this.validation[property].message = this.$t('field.required');
                         this.hasErrors = true;
@@ -412,14 +447,14 @@
                         this.validation[property].message = null;
                     }
                 }
-                if(!this.hasErrors){
+                if (!this.hasErrors) {
                     this.saveAccommodationTypeInEnglish();
                     window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
                     bus.$emit('destination-is-valid');
                 }
             });
         },
-        destroyed(){
+        destroyed() {
             bus.$off('validate-destination-details');
         },
         methods: {
@@ -463,8 +498,6 @@
             },
             updateAccomodationType(accommodationNeed) {
                 this.destinationDetails.reserveAccomodation = accommodationNeed.value;
-                // added last commit
-                this.validation.accommodationDetails = accommodationNeed.value;
                 // set the validation required prop of accommodation type with true
                 this.validation.selectedAccomodationType.required = accommodationNeed.value;
             },
