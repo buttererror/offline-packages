@@ -100,6 +100,7 @@
                     :multiple="false"
                     :searchable="true"
                     :class="{'is-invalid': validation.selectedCity.message}"
+                    @input="anyInput('selectedCity')"
                 >
 
                 </multiselect>
@@ -171,7 +172,6 @@
                                :width="70"
                                :height="30"
                                switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
-                               @change="setArentedCar"
                 />
 
             </div>
@@ -188,7 +188,6 @@
                                    :width="65"
                                    :height="25"
                                    switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
-                                   @change="setAcarWithAdriver"
                     />
 
                 </div>
@@ -206,6 +205,7 @@
                                  tagPosition="bottom" openDirection="bottom"
                                  :preserveSearch="true" :showNoResults="false" selectLabel=""
                                  :class="{'is-invalid': validation.selectedCarLevel.message}"
+                                 @input="anyInput('selectedCarLevel')"
                     >
                     </multiselect>
                     <div class="invalid-feedback d-block" :class="$t('labelDir')"
@@ -229,7 +229,6 @@
                                :width="70"
                                :height="30"
                                switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
-                               @change="goTours"
                 />
 
             </div>
@@ -246,7 +245,6 @@
                                :width="70"
                                :height="30"
                                switchColor="{checked: '#25EF02', unchecked: 'linear-gradient(red, yellow)'}"
-                               @change="updateAccomodationType"
                 />
             </div>
         </div>
@@ -275,7 +273,7 @@
 
         </div>
         <div v-if="destinationDetails.reserveAccomodation">
-            <AccommodationDetails :cityNumber="cityNumber" :reserveAccomodation="destinationDetails.reserveAccomodation"
+            <AccommodationDetails :cityNumber="cityNumber"
                                   :accomType="destinationDetails.selectedAccomodationType"
                                   :validation="validation.accommodationDetails"
             >
@@ -315,7 +313,9 @@
                     this.$t('packageDetails.typeApartment')
                 ],
                 adultsNum: window.packageDetails.packageMainDetails.adultsNum,
-                childrenNum: window.packageDetails.packageMainDetails.childrenNum,
+                childrenNum: window.packageDetails.packageMainDetails.childrenNumber,
+                adultsNumberChosen: 0,
+                childrenNumberChosen: 0,
                 hasErrors: false,
                 validation: {
                     selectedCity: {
@@ -359,6 +359,14 @@
                             message: null,
                             required: true
                         },
+                        selectedAdultsNum: {
+                            message: null,
+                            required: true
+                        },
+                        selectedChildrenNum: {
+                            message: null,
+                            required: true
+                        },
                         selectedRoomType: {
                             message: null,
                             required: true
@@ -367,8 +375,10 @@
                             message: null,
                             required: true
                         },
-                        selectedAdultsNum: [],
-                        selectedChildrenNum: [],
+                        selectedRoomView: {
+                            message: null,
+                            required: true
+                        },
                         hotelName: {
                             message: null,
                             required: false
@@ -411,60 +421,41 @@
             }
         },
         mounted() {
+            // set the data of the first destination, it can't be added through watch
             if (window.packageDetails.destinationsDetails[0]) {
                 this.destinationDetails = JSON.parse(JSON.stringify(window.packageDetails.destinationsDetails[0]));
             }
             bus.$on("reserve-accommodation", (accommodationDetails) => {
-                this.destinationDetails.accommodationDetails =  accommodationDetails;
+                this.destinationDetails.accommodationDetails = accommodationDetails;
             });
             bus.$on("previous-destination", () => {
-                // set the validation messages to null because the previous is already validated
-                for (let property in this.validation) {
-                    this.validation.selectedCarLevel.required = this.rentCar;
-                    this.validation.selectedAccomodationType.required = this.reserveAccomodation;
-                    this.validation[property].message = null;
-                }
+                this.resetValidation();
             });
             bus.$on("validate-destination-details", () => {
-                this.hasErrors = false;
-                // validate destination details on next destination
-                for (let property in this.validation) {
-                    if (property === "accommodationDetails" && this.destinationDetails.accommodationDetails) {
-                        for (let prop in this.validation.accommodationDetails) {
-                            if (this.validation.accommodationDetails[prop].required && !this.destinationDetails.accommodationDetails[prop]) {
-                                this.validation.accommodationDetails[prop].message = this.$t('field.required');
-                                this.hasErrors = true;
-                            }else{
-                                this.validation.accommodationDetails[prop].message = null;
-                            }
-                        }
-                        continue;
-                    }
-                    if (this.validation[property].required && !this.destinationDetails[property]) {
-                        this.validation[property].message = this.$t('field.required');
-                        this.hasErrors = true;
-                    } else {
-                        this.validation[property].message = null;
-                    }
-                }
-                if (!this.hasErrors) {
-                    this.saveAccommodationTypeInEnglish();
-                    window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
-                    bus.$emit('destination-is-valid');
-                }
+                this.saveValidatedData();
             });
         },
         destroyed() {
             bus.$off('validate-destination-details');
         },
         methods: {
+            anyInput(prop){
+                if(!this.validation[prop]){
+                    console.log(prop);
+                    console.log(this.validation);
+                }
+                this.validation[prop].message = null;
+            },
+
             getNights(checkIn, checkOut) {
                 return (new Date(checkOut) - new Date(checkIn)) / (1000 * 3600 * 24);
             },
             getCheckInDate(checkIn) {
+                this.anyInput("checkInDate");
                 this.destinationDetails.checkInDate = checkIn;
             },
             getCheckOutDate(checkOut) {
+                this.anyInput("checkOutDate");
                 this.destinationDetails.checkOutDate = checkOut;
                 if (checkOut || !this.destinationDetails.checkInDate && !checkOut) {
                     this.destinationDetails.nightsNum = this.getNights(this.destinationDetails.checkInDate, checkOut);
@@ -482,27 +473,9 @@
                     }
                 }
             },
-            setArentedCar(car) {
-                this.destinationDetails.rentCar = car.value;
-                this.validation.selectedCarLevel.required = car.value;
-                if (!this.destinationDetails.rentCar) {
-                    this.destinationDetails.rentCarWithDriver = false;
-                    this.destinationDetails.selectedCarLevel = '';
-                }
-            },
-            setAcarWithAdriver(driver) {
-                this.destinationDetails.rentCarWithDriver = driver.value;
-            },
-            goTours(tours) {
-                this.needTours = tours.value;
-            },
-            updateAccomodationType(accommodationNeed) {
-                this.destinationDetails.reserveAccomodation = accommodationNeed.value;
-                // set the validation required prop of accommodation type with true
-                this.validation.selectedAccomodationType.required = accommodationNeed.value;
-            },
             emptyOnAccommodationType() {
                 bus.$emit("empty-accommodation-fields");
+                this.anyInput('selectedAccomodationType');
             },
             clearRangeSelection() {
                 bus.$emit("clear-selection"); // listen in hotelDatePicker
@@ -549,6 +522,73 @@
                         }
                     }
                 }
+            },
+            resetAccommodationValidation() {
+                for (let prop in this.validation.accommodationDetails) {
+                    this.validation.accommodationDetails[prop].message = null;
+                }
+            },
+            resetValidation() {
+                // set the validation messages to null because the previous is already validated
+                for (let property in this.validation) {
+                    this.validation.selectedCarLevel.required = this.rentCar;
+                    this.validation.selectedAccomodationType.required = this.destinationDetails.reserveAccomodation;
+                    if (property === "accommodationDetails") {
+                        this.resetAccommodationValidation();
+                        continue;
+                    }
+                    this.validation[property].message = null;
+                }
+            },
+            saveValidatedData() {
+                this.hasErrors = false;
+                // validate destination details on next destination
+                for (let property in this.validation) {
+                    if (property === "accommodationDetails" && this.destinationDetails.accommodationDetails) {
+                        this.validateAccommodationDetails();
+                        continue;
+                    }else if(property === "accommodationDetails" && !this.destinationDetails.accommodationDetails){
+                        continue;
+                    }
+                    if (this.validation[property].required && !this.destinationDetails[property]) {
+                        this.validation[property].message = this.$t('field.required');
+                        this.hasErrors = true;
+                    } else {
+                        this.validation[property].message = null;
+                    }
+                }
+                if (!this.hasErrors) {
+                    this.saveAccommodationTypeInEnglish();
+                    window.packageDetails.destinationsDetails[this.cityNumber] = JSON.parse(JSON.stringify(this.destinationDetails));
+                    bus.$emit('destination-is-valid');
+                }
+            },
+            validateAccommodationDetails() {
+                for (let prop in this.validation.accommodationDetails) {
+                    if (prop === "selectedAdultsNum" || prop === "selectedChildrenNum") {
+                        this.adultsNumberChosen = 0;
+                        this.childrenNumberChosen = 0;
+                        this.destinationDetails.accommodationDetails.selectedAdultsNum.forEach((adult) => {
+                            this.adultsNumberChosen += Number(adult);
+                        });
+                        this.destinationDetails.accommodationDetails.selectedChildrenNum.forEach((child) => {
+                            this.childrenNumberChosen += Number(child);
+                        });
+                        if (this.adultsNumberChosen !== this.adultsNum || this.childrenNumberChosen !== this.childrenNum) {
+                            this.validation.accommodationDetails[prop].message = this.$t('field.required');
+                            this.hasErrors = true;
+                        } else {
+                            this.validation.accommodationDetails[prop].message = null;
+                        }
+                        continue;
+                    }
+                    if (this.validation.accommodationDetails[prop].required && !this.destinationDetails.accommodationDetails[prop]) {
+                        this.validation.accommodationDetails[prop].message = this.$t('field.required');
+                        this.hasErrors = true;
+                    } else {
+                        this.validation.accommodationDetails[prop].message = null;
+                    }
+                }
             }
         },
         watch: {
@@ -563,6 +603,21 @@
                     this.setStartDate(this.destinationDetails.checkInDate);
                     this.setEndDate(this.destinationDetails.checkOutDate);
                 }
+            },
+            "destinationDetails.reserveAccomodation"(newValue) {
+                // set the validation required prop of accommodation type with true
+                this.validation.selectedAccomodationType.required = newValue;
+                if (!newValue) {
+                    this.resetAccommodationValidation();
+                }
+            },
+            "destinationDetails.rentCar"(newValue) {
+                this.validation.selectedCarLevel.required = newValue;
+                if (!this.destinationDetails.rentCar) {
+                    this.destinationDetails.rentCarWithDriver = false;
+                    this.destinationDetails.selectedCarLevel = '';
+                }
+
             }
         },
         computed: {
@@ -596,7 +651,7 @@
                 } else {
                     return new Date(window.packageDetails.destinationsDetails[this.cityNumber - 1].checkOutDate);
                 }
-            }
+            },
         }
 
 
@@ -604,5 +659,19 @@
 </script>
 
 <style scoped>
-
+    .is-valid {
+        border: 1px solid #28a745;
+        border-radius: 5px;
+    }
+    .is-valid:focus {
+        border: 1px solid #28a745 !important;
+        border-radius: 5px;
+    }
+    .is-invalid {
+        border: 1px solid #dc3545;
+        border-radius: 5px;
+    }
+    .is-invalid:focus {
+        border: 1px solid #dc3545 !important;
+    }
 </style>

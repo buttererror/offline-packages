@@ -34,7 +34,11 @@
     "edit":"تعديل",
     "labelDir":"text-right",
     "adultsNumberLabel":"كبار",
-    "childrenNumberLabel":"صغار"
+    "childrenNumberLabel":"صغار",
+    "field": {
+    "required": "هذا الحقل مطلوب"
+    }
+
 
     },
 
@@ -72,7 +76,11 @@
     "edit":"Edit",
     "labelDir":"text-left",
     "adultsNumberLabel":"Adults",
-    "childrenNumberLabel":"Children"
+    "childrenNumberLabel":"Children",
+    "field": {
+    "required": "The field is required"
+    }
+
     }
     }
 </i18n>
@@ -81,7 +89,7 @@
 <template>
     <div v-if="accomType === 'Hotel' || accomType === 'فندق'">
 
-        <div class="card pb-0">
+        <div class="card pb-0" :class="{'is-invalid': roomsValidationHasErrors}">
             <div class="card-header card-title h5 text-center">
                 {{$t('packageDetails.roomsNum')}}
             </div>
@@ -95,10 +103,13 @@
                                      v-model="accommodationDetails.roomsNum"
                                      :options="adultsRange"
                                      :multiple="false"
-                                     @input="putRoomsNum()"
+                                     @input="putRoomsNum"
                                      :disabled="disableRoomNum"
+                                     :class="{'is-invalid': validation.roomsNum.message}"
                         ></multiselect>
+
                     </div>
+
                 </div>
 
                 <div v-if="Number(accommodationDetails.roomsNum)" role="tablist">
@@ -149,6 +160,7 @@
                                                          :disabled="childrenSelectDisabled"
                                                          :max="maxChildrenPerRoom"
                                                          @remove="removeChildrenOption"
+                                                         @input="anyInput('roomsValidation')"
 
                                             ></multiselect>
                                         </div>
@@ -171,7 +183,10 @@
                     <div class="col-6">
                         <b-alert show variant="info d-flex justify-content-around rounded-0"
                                  style="margin-bottom: 0">
-                            <div class="h6 text-danger d-inline-block">
+                            <div class="h6 d-inline-block"
+                                 :class="{
+                                 'text-danger': adultsNumberChosen < adultsNumber || childrenNumberChosen < childrenNumber,
+                                 'text-success': adultsNumberChosen === adultsNumber && childrenNumberChosen === childrenNumber}">
                                 {{$t('packageDetails.adults')}} : ({{adultsNumberChosen}})<br>
                                 {{$t('packageDetails.children')}} : ({{childrenNumberChosen}})
                             </div>
@@ -185,6 +200,11 @@
                 </div>
 
             </div>
+            <div class="invalid-feedback d-block" :class="$t('labelDir')"
+                 v-if="roomsValidationHasErrors">
+                {{$t('field.required')}}
+            </div>
+
         </div>
 
         <div class="mt-4">
@@ -198,7 +218,14 @@
                                  v-model="accommodationDetails.selectedRoomType"
                                  :options="roomType"
                                  :multiple="false"
+                                 :class="{'is-invalid': validation.selectedRoomType.message}"
+                                 @input="anyInput('selectedRoomType')"
                     ></multiselect>
+                    <div class="invalid-feedback d-block" :class="$t('labelDir')"
+                         v-if="validation.selectedRoomType.message">
+                        {{validation.selectedRoomType.message}}
+                    </div>
+
                 </div>
             </div>
 
@@ -212,7 +239,13 @@
                                  v-model="accommodationDetails.selectedRoomView"
                                  :options="roomView"
                                  :multiple="false"
+                                 :class="{'is-invalid': validation.selectedRoomView.message}"
+                                 @input="anyInput('selectedRoomView')"
                     ></multiselect>
+                    <div class="invalid-feedback d-block" :class="$t('labelDir')"
+                         v-if="validation.selectedRoomView.message">
+                        {{validation.selectedRoomView.message}}
+                    </div>
                 </div>
             </div>
 
@@ -226,7 +259,14 @@
                                  v-model="accommodationDetails.selectedStars"
                                  :options="stars"
                                  :multiple="false"
+                                 :class="{'is-invalid': validation.selectedStars.message}"
+                                 @input="anyInput('selectedStars')"
                     ></multiselect>
+                    <div class="invalid-feedback d-block" :class="$t('labelDir')"
+                         v-if="validation.selectedStars.message">
+                        {{validation.selectedStars.message}}
+                    </div>
+
                 </div>
             </div>
 
@@ -237,7 +277,7 @@
                 <div class="col-6">
                     <input type="text" :placeholder="$t('packageDetails.hotelName')"
                            v-model="accommodationDetails.hotelName"
-                           class="form-control"/>
+                           class="form-control">
                 </div>
             </div>
 
@@ -278,8 +318,7 @@
         props: {
             cityNumber: Number,
             accomType: String,
-            validation: Object,
-            reserveAccomodation: Boolean
+            validation: Object
         },
         components: {
             Multiselect
@@ -309,6 +348,7 @@
                 maxRooms: 0,
                 maxPerRoom: 6,
                 maxChildrenPerRoom: 4,
+                roomsValidationHasErrors: false,
                 accommodationDetails: {
                     roomsNum: '', //number of rooms
                     selectedRoomType: '',
@@ -322,6 +362,7 @@
             }
         },
         mounted() {
+            // save the data of the accommodation details by reference the object in destination details
             bus.$emit("reserve-accommodation", this.accommodationDetails);
             bus.$on("empty-accommodation-fields", () => {
                 this.emptyOnAccommodationType();
@@ -341,17 +382,6 @@
                 window.packageDetails.destinationsDetails[this.cityNumber].accommodationDetails =
                     JSON.parse(JSON.stringify(this.accommodationDetails));
             });
-            // bus.$on("validate-destination-details", () => {
-            //     for (let property in this.validation) {
-            //         if (this.validation[property].required && !this.accommodationDetails[property]) {
-            //             this.validation[property].message = this.$t('field.required');
-            //             this.$root.$data.hasErrors = true;
-            //         } else {
-            //             this.validation[property].message = null;
-            //         }
-            //     }
-            //
-            // });
         },
         watch: {
             accomType() {
@@ -359,6 +389,20 @@
                     this.editRoomsData();
                 }
             },
+            validation: {
+                handler(comingValidation) {
+                    for (let prop in comingValidation) {
+                        if (prop === "roomsNum" || prop === "selectedAdultsNum" || prop === "selectedChildrenNum") {
+                            if (comingValidation[prop].message) {
+                                this.roomsValidationHasErrors = true;
+                            } else {
+                                this.roomsValidationHasErrors = false;
+                            }
+                        }
+                    }
+                },
+                deep: true
+            }
         },
         methods: {
             fillChildrenOptions() {
@@ -368,7 +412,7 @@
                 }
             },
             putRoomsNum() {
-                // console.log("updating rooms number");
+                this.anyInput("roomsValidation");
                 for (let i = 0; i < this.accommodationDetails.roomsNum; i++) {
                     this.sortAdults.push([]);
                 }
@@ -387,7 +431,7 @@
                 }
             },
             updateAdultsNum(pastRooms, index) {
-                // console.log("updating adults Number");
+                this.anyInput("roomsValidation");
                 this.adultsSelected.push(index + 1); // disable after input
                 this.remainingAdults = Math.ceil(this.remainingAdults - this.accommodationDetails.selectedAdultsNum[index]);
                 this.remainingRooms = this.accommodationDetails.roomsNum - pastRooms;
@@ -408,6 +452,7 @@
                 this.childrenNumberChosen--;
             },
             editRoomsData() {
+                this.anyInput("roomsValidation");
                 this.disableRoomNum = false;
                 this.adultsSelected = [];
                 this.accommodationDetails.selectedAdultsNum = [];
@@ -428,7 +473,15 @@
                 this.accommodationDetails.hotelName = '';
                 this.accommodationDetails.area = '';
                 this.editRoomsData();
-            }
+            },
+            anyInput(prop){
+                if(prop === "roomsValidation"){
+                    this.roomsValidationHasErrors = false;
+                    return;
+                }
+                this.validation[prop].message = null;
+            },
+
         },
         destroyed() {
             bus.$emit("reserve-accommodation", null);
@@ -438,5 +491,19 @@
 </script>
 
 <style scoped>
-
+    .is-valid {
+        border: 1px solid #28a745;
+        border-radius: 5px;
+    }
+    .is-valid:focus {
+        border: 1px solid #28a745 !important;
+        border-radius: 5px;
+    }
+    .is-invalid {
+        border: 1px solid #dc3545;
+        border-radius: 5px;
+    }
+    .is-invalid:focus {
+        border: 1px solid #dc3545 !important;
+    }
 </style>
