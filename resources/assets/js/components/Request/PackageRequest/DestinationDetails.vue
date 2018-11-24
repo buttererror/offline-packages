@@ -352,6 +352,10 @@
                     selectedAccomodationType: {
                         message: null,
                         required: false
+                    },
+                    accommodationDetails: {
+                        message: null,
+                        required: false
                     }
                 },
                 destinationDetails: {
@@ -459,6 +463,8 @@
             },
             updateAccomodationType(accommodationNeed) {
                 this.destinationDetails.reserveAccomodation = accommodationNeed.value;
+                // added last commit
+                this.validation.accommodationDetails = accommodationNeed.value;
                 // set the validation required prop of accommodation type with true
                 this.validation.selectedAccomodationType.required = accommodationNeed.value;
             },
