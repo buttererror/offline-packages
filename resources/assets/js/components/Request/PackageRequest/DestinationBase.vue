@@ -72,7 +72,7 @@
                 </button>
             </div>
             <div class="card-footer d-flex flex-row-reverse justify-content-between">
-                <button class="btn btn-primary" @click.prevent="nextComponent" :disabled="citiesNumber !== cityNumber">
+                <button class="btn btn-primary" @click.prevent="nextComponent" :disabled="citiesNumber !== cityNumber + 1">
                     {{$t('next')}}
                 </button>
                 <button class="btn btn-primary" @click.prevent="previousComponent">
@@ -96,6 +96,7 @@
                 selectedCountries: window.packageDetails.packageMainDetails.selectedCountries,
                 citiesNumber: Number(window.packageDetails.packageMainDetails.citiesNumber),
                 selectedCountriesIds: [],
+                hasErrors: true
             }
         },
         mounted() {
@@ -112,6 +113,7 @@
             });
             // next destination
             bus.$on('destination-is-valid', () => {
+                if(this.cityNumber + 1 === this.citiesNumber) this.hasErrors = false;
                 this.cityNumber++;
             });
         },
@@ -125,8 +127,10 @@
                 bus.$emit("previous-destination");
             },
             nextComponent() {
+                this.hasErrors = true;
                 // validate and save the data of the final destination
                 bus.$emit("validate-destination-details");
+                if(this.hasErrors) return;
                 // this event for the breadcurmbs
                 this.$emit('next-component', {
                     component: 'FinalNote',
