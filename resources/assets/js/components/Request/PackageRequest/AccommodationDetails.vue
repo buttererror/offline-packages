@@ -105,7 +105,7 @@
                                      :multiple="false"
                                      @input="putRoomsNum"
                                      :disabled="disableRoomNum"
-                                     :class="{'is-invalid': validation.roomsNum.message}"
+                                     :class="{'is-invalid': roomsValidationHasErrors && validation.roomsNum.message}"
                         ></multiselect>
 
                     </div>
@@ -395,6 +395,7 @@
                         if (prop === "roomsNum" || prop === "selectedAdultsNum" || prop === "selectedChildrenNum") {
                             if (comingValidation[prop].message) {
                                 this.roomsValidationHasErrors = true;
+                                return;
                             } else {
                                 this.roomsValidationHasErrors = false;
                             }
