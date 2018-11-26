@@ -571,13 +571,21 @@
                         this.destinationDetails.accommodationDetails.selectedAdultsNum.forEach((adult) => {
                             this.adultsNumberChosen += Number(adult);
                         });
-                        this.destinationDetails.accommodationDetails.selectedChildrenNum.forEach((child) => {
-                            this.childrenNumberChosen += Number(child);
+                        this.destinationDetails.accommodationDetails.selectedChildrenNum.forEach((childPerRoom) => {
+                            this.childrenNumberChosen += childPerRoom.length;
                         });
-                        if (this.adultsNumberChosen !== this.adultsNum || this.childrenNumberChosen !== this.childrenNum) {
+                        if (this.childrenNumberChosen !== this.childrenNum && prop === "selectedChildrenNum") {
                             this.validation.accommodationDetails[prop].message = this.$t('field.required');
                             this.hasErrors = true;
-                        } else {
+                            continue;
+                        } else if(this.childrenNumberChosen === this.childrenNum && prop === "selectedChildrenNum"){
+                            this.validation.accommodationDetails[prop].message = null;
+                            continue;
+                        }
+                        if(this.adultsNumberChosen !== this.adultsNum){
+                            this.validation.accommodationDetails[prop].message = this.$t('field.required');
+                            this.hasErrors = true;
+                        }else {
                             this.validation.accommodationDetails[prop].message = null;
                         }
                         continue;

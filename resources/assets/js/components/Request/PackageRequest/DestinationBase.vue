@@ -113,7 +113,10 @@
             });
             // next destination
             bus.$on('destination-is-valid', () => {
-                if(this.cityNumber + 1 === this.citiesNumber) this.hasErrors = false;
+                if(this.cityNumber + 1 === this.citiesNumber) {
+                    this.hasErrors = false;
+                    return;
+                }
                 this.cityNumber++;
             });
         },
